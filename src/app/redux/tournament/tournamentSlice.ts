@@ -1,0 +1,136 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { InitialStateTournamet } from "./tournament";
+import { PTournament } from "@/app/api/tournament/tournament";
+import {
+  createTournamentApi,
+  getListTournamentApi,
+  getMyTournamentApi,
+  getTournamentByIdApi,
+} from "@/app/api/tournament/tournamentApi";
+
+const initialState: InitialStateTournamet = {
+  tournaments: [],
+  myTournaments: [],
+  isLoadingMy: false,
+  tournament: null,
+  loading: false,
+};
+
+export const getTournamentIdThunk = createAsyncThunk(
+  "tournament/getTournamentId",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data, success, message } = await getTournamentByIdApi(id);
+      if (success) {
+        return data;
+      } else {
+        return rejectWithValue(message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const getTournamentThunk = createAsyncThunk(
+  "tournament/getTournament",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data, success, message } = await getListTournamentApi();
+      if (success) {
+        return data;
+      } else {
+        return rejectWithValue(message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const getMyTournamentThunk = createAsyncThunk(
+  "tournament/getMyTournament",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data, success, message } = await getMyTournamentApi();
+      if (success) {
+        return data;
+      } else {
+        return rejectWithValue(message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const createTournamentThunk = createAsyncThunk(
+  "tournament/createTournament",
+  async (data: PTournament, { rejectWithValue }) => {
+    try {
+      const { futuresyo } = await createTournamentApi(data);
+      if (futuresyo.success) {
+        return futuresyo.data;
+      } else {
+        return rejectWithValue(futuresyo.message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+const TournamentSlice = createSlice({
+  name: "tournament",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getTournamentThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTournamentThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload) {
+          state.tournaments = action.payload;
+        }
+      })
+      .addCase(getTournamentThunk.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(createTournamentThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createTournamentThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tournament = action.payload;
+      })
+      .addCase(createTournamentThunk.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(getTournamentIdThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTournamentIdThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tournament = action.payload;
+      })
+      .addCase(getTournamentIdThunk.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(getMyTournamentThunk.pending, (state) => {
+        state.isLoadingMy = true;
+      })
+      .addCase(getMyTournamentThunk.fulfilled, (state, action) => {
+        state.isLoadingMy = false;
+        if (action.payload) {
+          state.myTournaments = action.payload;
+        }
+      })
+      .addCase(getMyTournamentThunk.rejected, (state) => {
+        state.isLoadingMy = false;
+      });
+  },
+});
+
+export default TournamentSlice.reducer;
