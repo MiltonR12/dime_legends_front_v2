@@ -33,9 +33,9 @@ function TorneoPage() {
   }
 
   return (
-    <main className="pt-24" >
+    <main className="pt-24 pb-10" >
       {loading ? <p>Cargando...</p> :
-        <Tabs defaultValue="principal" className="container mx-auto" >
+        <Tabs defaultValue="principal" className="p-4 md:container mx-auto" >
           <TabsList className="bg-secondary" >
             <TabsTrigger className="bg-oscuro" value="principal">
               Principal
@@ -43,9 +43,9 @@ function TorneoPage() {
             <TabsTrigger className="bg-oscuro " value="battle">
               Batallas / Equipos
             </TabsTrigger>
-            <TabsTrigger className="bg-oscuro" value="brackets">
+            {/* <TabsTrigger className="bg-oscuro" value="brackets">
               Brackets
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
           <TabsContent value="principal">
             {tournament && <CardShowTorneo torneo={tournament} />}
@@ -53,7 +53,7 @@ function TorneoPage() {
           <TabsContent value="battle">
             <CardShowBattle battles={battles} teams={teams} />
           </TabsContent>
-          <TabsContent value="brackets">
+          <TabsContent value="brackets" >
             <Bracket rounds={brackets} />
           </TabsContent>
         </Tabs>

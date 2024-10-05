@@ -9,6 +9,7 @@ import torneo2 from '@/assets/imgs/torneo2.jpeg'
 import torneo3 from '@/assets/imgs/torneo3.png'
 import CardLastTorneo from '@/components/card/CardLastTorneo';
 import Footer from '@/components/ui/Footer';
+import { Link } from 'react-router-dom';
 
 function HomePage() {
   return (
@@ -26,8 +27,11 @@ function HomePage() {
             <Button
               size="lg"
               className='border-2 border-primary text-primary rounded-2xl text-2xl px-8 py-3 h-auto'
+              asChild
             >
-              Comenzar
+              <Link to='/torneos' >
+                Comenzar
+              </Link>
             </Button>
           </div>
         </div>
@@ -44,7 +48,7 @@ function HomePage() {
           Dime Legends es una plataforma de torneos online que te permite competir en tus juegos favoritos y ganar premios increíbles. ¡Es fácil y divertido!
         </p>
 
-        <div className='container mx-auto flex gap-10' >
+        <div className='container mx-auto flex flex-col md:flex-row gap-10' >
           <CardCaracteristicas
             title='Organiza tus Torneos'
             description='Crea y personaliza tus propios torneos con facilidad. Establece reglas, elige los juegos y administra a los participantes desde una interfaz intuitiva.'
@@ -67,14 +71,17 @@ function HomePage() {
       </section>
 
       <section className='px-5 py-10' >
+
         <h2 className='text-4xl text-center font-bold mb-5' >
           Torneos Anteriores
         </h2>
+
         <p className='text-center text-lg text-zinc-200 mb-10' >
           Descubre los torneos anteriores y los increíbles premios que se han repartido. ¡No te pierdas la oportunidad de ganar en el próximo!
         </p>
-        <div className='grid grid-cols-3 max-w-6xl mx-auto flex-col gap-10' >
-          <div className='col-span-2' >
+
+        <div className='grid md:grid-cols-3 max-w-6xl mx-auto flex-col gap-10' >
+          <div className='md:col-span-2' >
             <CardLastTorneo
               title='Torneo de Verano'
               description='¡El torneo de verano ha llegado! Participa y gana premios increíbles en los juegos más populares.'
@@ -83,10 +90,10 @@ function HomePage() {
             />
           </div>
 
-          <div></div>
-          <div></div>
+          <div className='hidden md:block' ></div>
+          <div className='hidden md:block' ></div>
 
-          <div className='col-span-2 start-2' >
+          <div className='md:col-span-2 md:start-2' >
             <CardLastTorneo
               title='Torneo de Invierno'
               description='¡El torneo de invierno ha llegado! Participa y gana premios increíbles en los juegos más populares.'
@@ -95,7 +102,7 @@ function HomePage() {
             />
           </div>
 
-          <div className='col-span-2' >
+          <div className='md:col-span-2' >
             <CardLastTorneo
               title='Torneo de Primavera'
               description='¡El torneo de primavera ha llegado! Participa y gana premios increíbles en los juegos más populares.'

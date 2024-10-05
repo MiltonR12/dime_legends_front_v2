@@ -13,7 +13,7 @@ function LoginForm() {
 
   return (
     <Formik
-      initialValues={{ email: 'milton@gmail.com', password: '1234567' }}
+      initialValues={{ email: '', password: '' }}
       onSubmit={(values, { setSubmitting }) => {
 
         dispatch(authLoginThunk(values)).unwrap().then(() => {

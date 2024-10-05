@@ -39,8 +39,11 @@ function CreateTeamForm({ id }: Props) {
             players: ['']
           }}
           onSubmit={(values, { setSubmitting }) => {
-            createTeamApi({ ...values, id, image: logoTeam }).then(() => {
-              setIsSuccess(true)
+            createTeamApi({ ...values, id, image: logoTeam }).then((data) => {
+              console.log(data)
+              if (data.futuresyo.success) {
+                setIsSuccess(true)
+              }
             }).finally(() => {
               setSubmitting(false)
             })
@@ -82,7 +85,7 @@ function CreateTeamForm({ id }: Props) {
                 name="players"
                 values={values.players}
               />
-              <Button variant="form" size="lg" className="mt-10" >
+              <Button type="submit" variant="form" size="lg" className="mt-10" >
                 {isSubmitting ? 'Enviando...' : 'Registrar equipo'}
               </Button>
             </form>

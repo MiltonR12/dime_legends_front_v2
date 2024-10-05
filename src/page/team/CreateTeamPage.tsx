@@ -8,15 +8,16 @@ function CreateTeamPage() {
 
   return (
     <main className="pt-20 min-h-screen flex items-center justify-center fondo_blue" >
-      <div className="p-10 bg-fondo rounded-2xl grid grid-cols-2 gap-10" >
+      <div className="p-10 bg-fondo rounded-2xl grid md:grid-cols-2 gap-10" >
+        
         <div>
           <h1 className="text-info font-semibold mb-5 text-3xl text-center" >
             Registrar equipo
           </h1>
-
           {id && <CreateTeamForm id={id} />}
         </div>
-        <div>
+
+        <div className="hidden md:block" >
           <img src={gamer} alt="gamer" className="max-h-[80vh] object-cover" />
         </div>
       </div>

@@ -12,7 +12,9 @@ type Props = {
 function CardShowTorneo({ torneo }: Props) {
 
   return (
-    <section className="grid grid-cols-2 gap-10 container mx-auto border-secondary border-4 rounded-2xl p-10" >
+    <section className="grid md:grid-cols-2 gap-10 container mx-auto border-secondary 
+    border-4 rounded-2xl p-5 md:p-10" >
+      
       <div className="flex flex-col gap-5" >
 
         <h1 className="text-4xl font-semibold text-secondary" >
@@ -81,6 +83,7 @@ function CardShowTorneo({ torneo }: Props) {
         }
 
       </div>
+
       <div className="flex flex-col gap-5" >
 
         <Accordion type="single" collapsible>

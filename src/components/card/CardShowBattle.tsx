@@ -15,19 +15,21 @@ function CardShowBattle({ battles, teams }: Props) {
   const sortRound = groupBattlesByRound(battles)
 
   return (
-    <section className="grid grid-cols-2 gap-10 container mx-auto border-secondary border-4 rounded-2xl p-10" >
+    <section className="grid md:grid-cols-2 gap-10 container mx-auto border-secondary border-4 rounded-2xl  p-5 md:p-10" >
+
       <div className="flex flex-col gap-5" >
 
         <h3 className="text-2xl font-semibold" >
           Equipos inscritos
         </h3>
 
-        <ul className="text-info grid grid-cols-3 gap-2" >
+        <ul className="text-info flex flex-wrap gap-2" >
           {teams.map((team) => <CardTeam key={team._id} team={team} />)}
         </ul>
 
       </div>
-      <div className="flex flex-col gap-5" >
+
+      <div className="flex flex-col gap-5 overflow-auto" >
 
         <h3 className="text-2xl font-semibold" >
           Batallas
@@ -86,6 +88,7 @@ function CardShowBattle({ battles, teams }: Props) {
           </TableBody>
         </Table>
       </div>
+
     </section>
   )
 }
