@@ -15,7 +15,7 @@ export interface User {
   contact: string;
   avatar: string;
   page: {
-    pageName: string;
+    name: string;
     description: string;
     urlPage: string;
     urlGroup: string;

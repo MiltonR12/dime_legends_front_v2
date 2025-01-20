@@ -13,10 +13,10 @@ function CardTeam({ team }: Props) {
     <div className="bg-oscuro rounded-lg p-2 md:p-3 flex flex-col gap-3 items-center select-none" >
       
       {team.image ? <div className="mx-auto rounded-full overflow-hidden w-10 h-10 md:h-12 md:w-12" >
-        <img src={team.image} alt={team.teamName} className="h-full object-cover" />
+        <img src={team.image} alt={team.name} className="h-full object-cover" />
       </div> : <RiTeamFill className="w-10 h-10 md:h-12 md:w-12 bg-info rounded-full text-oscuro p-2" /> }
       <h3 className="line-clamp-1 truncate w-36 text-center" >
-        {team.teamName}
+        {team.name}
       </h3>
 
       {team.status === "inactive" ?

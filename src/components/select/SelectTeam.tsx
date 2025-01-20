@@ -28,7 +28,7 @@ function SelectTeam({ setValue, value, defaultValue }: Props) {
 
   const [open, setOpen] = useState(false)
   const { teams } = useSelector((state: RootState) => state.team)
-  const nameTeams = teams.map((team) => ({ value: team._id, label: team.teamName }))
+  const nameTeams = teams.map((team) => ({ value: team._id, label: team.name }))
 
   return (
     <Popover open={open} onOpenChange={setOpen} >

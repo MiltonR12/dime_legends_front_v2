@@ -8,7 +8,7 @@ export interface Team {
   voucher: null
   _id: string
   tournament: string
-  teamName: string
+  name: string
   captain: string
   players: string[]
   image: null

@@ -3,6 +3,7 @@ import { InitialStateTournamet } from "./tournament";
 import { PTournament } from "@/app/api/tournament/tournament";
 import {
   createTournamentApi,
+  deleteTournamentApi,
   getListTournamentApi,
   getMyTournamentApi,
   getTournamentByIdApi,
@@ -10,6 +11,7 @@ import {
 
 const initialState: InitialStateTournamet = {
   tournaments: [],
+  listTournaments: [],
   myTournaments: [],
   isLoadingMy: false,
   tournament: null,
@@ -32,7 +34,7 @@ export const getTournamentIdThunk = createAsyncThunk(
   }
 );
 
-export const getTournamentThunk = createAsyncThunk(
+export const getListTournamentThunk = createAsyncThunk(
   "tournament/getTournament",
   async (_, { rejectWithValue }) => {
     try {
@@ -80,22 +82,38 @@ export const createTournamentThunk = createAsyncThunk(
   }
 );
 
+export const deleteTournamentThunk = createAsyncThunk(
+  "tournament/deleteTournament",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { success, message } = await deleteTournamentApi(id);
+      if (success) {
+        return id;
+      } else {
+        return rejectWithValue(message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const TournamentSlice = createSlice({
   name: "tournament",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getTournamentThunk.pending, (state) => {
+      .addCase(getListTournamentThunk.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getTournamentThunk.fulfilled, (state, action) => {
+      .addCase(getListTournamentThunk.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload) {
-          state.tournaments = action.payload;
+          state.listTournaments = action.payload;
         }
       })
-      .addCase(getTournamentThunk.rejected, (state) => {
+      .addCase(getListTournamentThunk.rejected, (state) => {
         state.loading = false;
       })
       .addCase(createTournamentThunk.pending, (state) => {
@@ -129,7 +147,12 @@ const TournamentSlice = createSlice({
       })
       .addCase(getMyTournamentThunk.rejected, (state) => {
         state.isLoadingMy = false;
-      });
+      })
+      .addCase(deleteTournamentThunk.fulfilled, (state, { payload }) => {
+        state.myTournaments = state.myTournaments.filter(
+          (tournament) => tournament._id !== payload
+        );
+      })
   },
 });
 

@@ -5,6 +5,8 @@ import CustomInput from "../form/CustomInput"
 import { createPageValidation } from "@/lib/validations"
 import { useAppDispatch } from "@/app/store"
 import { createPageThunk } from "@/app/redux/auth/authSlice"
+import UploadPhoto from "../input/UploadPhoto"
+import InputTextArea from "../input/InputTextArea"
 
 function CreatePageModal() {
 
@@ -22,52 +24,50 @@ function CreatePageModal() {
           <DialogTitle className="text-center text-xl" >
             ¿Quieres ser organizador?
           </DialogTitle>
-          <DialogDescription  >
+          <DialogDescription className="text-center" >
             Llena el siguiente formulario para ser un creador de torneos.
           </DialogDescription>
         </DialogHeader>
         <Formik
           initialValues={{
-            pageName: "",
+            name: "",
             description: "",
-            urlPage: "",
-            urlGroup: "",
+            image: null as File | null
           }}
-          onSubmit={(values) => {
-            dispatch(createPageThunk(values))
+          onSubmit={({ description, image, name }, { setSubmitting }) => {
+            if (!image) return
+            dispatch(createPageThunk({ description, image, name })).unwrap().finally(() => {
+              setSubmitting(false)
+            })
           }}
           validationSchema={createPageValidation}
         >
-          {({ handleSubmit }) => (
+          {({ handleSubmit, isSubmitting }) => (
             <form className="flex flex-col gap-5" onSubmit={handleSubmit} >
+
+              <UploadPhoto name="image" />
 
               <CustomInput
                 label="Nombre de la página"
-                name="pageName"
+                name="name"
                 placeholder="Nombre de la página"
+                required
+                disabled={isSubmitting}
               />
 
-              <CustomInput
+              <InputTextArea
                 label="Descripción"
                 name="description"
                 placeholder="Descripción"
-              />
-
-              <CustomInput
-                label="URL de la página"
-                name="urlPage"
-                placeholder="URL de la página"
-              />
-
-              <CustomInput
-                label="URL del grupo"
-                name="urlGroup"
-                placeholder="URL del grupo"
+                required
+                disabled={isSubmitting}
               />
 
               <Button
                 type="submit"
                 variant="form"
+                className="text-center text-white font-semibold bg-primary"
+                disabled={isSubmitting}
               >
                 Crear página
               </Button>

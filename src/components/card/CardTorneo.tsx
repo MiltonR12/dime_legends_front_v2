@@ -1,58 +1,49 @@
-import { Tournament } from "@/app/redux/tournament/tournament"
-import { Button } from "../ui/button"
+import { ListTournament } from "@/app/redux/tournament/tournament"
+import { ListaGamesImage } from "@/payments/games"
 import { Link } from "react-router-dom"
 
 type Props = {
-  torneo: Tournament
+  torneo: ListTournament
 }
 
 function CardTorneo({ torneo }: Props) {
 
+  const date = new Date(torneo.dateStart)
+  const game = ListaGamesImage.find(game => game.name === torneo.game)
+
   return (
-    <div className="bg-fondo flex flex-col gap-5 p-5 rounded-2xl border-secondary 
-      border-4 w-96 hover:scale-105 transition ease-in-out duration-500 select-none" >
-      <h3 className="text-3xl font-bold text-secondary mb-5 line-clamp-1 text-center" >
-        {torneo.name}
-      </h3>
-      <div>
-        <img src={torneo.image} alt="" className="object-cover object-center w-full h-[200px]" />
-      </div>
-      <div>
-        <h3 className="text-secondary font-semibold" >
-          Descripción:
-        </h3>
-        <p className="text-info line-clamp-3" >
-          {torneo.description}
-        </p>
-      </div>
-      <div>
-        <div className="flex justify-between" >
-          <h3 className="text-secondary font-semibold" >
-            Fecha de inicio:
-          </h3>
-          <p className="text-info" >
-            {new Date(torneo.dateStart).toLocaleDateString("es", {
-              month: "long",
-              day: "numeric",
-              weekday: "long",
-            })}
-          </p>
-        </div>
-        <div className="flex justify-between" >
-          <h3 className="text-secondary font-semibold" >
-            Juego
-          </h3>
-          <p className="text-info" >
-            {torneo.game}
-          </p>
+    <article className="w-[550px] rounded-2xl overflow-hidden shadow-lg" >
+      <div className="relative" >
+        <img src={torneo.image} alt={torneo.name} className="w-full h-[250px] object-cover" />
+        <div className="absolute right-2 bottom-2 p-1 bg-rosePrimary rounded-full" >
+          <img src={game?.image} alt={game?.name} className="w-20 h-20 rounded-full object-cover" />
         </div>
       </div>
-      <Button asChild variant="orange" size="lg" className="font-semibold text-2xl" >
-        <Link to={`/torneo/${torneo._id}`} >
-          Ver torneo
-        </Link>
-      </Button>
-    </div>
+      <div className="flex items-center gap-5 p-3 bg-[#2B0C52]" >
+
+        <div className="p-3 border-2 border-white/60 rounded-3xl" >
+          <div className="flex flex-col text-center items-center" >
+            <p className="text-2xl uppercase" >{date.toLocaleString('es-ES', { month: 'long' })}</p>
+            <span className="text-4xl font-bold" >{date.getDate()}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1 w-full" >
+          <h3 className="text-white capitalize text-2xl" >{torneo.name}</h3>
+          <div className="flex justify-between text-white/60" >
+            <p>{torneo.teamsCount}/50 Equipos</p>
+            <p>Plataforma - {torneo.game}</p>
+          </div>
+          <div className="flex justify-between items-center pt-2 text-white/60" >
+            {torneo.payment ?
+              <p className="text-xl" >Costo - <span className="text-white" >{torneo.payment.account}</span> Bs</p> : <p className="text-white text-xl" >Gratis</p>}
+            <Link to={`/torneo/${torneo._id}`} className="bg-[#AA1EF1] py-2 px-4 rounded-2xl text-white" >
+              Registrarse Ahora
+            </Link>
+          </div>
+        </div>
+      </div>
+    </article>
   )
 }
 

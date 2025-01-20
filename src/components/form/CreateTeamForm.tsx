@@ -2,13 +2,12 @@ import { Formik } from "formik"
 import CustomInput from "./CustomInput"
 import ArrayInput from "./ArrayInput"
 import { Button } from "../ui/button"
-import { createTeamApi } from "@/app/api/team/teamApi"
 import { useState } from "react"
 import { GrStatusGood } from "react-icons/gr";
 import { Link } from "react-router-dom"
-import { useDropzone } from "react-dropzone"
-import { uploadImageApi } from "@/app/api/upload/uploadApi"
-import { FaUsers } from "react-icons/fa6";
+import InputUploadImage from "../input/InputUploadImage"
+import { useAppDispatch } from "@/app/store"
+import { createTeamThunk } from "@/app/redux/team/teamSlice"
 
 type Props = {
   id: string
@@ -17,67 +16,44 @@ type Props = {
 function CreateTeamForm({ id }: Props) {
 
   const [isSuccess, setIsSuccess] = useState(false)
-  const [logoTeam, setLogoTeam] = useState('')
-
-  const { getInputProps, getRootProps } = useDropzone({
-    accept: {
-      'image/png': ['.png', ".jpg", ".jpeg"],
-    },
-    onDrop: async (acceptedFiles) => {
-      const { futuresyo } = await uploadImageApi(acceptedFiles[0])
-      setLogoTeam(futuresyo.data.url)
-    }
-  })
+  const dispatch = useAppDispatch()
 
   return (
     <div>
       {
         !isSuccess ? <Formik
           initialValues={{
-            teamName: '',
+            name: '',
             captain: '',
+            image: null as File | null,
             players: ['']
           }}
           onSubmit={(values, { setSubmitting }) => {
-            createTeamApi({ ...values, id, image: logoTeam }).then((data) => {
-              console.log(data)
-              if (data.futuresyo.success) {
+            const { image, ...rest } = values
+            if (!image) return
+            dispatch(createTeamThunk({ ...rest, image, id }))
+              .then(() => {
                 setIsSuccess(true)
-              }
-            }).finally(() => {
-              setSubmitting(false)
-            })
+              })
+              .finally(() => {
+                setSubmitting(false)
+              })
           }}
         >
           {({ handleSubmit, values, isSubmitting }) => (
             <form onSubmit={handleSubmit} >
 
-              <div {...getRootProps()}
-                className='bg-blue-950/70 flex items-center justify-center mb-5 overflow-hidden mx-auto
-                rounded-full h-60 w-60' >
-                <input {...getInputProps()} />
-                {
-                  logoTeam ? <img
-                    src={logoTeam}
-                    alt="banner"
-                    className='w-full h-full object-cover object-center'
-                  /> :
-                    <div className="mx-auto rounded-full flex flex-col gap-5 items-center" >
-                      <FaUsers size={100} className=' text-info' />
-                      <h3 className='text-center font-semibold text-info' >
-                        Selecciona o arrastra la <br /> imagen del equipo
-                      </h3>
-                    </div>
-                }
-              </div>
+              <InputUploadImage name="image" />
 
               <CustomInput
                 label="Nombre del equipo"
-                name="teamName"
+                name="name"
+                disabled={isSubmitting}
               />
               <CustomInput
                 label="Capitan"
                 name="captain"
+                disabled={isSubmitting}
               />
 
               <ArrayInput
@@ -85,6 +61,7 @@ function CreateTeamForm({ id }: Props) {
                 name="players"
                 values={values.players}
               />
+              
               <Button type="submit" variant="form" size="lg" className="mt-10" >
                 {isSubmitting ? 'Enviando...' : 'Registrar equipo'}
               </Button>

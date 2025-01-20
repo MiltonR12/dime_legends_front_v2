@@ -13,9 +13,7 @@ function SectionPage() {
     CustomToast.info("URL copiada al portapapeles")
   }
 
-  if (!user) {
-    return null
-  }
+  if (!user) return null
 
   return (
     <section className="bg-blue-900/70 p-10 rounded-lg" >
@@ -24,7 +22,7 @@ function SectionPage() {
       </h3>
       <div className="text-xl font-semibold flex flex-col gap-5" >
         <h4>
-          Nombre: {user.page.pageName}
+          Nombre: {user.page.name}
         </h4>
         <h4 className="text-info" >
           Descripción: {user.page.description}

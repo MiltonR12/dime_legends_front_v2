@@ -12,8 +12,7 @@ export interface PRegister {
 }
 
 export interface PCreatePage {
-  pageName: string;
+  name: string;
   description: string;
-  urlPage: string;
-  urlGroup: string;
+  image: File;
 }

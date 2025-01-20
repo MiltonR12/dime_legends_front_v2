@@ -5,14 +5,14 @@ import { FaDiscord } from "react-icons/fa";
 
 function Footer() {
   return (
-    <footer className="py-5 px-3" >
+    <footer className="py-5 px-3 bg-[#18082E]" >
       <div className="container " >
         <div className="grid grid-cols-3 gap-10" >
-          <div>
-            <h3>
-              Dime Legends
+          <div className="max-w-72" >
+            <h3 className="text-4xl font-semibold pb-5" >
+              DIME LEGENDS
             </h3>
-            <p>
+            <p className="text-white/60" >
               Participa en la leyenda de Dime, un mundo de aventuras y misterios.
             </p>
           </div>

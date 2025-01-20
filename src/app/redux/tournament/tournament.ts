@@ -1,9 +1,27 @@
 export interface InitialStateTournamet {
+  listTournaments: ListTournament[];
   tournaments: Tournament[];
   tournament: TournamentOne | null;
   myTournaments: MyTournament[];
   loading: boolean;
   isLoadingMy: boolean;
+}
+
+export interface ListTournament {
+  _id: string
+  createdBy: CreatedBy
+  name: string
+  dateStart: string
+  game: string
+  image: string
+  modality: string[]
+  payment: Payment
+  teamsCount: number
+}
+
+interface CreatedBy {
+  firstName: string
+  lastName: string
 }
 
 export interface Tournament {
@@ -35,8 +53,15 @@ export interface Tournament {
     isFree: boolean;
     registrationEnd: string;
   };
+  payment: Payment | null;
   createdAt: string;
   updatedAt: string;
+}
+
+interface Payment {
+  amount: number;
+  account: string;
+  qrImage: string;
 }
 
 export interface TournamentOne {

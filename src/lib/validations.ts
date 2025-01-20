@@ -18,8 +18,9 @@ export const registerValidation = Yup.object().shape({
 });
 
 export const createPageValidation = Yup.object().shape({
-  pageName: Yup.string().required("Nombre de la página requerido"),
+  name: Yup.string().required("Nombre de la página requerido"),
   description: Yup.string().required("Descripción requerida"),
+  image: Yup.mixed().required("Imagen requerida"),
 });
 
 export const createTournoValidation = Yup.object().shape({

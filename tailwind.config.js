@@ -25,16 +25,24 @@ module.exports = {
         info: "#CCCFEE",
         fondo: "#000217",
         oscuro: "#111827",
-        neutral: {
+        violetPrimary: "#1D023E",
+        three: {
           100: "#FFFFFF",
           200: "#D9E1FA",
           300: "#D1DBF9",
           400: "#AEB9E1",
           500: "#7E89AC",
           600: "#37446B",
-          700: "#0A1330",
-          800: "#081028",
+          700: "#0B1739",
+          800: "#080F25",
         },
+        other: {
+          1: "#101935",
+          2: "#1A2138",
+          3: "#2D3748",
+          4: "#4A5568",
+          5: "#6B7280",
+        }
       },
       keyframes: {
         "accordion-down": {

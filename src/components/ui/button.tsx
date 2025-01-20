@@ -21,6 +21,7 @@ const buttonVariants = cva(
         form: "bg-primary text-slate-50 hover:bg-primary/70 dark:bg-primary dark:hover:bg-primary/70",
         orange: "bg-secondary text-slate-50 hover:bg-secondary/70 dark:bg-secondary dark:hover:bg-secondary/70",
         green: "bg-tertiary text-slate-50 hover:bg-tertiary/70 dark:bg-tertiary dark:hover:bg-tertiary/70",
+        rose: "text-white bg-fuchsia-500 hover:bg-fuchsia-600 active:bg-fuchsia-700 disabled:bg-fuchsia-100 disabled:text-fuchsia-400",
       },
       size: {
         default: "h-10 px-4 py-2",

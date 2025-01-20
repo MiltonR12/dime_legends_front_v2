@@ -1,17 +1,23 @@
 export interface PCreateTeam {
-  teamName: string;
+  name: string;
   captain: string;
-  image?: string;
+  image: File | null;
   players: string[];
   id: string;
 }
 
 export interface PUpdateTeam {
-  teamName?: string;
-  captain?: string;
-  players?: string[];
+  name: string;
+  captain: string;
+  players: string[];
   status?: string;
+  image?: File | null;
   id: string;
+}
+
+export interface PUpdateStatusTeam {
+  id: string;
+  status: string;
 }
 
 export interface RGetTeamByTournament {

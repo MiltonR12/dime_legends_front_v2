@@ -1,72 +1,79 @@
 import {
+  ColumnFiltersState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
-import { TDataTeam } from "@/payments/columns"
 import SelectStatusTeam from "../select/SelectStatusTeam";
 import { Fragment } from "react/jsx-runtime";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "../ui/accordion";
 import { GrStatusGood } from "react-icons/gr";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
-import { RiTeamFill } from "react-icons/ri";
-import { useEffect, useState } from "react";
 import { Team } from "@/app/redux/team/team";
+import { ImageTable } from "../icons/Image";
+import MenuTable from "../menu/MenuTable";
+import { useAppDispatch } from "@/app/store";
+import { useState } from "react";
+import ModalDelete from "../modals/ModalDelete";
+import { deleteTeamThunk } from "@/app/redux/team/teamSlice";
+import { Button } from "../ui/button";
+import DirectionIcon from "../icons/DirectionIcon";
+import ModalEditTeam from "./ModalEditTeam";
+import ModalCreateTeam from "./ModalCreateTeam";
+import Card from "../card/Card";
 
-const columnHelper = createColumnHelper<TDataTeam>();
+const columnHelper = createColumnHelper<Team>();
 
 type Props = {
   data: Team[]
+  id: string
 }
 
-function TableTeam({ data }: Props) {
+function TableTeam({ data = [], id }: Props) {
 
-  const [dataTeam, setDataTeam] = useState<TDataTeam[]>([])
+  const dispatch = useAppDispatch()
+  const [isOpenDelete, setIsOpenDelete] = useState(false)
+  const [isOpenEdit, setIsOpenEdit] = useState(false)
+  const [showPlayers, setShowPlayers] = useState("")
+  const [team, setTeam] = useState<Team | null>(null)
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  useEffect(() => {
-    const newTeams = data.map((item) => {
-      return {
-        _id: item._id,
-        teamName: item.teamName,
-        captain: item.captain,
-        status: item.status,
-        createdAt: item.createdAt,
-        players: item.players,
-        image: item.image || ''
-      }
+  const handleSearch = (search: string) => {
+    setColumnFilters([{ id: "name", value: search }])
+  }
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteTeamThunk(id)).then(() => {
+      setIsOpenDelete(false)
     })
-    setDataTeam(newTeams)
-  }, [data])
+  }
+
+  const handleShowPlayers = (id: string) => {
+    setShowPlayers(id === showPlayers ? "" : id)
+  }
 
   const columns = [
-    columnHelper.accessor("image", {
-      id: "image",
-      header: () => (
-        <p className="text-sm font-bold text-white">
-          Imagen
-        </p>
-      ),
-      cell: (info) => (
-        <div>
-          {info.getValue() === "" ? <RiTeamFill className="w-10 h-10 text-white" />
-            : <img src={info.getValue()} alt="team" className="w-10 h-10 rounded-full" />}
-        </div>
-      ),
-    }),
-    columnHelper.accessor("teamName", {
-      id: "teamName",
+    columnHelper.accessor("name", {
+      id: "name",
       header: () => (
         <p className="text-sm font-bold text-white">
           Nombre
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
-        </p>
+        <div className="flex items-center gap-3" >
+          <Button onClick={() => handleShowPlayers(info.row.original._id)} >
+            <DirectionIcon direction="down" />
+          </Button>
+          <ImageTable src={info.row.original.image} alt={info.row.original.name} />
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
       ),
     }),
     columnHelper.accessor("captain", {
@@ -130,87 +137,119 @@ function TableTeam({ data }: Props) {
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
+        <div className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
           <SelectStatusTeam
             _id={info.row.original._id}
             defaultValue={info.row.original.status}
           />
-        </p>
+          <MenuTable
+            onDelete={() => {
+              setTeam(info.row.original)
+              setIsOpenDelete(true)
+            }}
+            onEdit={() => {
+              setTeam(info.row.original)
+              setIsOpenEdit(true)
+            }}
+          />
+        </div>
       ),
     })
   ];
 
   const table = useReactTable({
-    data: dataTeam,
+    data: data,
     columns,
+    state: { columnFilters },
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   })
 
   return (
-    <div className="rounded-lg">
-      <Table className=" bg-[#111827]" >
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow className="bg-primary/10" key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody  >
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <Fragment key={row.id} >
-                <TableRow className=" border-none odd:bg-fondo/50 hover:bg-oscuro" >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                <TableRow className="border-none" >
-                  <TableCell className="hover:bg-[#1F2937] px-4 py-0 border-none" colSpan={columns.length} >
-                    <Accordion type="single" collapsible >
-                      <AccordionItem value="item-1" >
-                        <AccordionTrigger>
-                          Integrantes
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="flex flex-wrap gap-5">
-                            {row.original.players.map((player, index) => (
-                              <div key={index} className="w-full p-2 rounded-lg">
-                                <p className="text-sm font-bold text-white">
+    <div className="h-full" >
+
+      {team && <ModalEditTeam
+        data={team}
+        isOpen={isOpenEdit}
+        setIsOpen={setIsOpenEdit}
+      />}
+
+      {team && <ModalDelete
+        isOpen={isOpenDelete}
+        onClose={() => setIsOpenDelete(false)}
+        onSuccess={() => handleDelete(team._id)}
+      />}
+
+      <div className="py-4 flex items-center justify-between" >
+        <input
+          type="search"
+          placeholder="Buscar..."
+          className="bg-three-700 text-white py-2 px-4 rounded-lg outline-none"
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        <ModalCreateTeam id={id} />
+      </div>
+
+      <Card className="p-0 h-full" >
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody  >
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <Fragment key={row.id} >
+                  <TableRow className="border-none bg-three-700 odd:bg-fondo/50 hover:bg-oscuro" >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="hover:bg-[#1F2937] px-4 py-0" colSpan={columns.length} >
+                      <Accordion type="single" collapsible value={showPlayers} >
+                        <AccordionItem className="border-none" value={row.original._id} >
+                          <AccordionContent>
+                            <ul className="flex flex-wrap gap-5">
+                              {row.original.players?.map((player, index) => (
+                                <li key={index} className="w-full text-white text-lg">
                                   {player}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </TableCell>
-                </TableRow>
-              </Fragment>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                                </li>
+                              ))}
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </TableCell>
+                  </TableRow>
+                </Fragment>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-3xl font-bold h-96 text-center">
+                  Sin Equipos Registrados
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   )
 }

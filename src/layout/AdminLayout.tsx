@@ -1,41 +1,67 @@
-import { getMyTournamentThunk } from '@/app/redux/tournament/tournamentSlice'
+import { deleteTournamentThunk, getMyTournamentThunk } from '@/app/redux/tournament/tournamentSlice'
 import { RootState, useAppDispatch } from '@/app/store'
-import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
+import MenuTable from '@/components/menu/MenuTable'
+import ModalDelete from '@/components/modals/ModalDelete'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 
 function AdminLayout() {
 
   const dispatch = useAppDispatch()
   const { myTournaments } = useSelector((state: RootState) => state.tournament)
+  const [tournament, setTournament] = useState("")
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteTournamentThunk(id)).then(() => {
+      setIsOpen(false)
+    })
+  }
 
   useEffect(() => {
     dispatch(getMyTournamentThunk())
   }, [dispatch])
 
-  return <main className='pt-20 grid grid-cols-[auto_1fr] h-screen bg-neutral-800' >
-    <nav className='bg-neutral-800 grid grid-rows-[50px_1fr] w-64' >
-      <div className='flex items-center justify-center' >
-        <Button asChild >
-          <Link to='/torneo/create' >
-            Crear Torneo
-          </Link>
-        </Button>
-      </div>
+  return <main className='pt-20 grid grid-cols-[auto_1fr] h-screen bg-three-800' >
+
+    {tournament && <ModalDelete
+      title='Eliminar Torneo'
+      description='Esta acción no se puede deshacer y se eliminará permanentemente.'
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      onSuccess={() => { handleDelete(tournament) }}
+    />}
+
+    <nav className='bg-three-800 border-r border-three-300/20 grid grid-rows-[50px_1fr] w-72' >
+
       <div>
-        <ul className='flex flex-col ' >
+        <h2 className='text-white text-2xl font-bold text-center' >
+          Dime Legenes
+        </h2>
+      </div>
+
+      <div>
+        <ul className='flex flex-col' >
           {
             myTournaments.map(tournament => (
               <li key={tournament._id} className='px-4' >
                 <NavLink to={`/admin/torneo/${tournament._id}`}
                   className={({ isActive }) =>
-                    isActive ?
-                      'bg-neutral-700 border-l-4 border-rosePrimary px-4 py-2 rounded-lg block font-semibold text-white text-lg' :
-                      'px-4 py-2  block text-neutral-400 text-lg'
+                    `flex items-center border-l-4 justify-between text-lg px-4 py-2 rounded-lg font-semibold capitalize
+                    ${isActive ?
+                      'border-rosePrimary bg-three-700 text-white' :
+                      'border-transparent text-three-400 text-lg'}
+                  `
                   }
                 >
-                  {tournament.name}
+                  <span className='line-clamp-1' >{tournament.name}</span>
+                  <MenuTable 
+                    onDelete={() => {
+                      setTournament(tournament._id)
+                      setIsOpen(true)
+                    }}
+                  />
                 </NavLink>
               </li>
             ))

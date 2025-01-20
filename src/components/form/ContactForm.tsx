@@ -1,9 +1,9 @@
 import { Formik } from "formik"
 import CustomInput from "./CustomInput"
 import { Button } from "../ui/button"
-import CustomTextArea from "./CustomTextArea"
 import { sendContactApi } from "@/app/api/others/othersApi"
 import { CustomToast } from "@/lib/handleToast"
+import InputTextArea from "../input/InputTextArea"
 
 function ContactForm() {
 
@@ -37,7 +37,7 @@ function ContactForm() {
             type="email"
           />
 
-          <CustomTextArea
+          <InputTextArea
             name="message"
             label="Mensaje"
           />

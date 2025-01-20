@@ -164,7 +164,16 @@ export const validateTokenApi = async () => {
 
 export const createPageApi = async (data: PCreatePage) => {
   try {
-    const res = await axios.post("/page", data);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("image", data.image);
+
+    const res = await axios.post("/page", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     const body = res.data;
 
     if (res.status === 200) {

@@ -1,152 +1,155 @@
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import CustomInput from './CustomInput'
-import CustomTextArea from './CustomTextArea'
-import CustomSelect from './CustomSelect'
 import ArrayInput from './ArrayInput'
-import { useDropzone } from 'react-dropzone'
 import { useState } from 'react'
-import { FaImage } from "react-icons/fa";
-import { uploadImageApi } from '@/app/api/upload/uploadApi'
 import { Switch } from '../ui/switch'
 import { useAppDispatch } from '@/app/store'
-import { createTournamentThunk } from '@/app/redux/tournament/tournamentSlice'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
-import { validationBasicTorneo } from '@/lib/validationTorneo'
+import { validationTournament } from '@/lib/validationTorneo'
+import InputDatePicker from '../input/inputDatePicker'
+import InputComboBox from '../input/InputComboBox'
+import { listGames } from '@/payments/games'
+import UploadBanner from './UploadBanner'
+import InputTextArea from '../input/InputTextArea'
+import InputNumber from '../input/InputNumber'
+import { createTournamentThunk } from '@/app/redux/tournament/tournamentSlice'
+
+type StatusForm = "basic" | "modality" | "config"
 
 function CreateTorneoForm() {
 
-  const [banner, setBanner] = useState("")
-  const [imageQr, setImageQr] = useState("")
-  const [isFree, setIsFree] = useState(false)
-  const [isForm, setIsForm] = useState(false)
-  const [nextForm, setNextForm] = useState(0)
-  const [dataForm, setDataForm] = useState({})
+  const [nextForm, setNextForm] = useState<StatusForm>("basic")
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
-  const { getInputProps: getBannerInputProps, getRootProps: getBannerRootProps } = useDropzone({
-    onDrop: async (acceptedFiles) => {
-      const { futuresyo } = await uploadImageApi(acceptedFiles[0])
-      setBanner(futuresyo.data.url)
-    }
-  })
-
-  const { getInputProps: getImageQrInputProps, getRootProps: getImageQrRootProps } = useDropzone({
-    onDrop: async (acceptedFiles) => {
-      const { futuresyo } = await uploadImageApi(acceptedFiles[0])
-      setImageQr(futuresyo.data.url)
-    }
-  })
 
   return (
     <div className='max-w-2xl w-full' >
 
       {/* INFORMACION BASICA DEL TORNEO */}
 
-      {nextForm === 0 && <Formik
+      <Formik
         initialValues={{
           name: '',
           formUrl: '',
+          image: null as null | File,
           dateStart: new Date().toISOString().split('T')[0],
           description: '',
-        }}
-        onSubmit={(values) => {
-          console.log(values)
-          setDataForm({ ...values, image: banner })
-          setNextForm(1)
-        }}
-        validationSchema={validationBasicTorneo}
-      >
-        {({ handleSubmit }) => (
-          <form onSubmit={handleSubmit} >
-            <div className='flex flex-col gap-5 p-10' >
-
-              <h3 className='text-center text-2xl font-semibold' >
-                Crear Torneo
-              </h3>
-
-              <div {...getBannerRootProps()}
-                className='p-5 bg-blue-950/70 float-start items-center justify-center' >
-                <input {...getBannerInputProps()} />
-
-                {
-                  banner ? <img src={banner} alt="banner" className='mx-auto' /> :
-                    <>
-                      <FaImage size={100} className='mx-auto text-info' />
-                      <h3 className='text-center font-semibold text-info' >
-                        Selecciona o arrastra la imagen del banner
-                      </h3>
-                    </>
-                }
-              </div>
-
-              <CustomInput
-                label='Nombre del torneo'
-                name='name'
-                required={true}
-              />
-
-              <CustomTextArea
-                label='Descripción'
-                name='description'
-                required={true}
-              />
-
-              <CustomInput
-                label='Fecha de inicio'
-                name='dateStart'
-                type='date'
-                required={true}
-              />
-
-              <Button variant="form" type='submit' >
-                Siguiente paso
-              </Button>
-
-            </div>
-          </form>
-        )}
-      </Formik>}
-
-      {/* MODALIDAD DEL TORNEO TORNEO */}
-
-      {nextForm === 1 && <Formik
-        initialValues={{
-          game: 'Mobile Legends',
+          game: '',
           modality: [""],
           requirements: [""],
           rules: [""],
           award: [""],
           note: '',
+          minPlayers: 1,
+          maxPlayers: 50,
+          maxTeams: 50,
+          isFree: false,
+          qrImage: null as null | File,
+          amount: 0,
+          account: ''
         }}
-        onSubmit={(values) => {
-          console.log(values)
-          setDataForm({ ...dataForm, ...values })
-          setNextForm(2)
+        onSubmit={({ image, ...rest }, { setSubmitting }) => {
+          const {
+            name,
+            description,
+            game,
+            dateStart,
+            formUrl,
+            account,
+            award,
+            maxPlayers,
+            maxTeams,
+            minPlayers,
+            modality,
+            requirements,
+            amount,
+            qrImage,
+            rules
+          } = rest
+          if (!image) return
+          dispatch(createTournamentThunk({
+            name,
+            description,
+            image,
+            game,
+            dateStart,
+            formUrl,
+            award,
+            modality,
+            requirements,
+            rules,
+            config: {
+              minPlayers,
+              maxPlayers,
+              maxTeams,
+              tipo: "simple",
+              registrationEnd: new Date()
+            },
+            payment: qrImage ? {
+              qrImage,
+              amount,
+              account
+            } : null
+          })).unwrap()
+            .then(() => navigate('/admin'))
+            .finally(() => setSubmitting(false))
+
         }}
+        validationSchema={validationTournament}
       >
-        {({ handleSubmit, values, setFieldValue }) => (
-          <form onSubmit={handleSubmit} >
-            <div className='flex flex-col gap-5 p-10 overflow-y-auto' >
+        {({ isSubmitting, values, setFieldValue }) => (
+          <Form>
+
+            {nextForm === "basic" && <div className='flex flex-col gap-5 p-10' >
 
               <h3 className='text-center text-2xl font-semibold' >
                 Crear Torneo
               </h3>
 
-              <CustomSelect
+              <UploadBanner name='image' />
+
+              <CustomInput
+                label='Nombre del torneo'
+                name='name'
+                placeholder='Ejemplo: Torneo de LOL'
+                required={true}
+              />
+
+              <InputTextArea
+                label='Descripción'
+                name='description'
+                placeholder='Ejemplo: Torneo de LOL para jugadores de nivel 30'
+                required={true}
+              />
+
+              <InputDatePicker
+                label='Fecha de inicio'
+                name='dateStart'
+              />
+
+              <CustomInput
+                label='Enlace de inscripción (opcional)'
+                name='formUrl'
+                placeholder='https://forms.gle/...'
+              />
+
+              <Button variant="form" type='button' onClick={() => setNextForm("modality")} >
+                Siguiente paso
+              </Button>
+
+            </div>}
+
+            {nextForm === "modality" && <div className='flex flex-col gap-5 p-10 overflow-y-auto' >
+
+              <h3 className='text-center text-2xl font-semibold' >
+                Crear Torneo
+              </h3>
+
+              <InputComboBox
+                list={listGames.map((game) => ({ label: game, value: game }))}
                 label='Juego'
                 name='game'
-                list={[
-                  "Mobile Legends",
-                  "Free Fire",
-                  "Valorant",
-                  "League of Legends",
-                  "Clash Royale",
-                  "Call of Duty",
-                ]}
-                setFieldValue={setFieldValue}
-                defaultValue='Mobile Legends'
               />
 
               <ArrayInput
@@ -181,168 +184,97 @@ function CreateTorneoForm() {
                 required={true}
               />
 
-              <CustomTextArea
+              <InputTextArea
                 label='Nota'
                 name='note'
               />
 
               <div className='grid grid-cols-2 gap-10' >
-                <Button variant="ghost" type='button' onClick={() => setNextForm(0)} >
+                <Button variant="ghost" type='button' onClick={() => setNextForm("basic")} >
                   Atras
                 </Button>
 
-                <Button variant="form" type='submit' >
+                <Button variant="form" type='button' onClick={() => setNextForm("config")} >
                   Siguiente paso
                 </Button>
               </div>
 
-            </div>
-          </form>
-        )}
-      </Formik>}
+            </div>}
 
-      {/* CONFIGURACION DEL TORNEO */}
-      {nextForm === 2 && <Formik
-        initialValues={{
-          prize: '',
-          account: '',
-          minPlayers: 1,
-          maxPlayers: 50,
-          maxTeams: 50,
-          isFree: false,
-        }}
-        onSubmit={(values) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const data: any = { ...dataForm, ...values }
-          const config = {
-            minPlayers: values.minPlayers,
-            maxPlayers: values.maxPlayers,
-            maxTeams: values.maxTeams,
-            isFree: values.isFree,
-            tipo: 'normal'
-          }
-          dispatch(createTournamentThunk({
-            name: data.name,
-            formUrl: isForm ? data.formUrl : null,
-            dateStart: data.dateStart,
-            game: data.game,
-            image: banner,
-            prize: isFree ? values.prize : null,
-            imageQr: isFree ? imageQr : null,
-            account: isFree ? values.account : null,
-            description: data.description,
-            modality: data.modality,
-            requirements: data.requirements,
-            rules: data.rules,
-            award: data.award,
-            note: data.note,
-            config
-          })).then(() => navigate('/tournaments'))
-        }}
-      >
-        {({ handleSubmit }) => (
-          <form onSubmit={handleSubmit} >
-            <div className='flex flex-col gap-5 p-10' >
+            {nextForm === "config" && <div className='flex flex-col gap-5 p-10' >
 
               <h3 className='text-center text-2xl font-semibold' >
                 Configuración del torneo
               </h3>
 
               <div className='grid grid-cols-2 gap-5' >
-                <CustomInput
+
+                <InputNumber
                   label='Minimo de jugadores'
                   name='minPlayers'
-                  type='number'
+                  required
                 />
 
-                <CustomInput
+                <InputNumber
                   label='Máximo de jugadores'
                   name='maxPlayers'
-                  type='number'
+                  required
                 />
+
               </div>
 
-              <CustomInput
+              <InputNumber
                 label='Máximo de equipos'
                 name='maxTeams'
-                type='number'
+                required
               />
 
-              <CustomTextArea
-                label='Nota'
-                name='note'
-              />
-
-              <div>
-                <h3 className='text-center text-2xl font-semibold mb-5' >
-                  ¿User otro metodo de registro?
-                </h3>
-                <div className='flex items-center justify-center gap-5' >
-                  <Switch onCheckedChange={() => setIsForm(!isForm)} />
-                  <h3 className=' text-2xl font-semibold' >
-                    {isForm ? 'Si' : 'No'}
-                  </h3>
-                </div>
-              </div>
-
-              {
-                isForm && <CustomInput
-                  label='Link del formulario'
-                  name='formUrl'
-                />
-              }
-
-              <div>
-                <h3 className='text-center text-2xl font-semibold mb-5' >
+              <div className='flex items-center gap-5 justify-between' >
+                <h3 className='text-center text-2xl font-semibold' >
                   ¿El torneo es gratuito?
                 </h3>
                 <div className='flex items-center justify-center gap-5' >
-                  <Switch onCheckedChange={() => setIsFree(!isFree)} />
+                  <Switch onCheckedChange={() => setFieldValue("isFree", !values.isFree)} />
                   <h3 className=' text-2xl font-semibold' >
-                    {isFree ? 'Si' : 'No'}
+                    {values.isFree ? 'No' : 'Si'}
                   </h3>
                 </div>
               </div>
 
               {
-                isFree && <>
+                values.isFree && <>
                   <h3 className='text-center text-2xl font-semibold' >
                     Agregar metodos de pago
                   </h3>
-                  <div {...getImageQrRootProps()}
-                    className='p-5 bg-blue-950/70 float-start items-center justify-center' >
-                    <input {...getImageQrInputProps()} />
-                    {
-                      imageQr ? <img src={imageQr} alt="imageQr" className='mx-auto' /> :
-                        <>
-                          <FaImage size={100} className='mx-auto text-info' />
-                          <h3 className='text-center font-semibold text-info' >
-                            Selecciona o arrastra la imagen del código QR
-                          </h3>
-                        </>
-                    }
-                  </div>
 
-                  <CustomInput
+                  <UploadBanner name='qrImage' />
+
+                  <InputNumber
                     label='Coston de inscripción'
-                    name='prize'
+                    name='amount'
+                    required
                   />
 
                   <CustomInput
-                    label='Cuenta'
+                    label='Nro de cuenta (opcional)'
                     name='account'
                   />
                 </>
               }
 
-              <Button variant="form" type='submit' >
+              <Button variant="ghost" type='button' onClick={() => setNextForm("modality")} >
+                Atras
+              </Button>
+
+              <Button variant="form" type='submit' disabled={isSubmitting} >
                 Crear torneo
               </Button>
 
-            </div>
-          </form>
+            </div>}
+
+          </Form>
         )}
-      </Formik>}
+      </Formik>
     </div>
   )
 }

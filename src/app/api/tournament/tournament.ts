@@ -1,27 +1,30 @@
 export interface Configuration {
-  tipo: string;
   minPlayers: number;
   maxPlayers: number;
   maxTeams: number;
-  isFree: boolean;
+  registrationEnd: Date;
+  tipo: "doble" | "simple";
+}
+
+export interface IPayment {
+  qrImage: File;
+  account: string;
+  amount: number;
 }
 
 export interface PTournament {
   name: string;
-  formUrl: string | null;
+  formUrl: string;
   dateStart: string;
   game: string;
-  image: string;
-  prize: string | null;
-  imageQr: string | null;
-  account: string | null;
+  image: File;
   description: string;
   modality: string[];
   requirements: string[];
   rules: string[];
   award: string[];
-  note: string;
   config: Configuration;
+  payment: IPayment | null;
 }
 
 export interface RGetTournament {

@@ -42,15 +42,13 @@ function UserPage() {
         </div>
 
         {
-          user?.role.name === "User" && <div>
+          user?.page ? <SectionPage /> : <div>
             <h3 className="text-white text-2xl font-semibold text-center mb-5" >
               ¿Quieres ser un creador de torneos?
             </h3>
             <CreatePageModal />
           </div>
         }
-
-        { user?.role.name === "Creator" && <SectionPage />}
 
         <div>
           <Button

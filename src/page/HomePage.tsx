@@ -1,32 +1,35 @@
-import wan_wan from '@/assets/imgs/wan_wan.png'
-import CardCaracteristicas from '@/components/card/CardCaracteristicas'
+import fanny_image from '@/assets/imgs/personajes/fanny.png'
+import personajes_iamge from '@/assets/imgs/personajes/personajes.png'
+import esmeralda from '@/assets/imgs/personajes/esmeralda.png'
+import nana from '@/assets/imgs/personajes/nana.png'
 import { Button } from '@/components/ui/button'
-import { FaRegCalendarPlus } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
-import { TfiCup } from "react-icons/tfi";
-import torneo1 from '@/assets/imgs/torneo1.png'
-import torneo2 from '@/assets/imgs/torneo2.jpeg'
-import torneo3 from '@/assets/imgs/torneo3.png'
-import CardLastTorneo from '@/components/card/CardLastTorneo';
 import Footer from '@/components/ui/Footer';
 import { Link } from 'react-router-dom';
+import CardInfo from '@/components/card/CardInfo';
+import { FaUsers } from 'react-icons/fa'
+import { TfiCup } from 'react-icons/tfi'
+import { RiOrganizationChart } from 'react-icons/ri'
+import CardFormat from '@/components/card/CardFormat'
+import { BankDepositIcon, CompleteIcon, MedalIcon, RegisterIcon } from '@/components/icons/globals';
 
 function HomePage() {
   return (
-    <main>
+    <main className='bg-[##1D023E]' >
 
-      <section className='h-screen grid grid-cols-2 fondo_portada' >
-        <div className='flex flex-col items-center justify-center' >
-          <div>
-            <h1 className='text-8xl text-primary font-bold mb-5' >
-              HELL HEIM
+      <section className='h-screen relative grid grid-cols-2 bg-[#1D023E]' >
+        <div className='absolute' >
+          <img src={personajes_iamge} alt="" className='h-full object-cover object-right' />
+        </div>
+        <div className='flex flex-col items-end justify-center' >
+          <div  >
+            <h1 className='text-8xl font-bold' >
+              <span className='text-gradient' >DIME</span>  <span className='transparent-text' >LEGENDS</span>
             </h1>
-            <p className='text-lg text-zinc-200 mb-5' >
-              Participa en la leyenda de Dime, un mundo de aventuras y misterios.
+            <p className='text-2xl text-white font-semibold mb-5 pl-2' >
+              Participa en la competencia, ¡el trono te espera!
             </p>
             <Button
               size="lg"
-              className='border-2 border-primary text-primary rounded-2xl text-2xl px-8 py-3 h-auto'
               asChild
             >
               <Link to='/torneos' >
@@ -35,99 +38,95 @@ function HomePage() {
             </Button>
           </div>
         </div>
-        <div>
-          <img src={wan_wan} alt="" className='h-full object-cover object-left' />
+        <div className='flex justify-end pt-16' >
+          <img src={fanny_image} alt="" className='object-cover object-left' />
         </div>
       </section>
 
-      <section className='py-20' >
-        <h2 className='text-4xl text-center font-bold mb-5' >
-          ¿Cómo Funciona?
-        </h2>
-        <p className='text-center text-lg text-zinc-200 mb-10' >
-          Dime Legends es una plataforma de torneos online que te permite competir en tus juegos favoritos y ganar premios increíbles. ¡Es fácil y divertido!
-        </p>
-
-        <div className='container mx-auto flex flex-col md:flex-row gap-10' >
-          <CardCaracteristicas
-            title='Organiza tus Torneos'
-            description='Crea y personaliza tus propios torneos con facilidad. Establece reglas, elige los juegos y administra a los participantes desde una interfaz intuitiva.'
-          >
-            <FaRegCalendarPlus className='text-6xl text-primary' />
-          </CardCaracteristicas>
-          <CardCaracteristicas
-            title='Compite en Gran Escala'
-            description='Únete a torneos globales y mide tus habilidades contra jugadores de todo el mundo. Participa en eventos épicos y demuestra que eres el mejor.'
-          >
-            <FaUsers className='text-6xl text-primary' />
-          </CardCaracteristicas>
-          <CardCaracteristicas
-            title='Gana Premios Increíbles'
-            description='Compite por premios emocionantes, desde dinero en efectivo hasta equipo gamer de última generación. ¡Cada torneo es una oportunidad para ganar!'
-          >
-            <TfiCup className='text-6xl text-primary' />
-          </CardCaracteristicas>
-        </div>
-      </section>
-
-      <section className='px-5 py-10' >
-
-        <h2 className='text-4xl text-center font-bold mb-5' >
-          Torneos Anteriores
-        </h2>
-
-        <p className='text-center text-lg text-zinc-200 mb-10' >
-          Descubre los torneos anteriores y los increíbles premios que se han repartido. ¡No te pierdas la oportunidad de ganar en el próximo!
-        </p>
-
-        <div className='grid md:grid-cols-3 max-w-6xl mx-auto flex-col gap-10' >
-          <div className='md:col-span-2' >
-            <CardLastTorneo
-              title='Torneo de Verano'
-              description='¡El torneo de verano ha llegado! Participa y gana premios increíbles en los juegos más populares.'
-              date='12 de Agosto, 2021'
-              image={torneo1}
-            />
+      <div className='section_funtiona' >
+        <section className='pb-20 px-20' >
+          <div className='w-[80vw] mx-auto rounded-3xl overflow-hidden py-10 fondo-gradient' >
+            <h2 className='text-4xl text-center font-semibold pb-10' >
+              COMO FUNCIONA
+            </h2>
+            <div className='container mx-auto flex flex-col md:flex-row md:justify-center gap-10' >
+              <CardInfo
+                icon={FaUsers}
+                title='COMPITE'
+                subtitle='en gran escala'
+                description='Enfréntate a los mejores jugadores y demuestra tu habilidad.'
+              />
+              <CardInfo
+                icon={RiOrganizationChart}
+                title='ORGANIZA'
+                subtitle='tus torneos'
+                description='Crea y gestiona tus propios torneos fácilmente.'
+              />
+              <CardInfo
+                icon={TfiCup}
+                title='GANA'
+                subtitle='premios Increíbles'
+                description='Obtén premios increíbles en cada torneo.'
+              />
+            </div>
           </div>
+        </section>
 
-          <div className='hidden md:block' ></div>
-          <div className='hidden md:block' ></div>
+        <section className='px-5 py-10' >
 
-          <div className='md:col-span-2 md:start-2' >
-            <CardLastTorneo
-              title='Torneo de Invierno'
-              description='¡El torneo de invierno ha llegado! Participa y gana premios increíbles en los juegos más populares.'
-              date='12 de Diciembre, 2021'
-              image={torneo2}
-            />
-          </div>
-
-          <div className='md:col-span-2' >
-            <CardLastTorneo
-              title='Torneo de Primavera'
-              description='¡El torneo de primavera ha llegado! Participa y gana premios increíbles en los juegos más populares.'
-              date='12 de Marzo, 2022'
-              image={torneo3}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className='fondo_participa h-[50vh] flex items-center justify-center' >
-        <div className='container mx-auto text-center py-10' >
-          <h2 className='text-5xl font-bold mb-5' >
-            ¿Listo para Competir?
+          <h2 className='text-4xl text-center font-semibold pb-10' >
+            FORMATO DEL TORNEO
           </h2>
-          <p className='text-xl text-zinc-200 mb-10 max-w-2xl mx-auto' >
+
+          <div className="relative grid grid-cols-4 grid-rows-2 gap-8 items-center">
+            <CardFormat
+              icon={<RegisterIcon />}
+              title='REGISTRATE'
+              description='Regístrate en el torneo que más te guste.'
+            />
+            <CardFormat
+              icon={<BankDepositIcon />}
+              title='DEPOSITA'
+              description='Realiza el depósito correspondiente al torneo.'
+              className='col-start-2 row-start-2'
+            />
+            <CardFormat
+              icon={<CompleteIcon />}
+              title='COMPLETADO'
+              description='¡Listo! Ya estás inscrito en el torneo.'
+              className='col-start-3 row-start-1'
+            />
+            <CardFormat
+              icon={<MedalIcon />}
+              title='GANA & APRENDE'
+              description='Demuestra tus habilidades y aprende de los mejores.'
+              className='col-start-4 row-start-2'
+            />
+          </div>
+
+        </section>
+      </div>
+
+      <section className='section_funtiona h-[80vh] overflow-hidden relative flex items-center justify-center' >
+        <div className='container mx-auto text-center py-10 z-10' >
+          <h2 className='text-5xl font-bold mb-5' >
+            ¿LISTO PARA COMPETIR?
+          </h2>
+          <p className='text-2xl text-zinc-200 mb-10 max-w-3xl mx-auto' >
             ¡Regístrate ahora y comienza a competir en los torneos más emocionantes! Demuestra tus habilidades y gana premios increíbles.
           </p>
-          <Button
-            size="lg"
-            className='bg-white text-fondo hover:bg-primary hover:text-white rounded-2xl text-2xl px-8 py-3 h-auto'
-          >
-            Regístrate
+          <Button className='bg-rosePrimary rounded-2xl text-2xl py-2 px-10 h-auto' >
+            REGISTRATE AHORA
           </Button>
         </div>
+        <img
+          src={esmeralda}
+          className='absolute -left-52 opacity-50 bottom-0 h-3/4 object-cove'
+        />
+        <img
+          src={nana}
+          className='absolute -right-60 -bottom-10 h-3/4 object-cover -rotate-45'
+        />
       </section>
 
       <Footer />

@@ -10,7 +10,7 @@ function NavBar() {
   const { user } = useSelector((state: RootState) => state.auth)
 
   return (
-    <nav className="fixed bg-fondo w-screen py-4" >
+    <nav className="fixed bg-fondo w-screen py-4 z-50" >
       <div className='container mx-auto flex items-center justify-between px-5' >
 
         <h2>
@@ -65,6 +65,9 @@ function NavBar() {
             </li>
             <li>
               <Link to="/torneos" className="">Torneos</Link>
+            </li>
+            <li>
+              <Link to="/sobre-nosotros" className="">Sobre Nosotros</Link>
             </li>
             <li>
               <Link to="/contacto" className="">Contacto</Link>
