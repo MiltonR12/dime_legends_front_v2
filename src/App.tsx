@@ -35,7 +35,7 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
         </Route>
-        <Route path="sobre-nosotros" element={<AboutPage />} />
+        <Route path="sobre-nosotros" element  ={<AboutPage />} />
         <Route path="torneos" element={<TorneoListPage />} />
         <Route path='torneo/:id' element={<TorneoPage />} />
         <Route path='torneo/team/create/:id' element={<CreateTeamPage />} />

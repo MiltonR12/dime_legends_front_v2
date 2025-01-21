@@ -8,9 +8,15 @@ type Props = {
   required?: boolean
   className?: string
   disabled?: boolean
+  variant?: "default" | "outline"
 }
 
-function InputTextArea({ label, name, placeholder, required, className, disabled }: Props) {
+function InputTextArea({ label, name, placeholder, required, className, disabled, variant = "default" }: Props) {
+
+  const variantClasses = {
+    default: "bg-blue-950/50 rounded-lg",
+    outline: "bg-transparent border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed"
+  }
 
   return (
     <div className='flex flex-col gap-2' >
@@ -25,7 +31,12 @@ function InputTextArea({ label, name, placeholder, required, className, disabled
             placeholder={placeholder}
             required={required}
             disabled={disabled}
-            className={cn("px-4 py-2 rounded-lg text-xl bg-blue-950/50 outline-none", className)}
+            className={
+              cn(
+                "px-4 py-2 text-xl  outline-none",
+                variantClasses[variant],
+                className
+              )}
             {...field}
           />
         )}

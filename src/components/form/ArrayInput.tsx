@@ -10,9 +10,10 @@ type Props = {
   values: string[],
   required?: boolean
   disabled?: boolean
+  variant?: "outline" | "primary"
 }
 
-function ArrayInput({ name, label, values, required, placeholder, disabled }: Props) {
+function ArrayInput({ name, label, values, required, placeholder, disabled, variant = "primary" }: Props) {
   return (
     <div>
       <FieldArray
@@ -39,6 +40,7 @@ function ArrayInput({ name, label, values, required, placeholder, disabled }: Pr
                       disabled={disabled}
                       placeholder={placeholder}
                       required={required}
+                      variant={variant}
                     />
                     <Button
                       variant="destructive"

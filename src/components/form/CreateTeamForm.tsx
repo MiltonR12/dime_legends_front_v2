@@ -30,8 +30,8 @@ function CreateTeamForm({ id }: Props) {
           }}
           onSubmit={(values, { setSubmitting }) => {
             const { image, ...rest } = values
-            if (!image) return
             dispatch(createTeamThunk({ ...rest, image, id }))
+              .unwrap()
               .then(() => {
                 setIsSuccess(true)
               })
@@ -49,20 +49,23 @@ function CreateTeamForm({ id }: Props) {
                 label="Nombre del equipo"
                 name="name"
                 disabled={isSubmitting}
+                variant="outline"
               />
               <CustomInput
                 label="Capitan"
                 name="captain"
                 disabled={isSubmitting}
+                variant="outline"
               />
 
               <ArrayInput
                 label="Integrantes"
                 name="players"
                 values={values.players}
+                variant="outline"
               />
               
-              <Button type="submit" variant="form" size="lg" className="mt-10" >
+              <Button type="submit" variant="rose" size="lg" className="mt-10 w-full" disabled={isSubmitting} >
                 {isSubmitting ? 'Enviando...' : 'Registrar equipo'}
               </Button>
             </form>

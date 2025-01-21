@@ -1,30 +1,39 @@
-import Card from './Card'
-
 type Props = {
   title: string
   description: string
-  date: string
+  date: Date
   image: string
+  game: string
 }
 
-function CardLastTorneo({ date, description, image, title }: Props) {
+function CardLastTorneo({ date, description, image, title, game }: Props) {
+
   return (
-    <Card className='max-w-max border-l-4 border-primary' >
-      <div className='flex gap-5 ' >
-        <img src={image} alt="" className='w-48 h-48 object-cover object-left' />
-        <div>
-          <h3 className='text-4xl mb-3 font-bold' >
-            {title}
-          </h3>
-          <p className='text-lg text-zinc-200' >
-            {description}
-          </p>
-          <p className='text-lg text-zinc-200' >
-            {date}
-          </p>
+    <article className="w-[550px] rounded-2xl overflow-hidden shadow-lg" >
+      <div className="relative" >
+        <img src={image} alt={title} className="w-full h-[250px] object-cover" />
+      </div>
+      <div className="flex items-center gap-5 p-3 bg-[#2B0C52]" >
+
+        <div className="p-3 border-2 border-white/60 rounded-3xl" >
+          <div className="flex flex-col text-center items-center" >
+            <p className="text-2xl uppercase" >{date.toLocaleString('es-ES', { month: 'long' })}</p>
+            <span className="text-4xl font-bold" >{date.getDate()}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1 w-full" >
+          <h3 className="text-white capitalize text-2xl" >{title}</h3>
+          <div className="flex justify-between text-white/60" >
+            <p>30/50 Equipos</p>
+            <p>Plataforma - {game}</p>
+          </div>
+          <div className="flex justify-between items-center pt-2 text-white/60" >
+            <p>{description}</p>
+          </div>
         </div>
       </div>
-    </Card>
+    </article>
   )
 }
 

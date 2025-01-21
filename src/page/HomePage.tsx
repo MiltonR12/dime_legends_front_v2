@@ -11,6 +11,11 @@ import { TfiCup } from 'react-icons/tfi'
 import { RiOrganizationChart } from 'react-icons/ri'
 import CardFormat from '@/components/card/CardFormat'
 import { BankDepositIcon, CompleteIcon, MedalIcon, RegisterIcon } from '@/components/icons/globals';
+import CardLastTorneo from '@/components/card/CardLastTorneo'
+import banner1 from '@/assets/imgs/banner/pausa.png'
+import banner2 from '@/assets/imgs/banner/sabado.png'
+import banner3 from '@/assets/imgs/banner/domingo.png'
+import banner4 from '@/assets/imgs/banner/flayer.png'
 
 function HomePage() {
   return (
@@ -106,6 +111,44 @@ function HomePage() {
 
         </section>
       </div>
+
+      <section className='bg-violetPrimary' >
+        <h3 className='text-4xl text-center font-semibold py-10' >
+          TORNEOS ANTERIORES
+        </h3>
+        <div className='flex items-center justify-center' >
+          <div className='grid grid-cols-2 gap-10' >
+            <CardLastTorneo
+              image={banner1}
+              date={new Date()}
+              title='LEYENDS OF EPICS'
+              description='Este es un torneo para los más valientes y fuertes'
+              game='Mobile Legends'
+            />
+            <CardLastTorneo
+              image={banner2}
+              date={new Date()}
+              title='LEGENDS OF THE STORM'
+              description='Se parte de la leyenda y demuestra tus habilidades'
+              game='Mobile Legends'
+            />
+            <CardLastTorneo
+              image={banner3}
+              date={new Date()}
+              title='LA ULTIMA BATALLA'
+              description='Demuestra que eres el mejor en la última batalla'
+              game='Mobile Legends'
+            />
+            <CardLastTorneo
+              image={banner4}
+              date={new Date()}
+              title='STORM LEGENDS'
+              description='Demuestra que eres el mejor en la última batalla'
+              game='Mobile Legends'
+            />
+          </div>
+        </div>
+      </section>
 
       <section className='section_funtiona h-[80vh] overflow-hidden relative flex items-center justify-center' >
         <div className='container mx-auto text-center py-10 z-10' >

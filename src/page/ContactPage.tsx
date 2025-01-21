@@ -1,63 +1,112 @@
-import ContactForm from "@/components/form/ContactForm"
-import logo from '@/assets/imgs/logomandar.png'
-import Redes from "@/components/ui/Redes"
-import { FaDiscord, FaFacebook, FaWhatsapp } from "react-icons/fa"
+import fondo from '@/assets/imgs/fondo/fondo_contacto.jpg'
+import Card from "@/components/card/Card"
+import { MdOutlineMail } from "react-icons/md"
+import { IoLocationOutline } from "react-icons/io5";
+import { Form, Formik } from 'formik';
+import CustomInput from '@/components/form/CustomInput';
+import InputTextArea from '@/components/input/InputTextArea';
+import { Button } from '@/components/ui/button';
+import Footer from '@/components/ui/Footer';
+import { FaDiscord, FaFacebookF, FaWhatsapp } from 'react-icons/fa';
 
 function ContactPage() {
   return (
-    <section className="min-h-dvh w-screen flex items-center justify-center pt-28 px-8 pb-8 fondo_blue" >
-      <div className="grid grid-cols-2 bg-fondo gap-10 rounded-2xl container overflow-hidden" >
-        <div className="p-10" >
-
-          <h3 className="text-7xl font-bold mb-5" >
+    <main className="bg-violetPrimary" >
+      <section className="relative h-[70vh] w-full" >
+        <img src={fondo} alt="" className="object-cover w-full h-full" />
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center" >
+          <h1 className="text-white text-6xl font-semibold" >
             Contacto
-          </h3>
-
-          <p className="text-lg max-w-lg mb-5 text-info" >
-            Si tienes alguna duda, sugerencia o simplemente quieres saludar, no dudes en contactarnos.
-          </p>
-
-          <ContactForm />
-
-          <div className="pt-5" >
-            <h3 className="text-lg font-semibold mb-2" >
-              Mis redes sociales
-            </h3>
-            <ul className="flex gap-5" >
-              <li>
-                <Redes
-                  title="Facebook"
-                  url="https://www.facebook.com/DimeLegendsBolivia"
-                >
-                  <FaFacebook />
-                </Redes>
-              </li>
-              <li>
-                <Redes
-                  title="Whatsapp"
-                  url="https://wa.me/59177777777"
-                >
-                  <FaWhatsapp />
-                </Redes>
-              </li>
-              <li>
-                <Redes
-                  title="Discord"
-                  url="https://discord.gg/dimelegends"
-                >
-                  <FaDiscord />
-                </Redes>
-              </li>
-            </ul>
-          </div>
+          </h1>
         </div>
-        <div className="p-5 fondo_support" >
-          <div className="flex items-end justify-end w-full h-[80vh]" >
-            <img src={logo} alt="" className="max-w-80" />
-          </div>
+      </section>
+
+      <section className="section_funtiona flex justify-center gap-10 py-20" >
+        <div>
+          <Card className="bg-opacity-50 flex flex-col justify-between p-8 h-full rounded-3xl" >
+            <div>
+              <h3 className="text-4xl font-semibold text-white" >
+                INFORMACION <br /> DE CONTACTO
+              </h3>
+              <div className="flex items-center gap-5 pt-5 text-xl text-white/80" >
+                <IoLocationOutline className="text-3xl" />
+                <p>Boliviz, La Paz El Alto</p>
+              </div>
+              <div className="flex items-center gap-5 pt-5 text-xl text-white/80" >
+                <MdOutlineMail className="text-3xl" />
+                <p>miltonaguilar142018@gmail.com</p>
+              </div>
+            </div>
+            <div className='flex gap-5' >
+              <a href='https://www.facebook.com/DimeLegendsBolivia' target='_blank' rel='noreferrer'
+                className='w-12 h-12 text-3xl rounded-xl border border-white/60 p-2 flex items-center justify-center' >
+                <FaFacebookF />
+              </a>
+              <a href='https://chat.whatsapp.com/LgwUb7ngTC5DYfjO5bOSyM' target='_blank' rel='noreferrer'
+                className='w-12 h-12 text-3xl rounded-xl border border-white/60 p-2 flex items-center justify-center' >
+                <FaWhatsapp />
+              </a>
+              <a href='https://discord.gg/hKjwBn7m' target='_blank' rel='noreferrer'
+                className='w-12 h-12 text-3xl rounded-xl border border-white/60 p-2 flex items-center justify-center' >
+                <FaDiscord />
+              </a>
+            </div>
+          </Card>
         </div>
-      </div>
-    </section>
+        <div>
+          <Card className="bg-opacity-50 p-8 rounded-3xl w-[500px]" >
+            <Formik
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                message: ''
+              }}
+              onSubmit={(values) => {
+                console.log(values)
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <h3 className="text-3xl font-semibold text-white pb-5" >
+                    ENVIAR UN MENSAJE
+                  </h3>
+                  <div className='grid grid-cols-2 gap-10' >
+                    <CustomInput
+                      label='Nombre'
+                      name='firstName'
+                      variant='outline'
+                    />
+                    <CustomInput
+                      label='Apellido'
+                      name='lastName'
+                      variant='outline'
+                    />
+                  </div>
+                  <CustomInput
+                    label='Email'
+                    name='email'
+                    type='email'
+                    variant='outline'
+                  />
+                  <InputTextArea
+                    label='Mensaje'
+                    name='message'
+                    variant='outline'
+                  />
+                  <Button type='submit' variant="rose" disabled={isSubmitting} >
+                    Enviar Mensaje
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Card>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
   )
 }
 
