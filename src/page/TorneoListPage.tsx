@@ -15,22 +15,22 @@ function TorneoListPage() {
   }, [dispatch])
 
   return (
-    <main className="pt-20 min-h-screen bg-[#1D023E] pb-20" >
+    <main className="min-h-screen bg-[#1D023E] pb-10" >
 
-      <div className="flex items-center justify-center relative h-96" >
-        <img src={torneos_fondo} alt="torneos" className="max-h-[400px] w-full absolute object-cover" />
+      <div className="flex items-center justify-center relative h-[50vh] md:h-[70vh]" >
+        <img src={torneos_fondo} alt="torneos" className="w-full h-full absolute object-cover" />
         <h2 className="text-white text-7xl font-semibold z-10" >
           TORNEOS
         </h2>
       </div>
 
-      <div className="container" >
+      <div className="px-5 max-w-[1800px] mx-auto" >
 
-        <h2 className="text-white py-8 text-4xl md:text-4xl font-medium" >
+        <h2 className="text-white py-8 text-3xl md:text-4xl font-medium" >
           LISTA DE TORNEOS
         </h2>
 
-        <div className="flex gap-5 flex-wrap" >
+        <div className="grid sm:grid-cols-[repeat(auto-fit,_minmax(450px,1fr))] gap-10" >
           {listTournaments.map((torneo) => (
             <CardTorneo key={torneo._id} torneo={torneo} />
           ))}

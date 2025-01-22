@@ -9,14 +9,14 @@ function AboutPage() {
   return (
     <main className='bg-violetPrimary' >
 
-      <section className='relative h-[80vh] overflow-hidden flex items-center justify-center' >
+      <section className='relative h-[50vh] md:h-[70vh] overflow-hidden flex items-center justify-center' >
         <h3 className='text-white text-7xl z-10 font-semibold' >
           SOBRE NOSOTROS
         </h3>
         <img
           src={about_fondo}
           alt="about_fondo"
-          className='w-full absolute top-0 left-0 z-0 object-cover'
+          className='w-full absolute top-0 left-0 h-full z-0 object-cover'
         />
       </section>
 

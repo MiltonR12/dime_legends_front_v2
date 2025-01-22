@@ -21,26 +21,26 @@ function HomePage() {
   return (
     <main className='bg-[##1D023E]' >
 
-      <section className='h-screen relative grid grid-cols-2 bg-[#1D023E]' >
-        <div className='absolute' >
+      <section className='h-screen overflow-hidden relative grid grid-cols-2 bg-[#1D023E]' >
+        <div className='absolute z-0' >
           <img src={personajes_iamge} alt="" className='h-full object-cover object-right' />
         </div>
-        <div className='flex flex-col items-end justify-center' >
-          <div  >
-            <h1 className='text-8xl font-bold' >
+        <div className='flex flex-col px-5 items-end z-40 justify-center' >
+          <div>
+            <h1 className='text-4xl md:text-8xl font-bold ' >
               <span className='text-gradient' >DIME</span>  <span className='transparent-text' >LEGENDS</span>
             </h1>
-            <p className='text-2xl text-white font-semibold mb-5 pl-2' >
+            <p className='text-2xl text-white font-semibold mb-5 md:pl-2' >
               Participa en la competencia, ¡el trono te espera!
             </p>
-            <Button
-              size="lg"
-              asChild
-            >
-              <Link to='/torneos' >
-                Comenzar
-              </Link>
-            </Button>
+            <Link to='/torneos'
+              className='btn-gradient flex items-center justify-center p-1 rounded-3xl max-w-52 text-2xl' >
+              <span className='bg-violetPrimary w-full h-full rounded-3xl text-center p-1' >
+                <span className='text-gradient' >
+                  VER TORNEOS
+                </span>
+              </span>
+            </Link>
           </div>
         </div>
         <div className='flex justify-end pt-16' >
@@ -49,8 +49,8 @@ function HomePage() {
       </section>
 
       <div className='section_funtiona' >
-        <section className='pb-20 px-20' >
-          <div className='w-[80vw] mx-auto rounded-3xl overflow-hidden py-10 fondo-gradient' >
+        <section className='pb-20 px-5 xl:px-20' >
+          <div className='xl:w-[80vw] mx-auto rounded-3xl overflow-hidden py-10 fondo-gradient' >
             <h2 className='text-4xl text-center font-semibold pb-10' >
               COMO FUNCIONA
             </h2>
@@ -83,7 +83,7 @@ function HomePage() {
             FORMATO DEL TORNEO
           </h2>
 
-          <div className="relative grid grid-cols-4 grid-rows-2 gap-8 items-center">
+          <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-8 items-center">
             <CardFormat
               icon={<RegisterIcon />}
               title='REGISTRATE'
@@ -93,31 +93,31 @@ function HomePage() {
               icon={<BankDepositIcon />}
               title='DEPOSITA'
               description='Realiza el depósito correspondiente al torneo.'
-              className='col-start-2 row-start-2'
+              className='col-start-2 row-start-2 lg:col-start-2 lg:row-start-2'
             />
             <CardFormat
               icon={<CompleteIcon />}
               title='COMPLETADO'
               description='¡Listo! Ya estás inscrito en el torneo.'
-              className='col-start-3 row-start-1'
+              className='col-start-1 row-start-3 lg:col-start-3 lg:row-start-1'
             />
             <CardFormat
               icon={<MedalIcon />}
               title='GANA & APRENDE'
               description='Demuestra tus habilidades y aprende de los mejores.'
-              className='col-start-4 row-start-2'
+              className='col-start-2 row-start-4 lg:col-start-4 lg:row-start-2'
             />
           </div>
 
         </section>
       </div>
 
-      <section className='bg-violetPrimary' >
-        <h3 className='text-4xl text-center font-semibold py-10' >
+      <section className='bg-violetPrimary px-5' >
+        <h3 className='text-3xl md:text-4xl text-center font-semibold py-10' >
           TORNEOS ANTERIORES
         </h3>
         <div className='flex items-center justify-center' >
-          <div className='grid grid-cols-2 gap-10' >
+          <div className='grid lg:grid-cols-2 gap-5 lg:gap-10' >
             <CardLastTorneo
               image={banner1}
               date={new Date()}

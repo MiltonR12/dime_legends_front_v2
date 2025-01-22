@@ -57,8 +57,8 @@ function TorneoPage() {
   const game = ListaGamesImage.find((game) => game.name === tournament.game)
 
   return (
-    <main className="pt-24 pb-10 bg-violetPrimary" >
-      <div className="grid grid-cols-2 container mx-auto gap-20 p-10" >
+    <main className="pt-20 2xl:pt-24 pb-10 bg-violetPrimary" >
+      <div className="grid lg:grid-cols-2 container mx-auto gap-5 lg:gap-20 px-5 lg:p-10" >
         <section>
           <Dialog>
             <DialogTrigger className="h-full rounded-2xl overflow-hidden" >
@@ -115,7 +115,7 @@ function TorneoPage() {
               <div className="w-3 h-3 rounded-full bg-white/50" /> Lorem ipsum dolor sit amet.
             </li>
           </ul>
-          <div className="grid grid-cols-2 gap-10" >
+          <div className="grid sm:grid-cols-2 gap-10" >
             <Card className="grid grid-cols-[1fr_auto_1fr] text-center border-2" >
               <div>
                 <h4 className="text-xl uppercase" >{date.toLocaleString('default', { month: 'long' })}</h4>
@@ -150,15 +150,14 @@ function TorneoPage() {
       </div>
 
       <section className="py-10 flex flex-col gap-10 section_funtiona" >
-        <div className="container" >
+        <div className="container px-20" >
           <h3 className="text-3xl font-semibold text-white pb-10" >
             EQUIPOS INSCRITOS
           </h3>
-
-          <Carousel>
+          <Carousel  >
             <CarouselContent>
               {teams.map((team, index) => (
-                <CarouselItem key={index} className="basis-1/4" >
+                <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 lg:basis-1/4" >
                   <CardTeam team={team} />
                 </CarouselItem>
               ))}

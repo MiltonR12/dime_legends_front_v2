@@ -13,10 +13,10 @@ function CardFormat({ icon, title, description, className }: Props) {
       <div className="bg-[#810EBA] rounded-full p-5" >
         {icon}
       </div>
-      <h3 className='text-2xl font-semibold my-3' >
+      <h3 className='text-2xl text-center font-semibold my-3' >
         {title}
       </h3>
-      <p className='text-center w-64 text-lg leading-5 text-white/80' >
+      <p className='text-center max-w-64 text-lg leading-5 text-white/80' >
         {description}
       </p>
     </div>

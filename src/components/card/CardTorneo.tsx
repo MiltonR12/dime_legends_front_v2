@@ -12,27 +12,27 @@ function CardTorneo({ torneo }: Props) {
   const game = ListaGamesImage.find(game => game.name === torneo.game)
 
   return (
-    <article className="w-[550px] rounded-2xl overflow-hidden shadow-lg" >
+    <article className="rounded-2xl overflow-hidden shadow-lg" >
       <div className="relative" >
-        <img src={torneo.image} alt={torneo.name} className="w-full h-[250px] object-cover" />
+        <img src={torneo.image} alt={torneo.name} className="w-full h-[180px] md:h-[250px] object-cover" />
         <div className="absolute right-2 bottom-2 p-1 bg-rosePrimary rounded-full" >
           <img src={game?.image} alt={game?.name} className="w-20 h-20 rounded-full object-cover" />
         </div>
       </div>
       <div className="flex items-center gap-5 p-3 bg-[#2B0C52]" >
 
-        <div className="p-3 border-2 border-white/60 rounded-3xl" >
+        <div className="p-3 border-2 border-white/60 rounded-2xl md:rounded-3xl" >
           <div className="flex flex-col text-center items-center" >
-            <p className="text-2xl uppercase" >{date.toLocaleString('es-ES', { month: 'long' })}</p>
-            <span className="text-4xl font-bold" >{date.getDate()}</span>
+            <p className="md:text-2xl uppercase" >{date.toLocaleString('es-ES', { month: 'long' })}</p>
+            <span className="text-2xl md:text-4xl font-bold" >{date.getDate()}</span>
           </div>
         </div>
 
         <div className="flex flex-col gap-1 w-full" >
-          <h3 className="text-white capitalize text-2xl" >{torneo.name}</h3>
+          <h3 className="text-white capitalize text-xl line-clamp-1 md:text-2xl" >{torneo.name}</h3>
           <div className="flex justify-between text-white/60" >
-            <p>{torneo.teamsCount}/50 Equipos</p>
-            <p>Plataforma - {torneo.game}</p>
+            <p className="text-sm md:text-base" >{torneo.teamsCount}/50 Equipos</p>
+            <p className="text-sm md:text-base" >Plataforma - {torneo.game}</p>
           </div>
           <div className="flex justify-between items-center pt-2 text-white/60" >
             {torneo.payment ?

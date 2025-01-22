@@ -12,7 +12,8 @@ import { FaDiscord, FaFacebookF, FaWhatsapp } from 'react-icons/fa';
 function ContactPage() {
   return (
     <main className="bg-violetPrimary" >
-      <section className="relative h-[70vh] w-full" >
+      
+      <section className="relative h-[50vh] md:h-[70vh] w-full" >
         <img src={fondo} alt="" className="object-cover w-full h-full" />
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center" >
           <h1 className="text-white text-6xl font-semibold" >
