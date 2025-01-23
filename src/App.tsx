@@ -17,6 +17,7 @@ import TorneoPage from './page/TorneoPage'
 import CreateTeamPage from './page/team/CreateTeamPage'
 import ContactPage from './page/ContactPage'
 import AboutPage from './page/public/about/AboutPage'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />

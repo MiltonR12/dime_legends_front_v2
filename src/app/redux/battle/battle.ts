@@ -1,3 +1,5 @@
+import { Team } from "../team/team";
+
 export interface InitialStateBattle {
   battles: TBattle[];
   isLoading: boolean;
@@ -7,8 +9,8 @@ export interface TBattle {
   _id: string;
   hour: string;
   date: string;
-  teamOne: BattleTeam | null;
-  teamTwo: BattleTeam | null;
+  teamOne: Team | null;
+  teamTwo: Team | null;
   tournament: string;
   round: number;
   nro: number;
@@ -16,12 +18,4 @@ export interface TBattle {
   winner: string;
   status: string;
   note: string;
-}
-
-interface BattleTeam {
-  _id: string;
-  teamName: string;
-  image: string;
-  captain: string;
-  players: string[];
 }

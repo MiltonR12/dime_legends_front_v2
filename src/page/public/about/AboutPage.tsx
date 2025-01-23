@@ -20,12 +20,12 @@ function AboutPage() {
         />
       </section>
 
-      <section className='p-20' >
-        <div className='flex gap-20 items-center mx-auto justify-center' >
-          <div className='flex-shrink-0 w-[500px] h-[500px]' >
-            <img src={equipos} alt="about" className='rounded-full flex-shrink-0 w-[500px] h-[500px]' />
+      <section className='p-5 md:p-20' >
+        <div className='flex flex-col-reverse md:flex-row gap-5 md:gap-20 items-center mx-auto justify-center' >
+          <div className='flex-shrink-0 w-60 h-60 lg:w-[500px] lg:h-[500px]' >
+            <img src={equipos} alt="about" className='rounded-full h-full w-full' />
           </div>
-          <div className='max-w-2xl' >
+          <div className='md:max-w-2xl' >
             <h4 className='text-2xl pb-3' >SOBRE DIME LEGENDS</h4>
             <h3 className='text-4xl uppercase leading-[48px] font-semibold pb-5' >
               Dime Legends es una plataforma de torneos de videojuegos en línea
@@ -38,7 +38,7 @@ function AboutPage() {
             </p>
           </div>
         </div>
-        <div className='grid grid-cols-4 gap-5 container pt-5' >
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-5 container pt-5' >
           <article>
             <h3 className='text-white text-4xl font-semibold text-center' >100</h3>
             <p className='text-white/70 text-center text-lg' >PARTICIPANTES</p>
@@ -58,7 +58,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className='section_funtiona py-10' >
+      <section className='section_funtiona py-10 container' >
         {/* <div className='fondo-gradient max-w-5xl mx-auto rounded-3xl p-5' >
           <h3 className='text-3xl text-center font-semibold pb-5' >
             NUESTROS CREADORES
@@ -86,7 +86,8 @@ function AboutPage() {
           <h3 className='text-4xl text-center font-semibold pb-10' >
             NUESTROS CREDORES
           </h3>
-          <div className='grid grid-cols-3 gap-10 mx-auto max-w-5xl' >
+          <div className='grid grid-cols-[repeat(auto-fit,_minmax(150px,1fr))] 
+          gap-10 md:gap-16 mx-auto max-w-3xl' >
             <CardCreator
               image={logo}
               name='Dime Legends'
