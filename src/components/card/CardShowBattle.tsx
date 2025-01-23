@@ -64,7 +64,7 @@ function CardShowBattle({ battles, teams }: Props) {
                   <TableRow key={battle._id} >
                     <TableCell >
                       <p className={battle.teamOne?._id === battle.winner ? "text-green-500" : ""} >
-                        {battle.teamOne?.teamName || "Sin designar"}
+                        {battle.teamOne?.name || "Sin designar"}
                       </p>
                     </TableCell>
                     <TableCell>
@@ -79,7 +79,7 @@ function CardShowBattle({ battles, teams }: Props) {
                       {battle.hour ? battle.hour : "Sin hora"}
                     </TableCell>
                     <TableCell>
-                      {battle.teamTwo?.teamName || "Sin designar"}
+                      {battle.teamTwo?.name || "Sin designar"}
                     </TableCell>
                   </TableRow>
                 ))}

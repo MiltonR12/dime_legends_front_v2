@@ -41,12 +41,12 @@ export const transformBrackets = (data: TBattle[]): Round[] => {
         teams: [
           {
             id: battle.teamOne?._id || "",
-            name: battle.teamOne?.teamName || "TBD",
+            name: battle.teamOne?.name || "TBD",
             score: battle.teamOne?._id === battle.winner ? 1 : 0,
           },
           {
             id: battle.teamTwo?._id || "",
-            name: battle.teamTwo?.teamName || "TBD",
+            name: battle.teamTwo?.name || "TBD",
             score: battle.teamTwo?._id === battle.winner ? 1 : 0,
           },
         ],
