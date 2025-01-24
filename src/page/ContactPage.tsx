@@ -8,16 +8,28 @@ import InputTextArea from '@/components/input/InputTextArea';
 import { Button } from '@/components/ui/button';
 import Footer from '@/components/ui/Footer';
 import { FaDiscord, FaFacebookF, FaWhatsapp } from 'react-icons/fa';
+import { sendContactApi } from '@/app/api/contact/contactApi';
+import { CustomToast } from '@/lib/handleToast';
+import * as Yup from 'yup';
+
+const validateSchema = Yup.object().shape({
+  firstName: Yup.string().required('Este campo es requerido'),
+  lastName: Yup.string().required('Este campo es requerido'),
+  email: Yup.string().email('Correo invalido').required('Este campo es requerido'),
+  phone: Yup.string().required('Este campo es requerido'),
+  message: Yup.string().required('Este campo es requerido'),
+})
 
 function ContactPage() {
+
   return (
     <main className="bg-violetPrimary" >
-      
-      <section className="relative h-[50vh] md:h-[70vh] w-full" >
+
+      <section className="relative h-[40vh] sm:h-[50vh] md:h-[70vh] w-full" >
         <img src={fondo} alt="" className="object-cover w-full h-full" />
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center" >
-          <h1 className="text-white text-6xl font-semibold" >
-            Contacto
+          <h1 className="text-white text-3xl md:text-6xl font-semibold" >
+            CONTACTO
           </h1>
         </div>
       </section>
@@ -64,9 +76,22 @@ function ContactPage() {
                 phone: '',
                 message: ''
               }}
-              onSubmit={(values) => {
-                console.log(values)
+              onSubmit={({ email, firstName, lastName, message, phone }, { setSubmitting, resetForm }) => {
+                sendContactApi({
+                  email,
+                  message,
+                  phone,
+                  name: `${firstName} ${lastName}`
+                }).then(() => {
+                  CustomToast.success('Mensaje enviado correctamente')
+                }).catch(() => {
+                  CustomToast.error('Error al enviar el mensaje')
+                }).finally(() => {
+                  setSubmitting(false)
+                  resetForm()
+                })
               }}
+              validationSchema={validateSchema}
             >
               {({ isSubmitting }) => (
                 <Form>
@@ -91,12 +116,17 @@ function ContactPage() {
                     type='email'
                     variant='outline'
                   />
+                  <CustomInput
+                    label='Telefono'
+                    name='phone'
+                    variant='outline'
+                  />
                   <InputTextArea
                     label='Mensaje'
                     name='message'
                     variant='outline'
                   />
-                  <Button type='submit' variant="rose" disabled={isSubmitting} >
+                  <Button type='submit' className='mt-2' variant="rose" disabled={isSubmitting} >
                     Enviar Mensaje
                   </Button>
                 </Form>

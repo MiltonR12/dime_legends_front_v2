@@ -2,7 +2,6 @@ import fanny_image from '@/assets/imgs/personajes/fanny.png'
 import personajes_iamge from '@/assets/imgs/personajes/personajes.png'
 import esmeralda from '@/assets/imgs/personajes/esmeralda.png'
 import nana from '@/assets/imgs/personajes/nana.png'
-import { Button } from '@/components/ui/button'
 import Footer from '@/components/ui/Footer';
 import { Link } from 'react-router-dom';
 import CardInfo from '@/components/card/CardInfo';
@@ -158,9 +157,16 @@ function HomePage() {
           <p className='text-2xl text-zinc-200 mb-10 max-w-3xl mx-auto' >
             ¡Regístrate ahora y comienza a competir en los torneos más emocionantes! Demuestra tus habilidades y gana premios increíbles.
           </p>
-          <Button className='bg-rosePrimary rounded-2xl text-2xl py-2 px-10 h-auto' >
-            REGISTRATE AHORA
-          </Button>
+          <div className='flex justify-center' >
+            <Link to='/torneos'
+              className='btn-gradient flex items-center justify-center p-1 rounded-3xl max-w-72 w-full text-2xl' >
+              <span className='bg-violetPrimary w-full h-full rounded-3xl text-center p-2' >
+                <span className='text-gradient' >
+                  VER TORNEOS
+                </span>
+              </span>
+            </Link>
+          </div>
         </div>
         <img
           src={esmeralda}

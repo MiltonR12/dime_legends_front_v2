@@ -26,6 +26,8 @@ module.exports = {
         fondo: "#000217",
         oscuro: "#111827",
         violetPrimary: "#1D023E",
+        violetSecondary: "#2B044A",
+        violetTertiary: "#2B0C52",
         three: {
           100: "#FFFFFF",
           200: "#D9E1FA",

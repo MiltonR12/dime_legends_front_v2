@@ -1,5 +1,7 @@
 import { Field, ErrorMessage } from 'formik'
 import { cn } from '@/lib/utils'
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from 'react';
 
 interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   label: string
@@ -8,22 +10,24 @@ interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   placeholder?: string
   disabled?: boolean
   required?: boolean
-  variant?: "primary" | "error" | "success" | "warning" | "outline"
+  variant?: "default" | "error" | "success" | "warning" | "outline"
 }
 
-function CustomInput({ 
-  label, 
-  name, 
-  placeholder, 
-  className, 
-  required, 
-  type = "text", 
-  variant = "primary", 
-  ...args 
+function CustomInput({
+  label,
+  name,
+  placeholder,
+  className,
+  required,
+  type = "text",
+  variant = "default",
+  ...args
 }: Props) {
 
+  const [isVisible, setIsVisible] = useState(false)
+
   const variantClasses = {
-    primary: "bg-blue-950/50 rounded-lg border-blue-500 focus:ring-blue-500",
+    default: "bg-blue-950/50 rounded-lg border-blue-500 focus:ring-blue-500",
     error: "bg-red-50 border-red-500 focus:ring-red-500",
     success: "bg-green-50 border-green-500 focus:ring-green-500",
     warning: "bg-yellow-50 border-yellow-500 focus:ring-yellow-500",
@@ -35,19 +39,30 @@ function CustomInput({
       <label htmlFor={name} className="font-semibold text-xl">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      <Field
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        required={required}
-        className={cn(
-          "px-4 py-2 text-xl outline-none transition-all",
-          variantClasses[variant],
-          className
+      <div className="relative">
+        <Field
+          id={name}
+          name={name}
+          type={type === "password" ? (isVisible ? "text" : "password") : type}
+          placeholder={placeholder}
+          required={required}
+          className={cn(
+            "px-4 py-2 text-xl w-full outline-none transition-all",
+            variantClasses[variant],
+            className
+          )}
+          {...args}
+        />
+        {type === "password" && (
+          <button
+            type="button"
+            onClick={() => setIsVisible(!isVisible)}
+            className="absolute top-1/2 transform right-5 -translate-y-1/2"
+          >
+            {isVisible ? <FaEyeSlash className="text-xl" /> : <FaEye className="text-xl" />}
+          </button>
         )}
-        {...args}
-      />
+      </div>
       <div className="h-5">
         <ErrorMessage name={name}>
           {msg => <span className="text-red-500">{msg}</span>}

@@ -1,6 +1,5 @@
 import axios from '@/lib/axios'
-import { PSendContact } from './others';
-
+import { PSendContact } from './contact';
 
 export const sendContactApi = async (data: PSendContact) => {
   try {

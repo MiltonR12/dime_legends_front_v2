@@ -17,7 +17,7 @@ function TorneoListPage() {
   return (
     <main className="min-h-screen bg-[#1D023E] pb-10" >
 
-      <div className="flex items-center justify-center relative h-[50vh] md:h-[70vh]" >
+      <div className="flex items-center justify-center relative h-[40vh] sm:h-[50vh] md:h-[70vh]" >
         <img src={torneos_fondo} alt="torneos" className="w-full h-full absolute object-cover" />
         <h2 className="text-white text-7xl font-semibold z-10" >
           TORNEOS

@@ -1,6 +1,6 @@
 import { getBattlesThunk } from "@/app/redux/battle/battleSlice"
 import { getTeamByTournamentThunk } from "@/app/redux/team/teamSlice"
-import { getTournamentIdThunk } from "@/app/redux/tournament/tournamentSlice"
+import { getListTournamentThunk, getTournamentIdThunk } from "@/app/redux/tournament/tournamentSlice"
 import { RootState, useAppDispatch } from "@/app/store"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
@@ -29,14 +29,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ListaGamesImage } from "@/payments/games"
 import CardTeam from "@/components/card/CardTeam"
 import CardBattle from "@/components/card/CardBattle"
+import CardTorneo from "@/components/card/CardTorneo"
 
 function TorneoPage() {
 
-  const { tournament } = useSelector((state: RootState) => state.tournament)
+  const { tournament, listTournaments } = useSelector((state: RootState) => state.tournament)
   const { teams } = useSelector((state: RootState) => state.team)
   const { battles } = useSelector((state: RootState) => state.battle)
   const { id } = useParams()
   const dispatch = useAppDispatch()
+
+  console.log(teams)
+
+  useEffect(() => {
+    dispatch(getListTournamentThunk())
+  }, [dispatch])
 
   useEffect(() => {
     if (id) {
@@ -172,6 +179,19 @@ function TorneoPage() {
                 />
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="container px-5" >
+          <h3 className="text-xl md:text-3xl font-semibold text-white pb-10" >
+            TORNEOS RELACIONADOS
+          </h3>
+          <div className="grid sm:grid-cols-2 gap-10" >
+            {listTournaments.slice(0, 2).map((torneo) => (
+              <CardTorneo key={torneo._id} torneo={torneo} />
+            ))}
           </div>
         </div>
       </section>

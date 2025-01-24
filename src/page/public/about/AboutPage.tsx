@@ -4,13 +4,17 @@ import CardCreator from '@/components/card/CardCreator'
 import logo from '@/assets/imgs/logos/logomandar.png'
 import deathlex from '@/assets/imgs/logos/deathlex.png'
 import Footer from '@/components/ui/Footer'
+import reviews from '@/assets/data/reviews.json'
+import CardReview from '@/components/card/CardReview'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import avatar from '@/assets/imgs/personajes/equipos.png'
 
 function AboutPage() {
   return (
     <main className='bg-violetPrimary' >
 
-      <section className='relative h-[50vh] md:h-[70vh] overflow-hidden flex items-center justify-center' >
-        <h3 className='text-white text-7xl z-10 font-semibold' >
+      <section className='relative h-[40vh] sm:h-[50vh] md:h-[70vh] overflow-hidden flex items-center justify-center' >
+        <h3 className='text-white text-3xl md:text-6xl z-10 font-semibold' >
           SOBRE NOSOTROS
         </h3>
         <img
@@ -123,7 +127,35 @@ function AboutPage() {
 
       </section>
 
-      <section></section>
+      <section className='bg-[#18082E]' >
+        <div className='container py-10' >
+          <h3 className='text-4xl text-center font-semibold pb-10' >
+            TESTIMONIOS
+          </h3>
+
+          <div className='px-8' >
+            <Carousel>
+              <CarouselContent>
+                {
+                  reviews.map((review, index) => (
+                    <CarouselItem key={index} className='sm:basis-1/2' >
+                      <CardReview
+                        image={avatar}
+                        comment={review.comment}
+                        name={review.name}
+                        punctuation={review.punctuation}
+                      />
+                    </CarouselItem>
+                  ))
+                }
+              </CarouselContent>
+              <CarouselPrevious className='bg-transparent' />
+              <CarouselNext className='bg-transparent' />
+            </Carousel>
+          </div>
+
+        </div>
+      </section>
 
       <Footer />
 

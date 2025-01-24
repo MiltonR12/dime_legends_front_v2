@@ -1,24 +1,27 @@
 import Redes from "./Redes"
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaFacebookF } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
+import { Button } from "./button";
 
 function Footer() {
   return (
     <footer className="py-5 px-3 bg-[#18082E]" >
       <div className="container " >
-        <div className="grid grid-cols-3 gap-10" >
-          <div className="max-w-72" >
-            <h3 className="text-4xl font-semibold pb-5" >
+        <div className="grid sm:grid-cols-3 gap-10" >
+
+          <div className="sm:max-w-72" >
+            <h3 className="text-2xl sm:text-4xl font-semibold pb-5" >
               DIME LEGENDS
             </h3>
             <p className="text-white/60" >
               Participa en la leyenda de Dime, un mundo de aventuras y misterios.
             </p>
           </div>
+
           <div>
             <h3 className="mb-3 text-2xl font-semibold" >
-              Redes Sociales
+              Enlaces
             </h3>
             <ul>
               <li>
@@ -47,27 +50,28 @@ function Footer() {
               </li>
             </ul>
           </div>
+
           <div>
-            <h3>
-              Menu
+            <h3 className="mb-3 text-2xl font-semibold" >
+              Comunidad
             </h3>
-            <ul>
-              <li>
-                <a href='#'>
-                  Inicio
+            <div className='flex gap-5' >
+              <Button asChild variant="redes" size="icon" >
+                <a href='https://www.facebook.com/DimeLegendsBolivia' target='_blank' rel='noreferrer' >
+                  <FaFacebookF />
                 </a>
-              </li>
-              <li>
-                <a href='#'>
-                  Torneos
+              </Button>
+              <Button asChild variant="redes" size="icon" >
+                <a href='https://chat.whatsapp.com/LgwUb7ngTC5DYfjO5bOSyM' target='_blank' rel='noreferrer' >
+                  <FaWhatsapp />
                 </a>
-              </li>
-              <li>
-                <a href='#'>
-                  Contacto
+              </Button>
+              <Button asChild variant="redes" size="icon" >
+                <a href='https://discord.gg/hKjwBn7m' target='_blank' rel='noreferrer' >
+                  <FaDiscord />
                 </a>
-              </li>
-            </ul>
+              </Button>
+            </div>
           </div>
         </div>
         <div>

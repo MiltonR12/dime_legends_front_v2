@@ -35,7 +35,7 @@ export const getTournamentIdThunk = createAsyncThunk(
 );
 
 export const getListTournamentThunk = createAsyncThunk(
-  "tournament/getTournament",
+  "tournament/getListTournament",
   async (_, { rejectWithValue }) => {
     try {
       const { data, success, message } = await getListTournamentApi();
