@@ -11,7 +11,7 @@ type Props = {
 
 function InputDatePicker({ label, name, required, className }: Props) {
 
-  const [_, meta, helpers] = useField<Date | undefined>(name)
+  const [, meta, helpers] = useField<Date | undefined>(name)
   const { value } = meta
   const { setValue } = helpers
 

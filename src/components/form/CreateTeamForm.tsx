@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/app/store"
 import { createTeamThunk } from "@/app/redux/team/teamSlice"
 import { TournamentOne } from "@/app/redux/tournament/tournament"
 import UploadField from "./UploadField"
+import InputPhone from "../input/InputPhone"
 
 type PageForm = "payment" | "register" | "success"
 
@@ -93,7 +94,7 @@ function CreateTeamForm({ id, torneo }: Props) {
                 variant="outline"
               />
 
-              <CustomInput
+              <InputPhone
                 label="Telefono"
                 name="phone"
                 disabled={isSubmitting}
