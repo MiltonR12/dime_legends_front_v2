@@ -26,14 +26,12 @@ function CreateTorneoForm() {
   return (
     <div className='max-w-2xl w-full' >
 
-      {/* INFORMACION BASICA DEL TORNEO */}
-
       <Formik
         initialValues={{
           name: '',
           formUrl: '',
           image: null as null | File,
-          dateStart: new Date().toISOString().split('T')[0],
+          dateStart: new Date(),
           description: '',
           game: '',
           modality: [""],
@@ -73,7 +71,7 @@ function CreateTorneoForm() {
             description,
             image,
             game,
-            dateStart,
+            dateStart: dateStart.toISOString(),
             formUrl,
             award,
             modality,
@@ -94,7 +92,6 @@ function CreateTorneoForm() {
           })).unwrap()
             .then(() => navigate('/admin'))
             .finally(() => setSubmitting(false))
-
         }}
         validationSchema={validationTournament}
       >

@@ -35,6 +35,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { FaFileInvoiceDollar } from "react-icons/fa";
+import { CustomToast } from "@/lib/handleToast";
 
 const columnHelper = createColumnHelper<Team>();
 
@@ -51,6 +52,12 @@ function TableTeam({ data = [], id }: Props) {
   const [showPlayers, setShowPlayers] = useState("")
   const [team, setTeam] = useState<Team | null>(null)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  const copyPhone = (phone: string) => {
+    navigator.clipboard.writeText(phone).then(() => {
+      CustomToast.info("Teléfono copiado")
+    })
+  }
 
   const handleSearch = (search: string) => {
     setColumnFilters([{ id: "name", value: search }])
@@ -90,13 +97,26 @@ function TableTeam({ data = [], id }: Props) {
       id: "captain",
       header: () => (
         <p className="text-sm font-bold text-white">
-          Título
+          Capitán
         </p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
           {info.getValue()}
         </p>
+      ),
+    }),
+    columnHelper.accessor("phone", {
+      id: "phone",
+      header: () => (
+        <p className="text-sm font-bold text-white">
+          Teléfono
+        </p>
+      ),
+      cell: (info) => (
+        <Button size="none" onClick={() => copyPhone(info.getValue())} >
+          {info.getValue()}
+        </Button>
       ),
     }),
     columnHelper.accessor("status", {

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import HomePage from './page/HomePage'
 import NavBar from './components/ui/NavBar'
 import AuthLayout from './layout/AuthLayout'
@@ -18,6 +18,7 @@ import CreateTeamPage from './page/team/CreateTeamPage'
 import ContactPage from './page/ContactPage'
 import AboutPage from './page/public/about/AboutPage'
 import ScrollToTop from './components/ScrollToTop'
+import NotFoundPage from './page/public/not-found/NotFoundPage'
 
 function App() {
 
@@ -49,8 +50,7 @@ function App() {
           </Route>
           <Route path="torneo/create" element={<CreateTorneoPage />} />
         </Route>
-        <Route path="404" element={<h1>404 Not Found</h1>} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   )

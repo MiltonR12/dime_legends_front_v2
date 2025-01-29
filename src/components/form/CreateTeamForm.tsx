@@ -10,7 +10,6 @@ import { useAppDispatch } from "@/app/store"
 import { createTeamThunk } from "@/app/redux/team/teamSlice"
 import { TournamentOne } from "@/app/redux/tournament/tournament"
 import UploadField from "./UploadField"
-import { CustomToast } from "@/lib/handleToast"
 
 type PageForm = "payment" | "register" | "success"
 
@@ -30,6 +29,7 @@ function CreateTeamForm({ id, torneo }: Props) {
         initialValues={{
           name: '',
           captain: '',
+          phone: '',
           image: null as File | null,
           voucher: null as File | null,
           players: ['']
@@ -66,13 +66,10 @@ function CreateTeamForm({ id, torneo }: Props) {
                 </div>
                 <div className="flex flex-col items-center justify-center gap-5" >
                   <UploadField name="voucher" className="w-96" />
-                  <Button variant="rose" type="button" className="w-full" onClick={() => {
-                    if (values.voucher) {
-                      setPage("register")
-                    } else {
-                      CustomToast.error("Debe subir el comprobante de pago")
-                    }
-                  }} >
+                  <Button
+                    disabled={!values.voucher || isSubmitting}
+                    variant="rose" type="button"
+                    className="w-full" onClick={() => setPage("register")} >
                     Siguiente
                   </Button>
                 </div>
@@ -88,9 +85,17 @@ function CreateTeamForm({ id, torneo }: Props) {
                 disabled={isSubmitting}
                 variant="outline"
               />
+
               <CustomInput
                 label="Capitan"
                 name="captain"
+                disabled={isSubmitting}
+                variant="outline"
+              />
+
+              <CustomInput
+                label="Telefono"
+                name="phone"
                 disabled={isSubmitting}
                 variant="outline"
               />

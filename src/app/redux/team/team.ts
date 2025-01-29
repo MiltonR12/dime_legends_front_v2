@@ -10,6 +10,7 @@ export interface Team {
   tournament: string
   name: string
   captain: string
+  phone: string
   players: string[]
   image: null
   status: string

@@ -58,6 +58,7 @@ function ModalCreateTeam({ id }: Props) {
             initialValues={{
               name: "",
               captain: "",
+              phone: "",
               image: null as null | File,
               players: [""]
             }}
@@ -82,6 +83,12 @@ function ModalCreateTeam({ id }: Props) {
                 <CustomInput
                   label="Nombre del equipo"
                   name="name"
+                  disabled={isSubmitting}
+                />
+
+                <CustomInput
+                  label="Telefono"
+                  name="phone"
                   disabled={isSubmitting}
                 />
 

@@ -46,6 +46,7 @@ export const createTeamApi = async (data: PCreateTeam) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("captain", data.captain);
+    formData.append("phone", data.phone);
     if (data.image) {
       formData.append("image", data.image);
     }

@@ -1,6 +1,7 @@
 export interface PCreateTeam {
   name: string;
   captain: string;
+  phone: string;
   image: File | null;
   voucher: File | null;
   players: string[];

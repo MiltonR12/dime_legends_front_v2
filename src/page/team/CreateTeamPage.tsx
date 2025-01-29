@@ -29,7 +29,7 @@ function CreateTeamPage() {
 
   return (
     <main className="pt-24 pb-10 min-h-screen flex items-center overflow-hidden justify-center section_funtiona relative" >
-      <Card className="bg-transparent w-full  border-none z-10" >
+      <Card className="bg-transparent w-full border-none z-10" >
         <h1 className="text-white font-semibold mb-5 text-3xl text-center" >
           Registrar equipo
         </h1>
