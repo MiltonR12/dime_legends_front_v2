@@ -133,10 +133,18 @@ export const createTournamentApi = async (tournament: PTournament) => {
     formData.append("game", tournament.game);
     formData.append("dateStart", tournament.dateStart);
     formData.append("formUrl", tournament.formUrl);
-    formData.append("award", JSON.stringify(tournament.award));
-    formData.append("modality", JSON.stringify(tournament.modality));
-    formData.append("requirements", JSON.stringify(tournament.requirements));
-    formData.append("rules", JSON.stringify(tournament.rules));
+    tournament.award.forEach(item => {
+      formData.append("award", item);
+    });
+    tournament.requirements.forEach(item => {
+      formData.append("requirements", item);
+    });
+    tournament.modality.forEach(item => {
+      formData.append("modality", item);
+    });
+    tournament.rules.forEach(item => {
+      formData.append("rules", item);
+    });
     formData.append("image", tournament.image);
 
     // COnfiguration
@@ -150,12 +158,12 @@ export const createTournamentApi = async (tournament: PTournament) => {
     // Payment
 
     if (tournament.payment && tournament.payment.qrImage) {
-      formData.append("qrImage", tournament.payment.qrImage);
+      formData.append("qr", tournament.payment.qrImage);
       formData.append("account", tournament.payment.account);
       formData.append("amount", tournament.payment.amount.toString());
     }
 
-    const res = await axios.post("/tournament", tournament, {
+    const res = await axios.post("/tournament", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -131,7 +131,7 @@ const TournamentSlice = createSlice({
       })
       .addCase(getTournamentIdThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.tournament = action.payload;
+        state.tournament = action.payload as any;
       })
       .addCase(getTournamentIdThunk.rejected, (state) => {
         state.loading = false;

@@ -2,9 +2,10 @@ import { deleteTournamentThunk, getMyTournamentThunk } from '@/app/redux/tournam
 import { RootState, useAppDispatch } from '@/app/store'
 import MenuTable from '@/components/menu/MenuTable'
 import ModalDelete from '@/components/modals/ModalDelete'
+import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 
 function AdminLayout() {
 
@@ -33,12 +34,19 @@ function AdminLayout() {
       onSuccess={() => { handleDelete(tournament) }}
     />}
 
-    <nav className='bg-three-800 border-r border-three-300/20 grid grid-rows-[50px_1fr] w-72' >
+    <nav className='bg-three-800 border-r border-three-300/20 grid grid-rows-[auto_1fr] w-72' >
 
       <div>
         <h2 className='text-white text-2xl font-bold text-center' >
           Dime Legenes
         </h2>
+        <div className='p-2 px-5' >
+          <Button variant="rose" asChild>
+            <Link to='/torneo/create' className='w-full h-full0' >
+              Crear Nuevo Torneo
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div>
@@ -56,7 +64,7 @@ function AdminLayout() {
                   }
                 >
                   <span className='line-clamp-1' >{tournament.name}</span>
-                  <MenuTable 
+                  <MenuTable
                     onDelete={() => {
                       setTournament(tournament._id)
                       setIsOpen(true)

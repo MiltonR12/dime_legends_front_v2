@@ -52,6 +52,9 @@ export const createTeamApi = async (data: PCreateTeam) => {
     data.players.forEach((player) => {
       formData.append("players", player);
     });
+    if (data.voucher) {
+      formData.append("voucher", data.voucher);
+    }
 
     const res = await axios.post(`/team/${data.id}`, formData, {
       headers: {

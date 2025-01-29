@@ -6,8 +6,10 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 function Card({ children, className, ...args }: Props) {
   return (
-    <div className={cn('bg-violetPrimary border border-white/60 p-5 rounded-xl overflow-hidden',
-      className)} {...args}>
+    <div
+      className={cn('bg-violetPrimary border border-white/60 p-5 rounded-xl overflow-hidden', className)}
+      {...args}
+    >
       {children}
     </div>
   )

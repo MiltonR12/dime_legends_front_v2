@@ -2,6 +2,7 @@ export interface PCreateTeam {
   name: string;
   captain: string;
   image: File | null;
+  voucher: File | null;
   players: string[];
   id: string;
 }

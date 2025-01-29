@@ -64,7 +64,7 @@ function ModalCreateTeam({ id }: Props) {
             onSubmit={(values, { setSubmitting }) => {
               const { image, ...rest } = values
               if (!image) return
-              dispatch(createTeamThunk({ image, id, ...rest, }))
+              dispatch(createTeamThunk({ image, id, voucher: null, ...rest, }))
                 .then(() => {
                   setIsOpen(false)
                 })

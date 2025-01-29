@@ -94,6 +94,7 @@ export interface TournamentOne {
     isFree: boolean;
     registrationEnd: string | null;
   };
+  payment: Payment | null;
   teams: string[];
   battles: string[];
   createdAt: string;

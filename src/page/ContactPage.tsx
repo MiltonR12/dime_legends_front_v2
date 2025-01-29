@@ -34,11 +34,11 @@ function ContactPage() {
         </div>
       </section>
 
-      <section className="section_funtiona flex justify-center gap-10 py-20" >
+      <section className="section_funtiona px-5 flex flex-col-reverse lg:flex-row justify-center gap-10 py-20" >
         <div>
           <Card className="bg-opacity-50 flex flex-col justify-between p-8 h-full rounded-3xl" >
             <div>
-              <h3 className="text-4xl font-semibold text-white" >
+              <h3 className="text-3xl md:text-4xl font-semibold text-white" >
                 INFORMACION <br /> DE CONTACTO
               </h3>
               <div className="flex items-center gap-5 pt-5 text-xl text-white/80" >
@@ -50,7 +50,7 @@ function ContactPage() {
                 <p>miltonaguilar142018@gmail.com</p>
               </div>
             </div>
-            <div className='flex gap-5' >
+            <div className='flex gap-5 pt-5' >
               <a href='https://www.facebook.com/DimeLegendsBolivia' target='_blank' rel='noreferrer'
                 className='w-12 h-12 text-3xl rounded-xl border border-white/60 p-2 flex items-center justify-center' >
                 <FaFacebookF />
@@ -67,7 +67,7 @@ function ContactPage() {
           </Card>
         </div>
         <div>
-          <Card className="bg-opacity-50 p-8 rounded-3xl w-[500px]" >
+          <Card className="bg-opacity-50 p-8 rounded-3xl lg:w-[500px]" >
             <Formik
               initialValues={{
                 firstName: '',
@@ -95,10 +95,10 @@ function ContactPage() {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <h3 className="text-3xl font-semibold text-white pb-5" >
+                  <h3 className="text-2xl md:text-3xl font-semibold text-white pb-5" >
                     ENVIAR UN MENSAJE
                   </h3>
-                  <div className='grid grid-cols-2 gap-10' >
+                  <div className='grid md:grid-cols-2 md:gap-10' >
                     <CustomInput
                       label='Nombre'
                       name='firstName'

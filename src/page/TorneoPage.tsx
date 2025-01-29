@@ -39,8 +39,6 @@ function TorneoPage() {
   const { id } = useParams()
   const dispatch = useAppDispatch()
 
-  console.log(teams)
-
   useEffect(() => {
     dispatch(getListTournamentThunk())
   }, [dispatch])
@@ -92,12 +90,12 @@ function TorneoPage() {
           </Dialog>
 
         </section>
-        <section className="flex flex-col gap-10" >
+        <section className="flex flex-col gap-5" >
           <h3 className="text-white text-6xl font-semibold capitalize" >
             {tournament.name}
           </h3>
           <p className="text-white/80 text-lg" >
-            {tournament.description} Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet reprehenderit possimus est distinctio. Itaque temporibus quasi architecto neque maxime, a doloremque nulla, veniam natus repellendus impedit optio totam tempore rem.
+            {tournament.description}
           </p>
           <h3 className="text-white text-3xl font-medium" >
             Requisitos
@@ -105,7 +103,27 @@ function TorneoPage() {
           <ul className="flex flex-col gap-2" >
             {tournament.requirements.map((req, index) => (
               <li key={index} className="flex items-center gap-2 text-white/80" >
-                <div className="w-3 h-3 rounded-full bg-white/50" /> {req} Lorem ipsum dolor sit amet.
+                <div className="w-3 h-3 rounded-full bg-white/50" /> <span>{req}</span>
+              </li>
+            ))}
+          </ul>
+          <h3 className="text-white text-3xl font-medium" >
+            Premios
+          </h3>
+          <ul className="flex flex-col gap-2" >
+            {tournament.award.map((req, index) => (
+              <li key={index} className="flex items-center gap-2 text-white/80" >
+                <div className="w-3 h-3 rounded-full bg-white/50" /> {req}
+              </li>
+            ))}
+          </ul>
+          <h3 className="text-white text-3xl font-medium" >
+            Reglas
+          </h3>
+          <ul className="flex flex-col gap-2" >
+            {tournament.rules.map((req, index) => (
+              <li key={index} className="flex items-center gap-2 text-white/80" >
+                <div className="w-3 h-3 rounded-full bg-white/50" /> {req}
               </li>
             ))}
           </ul>
@@ -137,7 +155,7 @@ function TorneoPage() {
           </div>
           <Button variant="rose" asChild className="text-lg md:text-2xl md:py-4 h-auto rounded-3xl" >
             <Link to={`/torneo/team/create/${tournament._id}`} >
-              REGISTRATE AHORA
+              {tournament.payment ? `Inscribirme por ${tournament.payment.amount} Bs` : "Inscribite Gratis"}
             </Link>
           </Button>
         </section>

@@ -26,6 +26,16 @@ import ModalEditTeam from "./ModalEditTeam";
 import ModalCreateTeam from "./ModalCreateTeam";
 import Card from "../card/Card";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { FaFileInvoiceDollar } from "react-icons/fa";
+
 const columnHelper = createColumnHelper<Team>();
 
 type Props = {
@@ -152,6 +162,23 @@ function TableTeam({ data = [], id }: Props) {
               setIsOpenEdit(true)
             }}
           />
+          {info.row.original.voucher && <Dialog>
+            <DialogTrigger>
+              <FaFileInvoiceDollar />
+            </DialogTrigger>
+            <DialogContent className="bg-violetPrimary" >
+              <DialogHeader>
+                <DialogTitle className="text-white text-2xl text-center" >
+                  Comprobante de Pago
+                </DialogTitle>
+                <DialogDescription className="hidden" >
+                  This action cannot be undone. This will permanently delete your account
+                  and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <img src={info.row.original.voucher} alt="team" />
+            </DialogContent>
+          </Dialog>}
         </div>
       ),
     })

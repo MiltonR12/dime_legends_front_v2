@@ -21,12 +21,12 @@ function CardTorneo({ torneo }: Props) {
       </div>
       <div className="flex items-center gap-5 p-5 bg-[#2B0C52]" >
 
-        <div className="p-3 border-2 border-white/60 rounded-2xl md:rounded-3xl" >
+        <div className="px-3 py-2 border-2 border-white/60 rounded-2xl md:rounded-3xl" >
           <div className="flex flex-col text-center items-center " >
-            <p className="md:text-2xl font-mono uppercase" >
-              {date.toLocaleString('es-ES', { month: 'long' })}
+            <p className="md:text-2xl font-mono uppercase px-2" >
+              {date.toLocaleString('es-ES', { month: 'short' })}
             </p>
-            <span className="text-2xl md:text-4xl font-bold" >{date.getDate()}</span>
+            <span className="text-2xl md:text-3xl font-bold" >{date.getDate()}</span>
           </div>
         </div>
 
