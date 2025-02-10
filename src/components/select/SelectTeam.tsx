@@ -37,7 +37,7 @@ function SelectTeam({ setValue, value, defaultValue }: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="max-w-[400px] justify-between"
         >
           {value
             ? nameTeams.find((framework) => framework.value === value)?.label

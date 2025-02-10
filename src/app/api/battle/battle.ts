@@ -1,5 +1,4 @@
 export interface PCreateBattle {
-  hour: string;
   date: Date;
   teamOne: string;
   teamTwo: string;
@@ -8,7 +7,6 @@ export interface PCreateBattle {
 
 export interface PUpdateBattle {
   id: string;
-  hour: string;
   date: Date;
   teamOne: string;
   teamTwo: string;

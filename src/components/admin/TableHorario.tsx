@@ -98,25 +98,14 @@ function TableHorario({ data }: Props) {
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
+        <p className="text-sm capitalize font-bold text-navy-700 dark:text-white">
           {new Date(info.getValue()).toLocaleDateString("es", {
-            month: "long",
+            month: "short",
             day: "numeric",
-            weekday: "long",
+            weekday: "short",
+            hour: "numeric",
+            minute: "numeric",
           })}
-        </p>
-      ),
-    }),
-    columnHelper.accessor("hour", {
-      id: "hour",
-      header: () => (
-        <p className="text-sm font-bold text-white">
-          Hora
-        </p>
-      ),
-      cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
         </p>
       ),
     }),

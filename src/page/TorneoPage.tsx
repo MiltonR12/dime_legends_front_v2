@@ -75,7 +75,7 @@ function TorneoPage() {
                 className="h-full object-cover object-left-top "
               />
             </DialogTrigger>
-            <DialogContent className="p-0 overflow-hidden max-w-5xl border-rosePrimary" >
+            <DialogContent className="p-0 w-auto max-w-5xl border-rosePrimary" >
               <DialogHeader className="hidden" >
                 <DialogTitle>Are you absolutely sure?</DialogTitle>
                 <DialogDescription>

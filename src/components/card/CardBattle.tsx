@@ -11,7 +11,7 @@ type Props = {
 function CardBattle({ teamA, teamB, date }: Props) {
 
   return (
-    <div className="text-white border-b-2 p-6 max-w-4xl mx-auto shadow-lg">
+    <div className="text-white border-b-2 p-6 max-w-5xl mx-auto shadow-lg">
 
       <div className="grid grid-cols-3">
         <div className="text-center flex flex-col md:flex-row gap-5 items-center">
