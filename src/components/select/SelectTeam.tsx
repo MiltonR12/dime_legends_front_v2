@@ -37,7 +37,7 @@ function SelectTeam({ setValue, value, defaultValue }: Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="max-w-[400px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? nameTeams.find((framework) => framework.value === value)?.label
@@ -45,14 +45,14 @@ function SelectTeam({ setValue, value, defaultValue }: Props) {
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 ">
-        <Command defaultValue={defaultValue} className="bg-oscuro text-white" >
+      <PopoverContent className="p-0 overflow-hidden">
+        <Command defaultValue={defaultValue} className="bg-oscuro b text-white" >
           <CommandInput placeholder="Buscar equipo" className="h-9 " />
           <CommandList>
             <CommandEmpty>
               No se encontraron equipos
             </CommandEmpty>
-            <CommandGroup defaultValue={defaultValue} className="bg-oscuro text-white" >
+            <CommandGroup defaultValue={defaultValue} className="bg-oscuro overflow-y-scroll text-white" >
               {nameTeams.map((framework) => (
                 <CommandItem
                   className="hover:bg-primary/10"

@@ -12,8 +12,7 @@ import Image from "../ui/Image";
 import { useRef, useState } from "react";
 import ModalDelete from "../modals/ModalDelete";
 import UpdateBattleDialog from "../modals/UpdateBattleDialog";
-import domtoimage from "dom-to-image";
-import { Button } from "../ui/button";
+import ModalShowVersus from "../modals/ModalShowVersus";
 
 const columnHelper = createColumnHelper<TBattle>();
 
@@ -29,20 +28,6 @@ function TableHorario({ data }: Props) {
   const [isOpenedit, setIsOpenedit] = useState(false)
   const rowRef = useRef<HTMLTableRowElement>(null)
   const { id } = useParams()
-
-  const handleCapture = async () => {
-    if (rowRef.current) {
-      try {
-        const dataUrl = await domtoimage.toPng(rowRef.current);
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = `versus.png`;
-        link.click();
-      } catch (error) {
-        console.error('Error al capturar la fila:', error);
-      }
-    }
-  };
 
   const winnerBattle = (data: PWinnerBattle) => {
     dispatch(winnerBattleThunk(data))
@@ -149,9 +134,7 @@ function TableHorario({ data }: Props) {
               setIsOpenedit(true)
             }}
           />
-          <Button onClick={handleCapture} >
-            Capturar
-          </Button>
+          <ModalShowVersus battle={info.row.original} />
         </div>
       ),
     })
