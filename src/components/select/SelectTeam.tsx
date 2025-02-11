@@ -66,6 +66,16 @@ function SelectTeam({ setValue, value, defaultValue }: Props) {
                   {framework.label}
                 </CommandItem>
               ))}
+              <CommandItem
+                className="hover:bg-primary/10"
+                value={""}
+                onSelect={() => {
+                  setValue("")
+                  setOpen(false)
+                }}
+              >
+                {"Sin equipo"}
+              </CommandItem>
             </CommandGroup>
           </CommandList>
         </Command>

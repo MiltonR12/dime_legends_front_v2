@@ -213,7 +213,7 @@ function TableTeam({ data = [], id }: Props) {
   })
 
   return (
-    <div className="h-full" >
+    <div className="h-full grid grid-rows-[auto_1fr] gap-5" >
 
       {team && <ModalEditTeam
         data={team}
@@ -237,7 +237,7 @@ function TableTeam({ data = [], id }: Props) {
         <ModalCreateTeam id={id} />
       </div>
 
-      <Card className="p-0 h-full" >
+      <Card className="p-0 h-full overflow-y-auto" >
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

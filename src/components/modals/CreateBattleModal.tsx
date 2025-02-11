@@ -20,7 +20,7 @@ function CreateBattleModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="text-center text-white font-semibold bg-primary" size="lg" >
+        <Button variant="secondary" size="lg" >
           Crear Versus
         </Button>
       </DialogTrigger>

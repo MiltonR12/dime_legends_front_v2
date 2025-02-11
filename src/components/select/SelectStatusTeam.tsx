@@ -20,7 +20,7 @@ function SelectStatusTeam({ defaultValue, _id }: Props) {
 
   return (
     <Select defaultValue={defaultValue} onValueChange={handleChange} >
-      <SelectTrigger className="w-[180px] border-none text-three-200" >
+      <SelectTrigger className="w-[150px] border-none text-three-200" >
         <SelectValue className=''  />
       </SelectTrigger>
       <SelectContent className='text-three-200 bg-three-800 border-none' >

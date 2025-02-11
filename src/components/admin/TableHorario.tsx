@@ -1,20 +1,21 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { TDataHorario } from "@/payments/columns";
 import CreateBattleModal from "../modals/CreateBattleModal";
 import { TBattle } from "@/app/redux/battle/battle";
-import { useEffect, useState } from "react";
-import { BsMicrosoftTeams } from "react-icons/bs";
 import { useAppDispatch } from "@/app/store";
-import { deleteBattleThunk, generateBattleThunk, winnerBattleThunk } from "@/app/redux/battle/battleSlice";
-import { MdDeleteForever } from "react-icons/md";
-import { Button } from "../ui/button";
+import { deleteBattleThunk, winnerBattleThunk } from "@/app/redux/battle/battleSlice";
 import ShowTeamModal from "../modals/ShowTeamModal";
-import UpdateBattleDialog from "../modals/UpdateBattleDialog";
 import { useParams } from "react-router-dom";
 import { PWinnerBattle } from "@/app/api/battle/battle";
+import MenuTable from "../menu/MenuTable";
+import Image from "../ui/Image";
+import { useRef, useState } from "react";
+import ModalDelete from "../modals/ModalDelete";
+import UpdateBattleDialog from "../modals/UpdateBattleDialog";
+import domtoimage from "dom-to-image";
+import { Button } from "../ui/button";
 
-const columnHelper = createColumnHelper<TDataHorario>();
+const columnHelper = createColumnHelper<TBattle>();
 
 type Props = {
   data: TBattle[]
@@ -22,15 +23,26 @@ type Props = {
 
 function TableHorario({ data }: Props) {
 
-  const [dataBattle, setDataBattle] = useState<TDataHorario[]>([])
   const dispatch = useAppDispatch()
+  const [selectBattle, setSelectBattle] = useState<TBattle | null>(null)
+  const [isOpenDelete, setIsOpenDelete] = useState(false)
+  const [isOpenedit, setIsOpenedit] = useState(false)
+  const rowRef = useRef<HTMLTableRowElement>(null)
   const { id } = useParams()
 
-  const generateBattle = () => {
-    if (id) {
-      dispatch(generateBattleThunk(id))
+  const handleCapture = async () => {
+    if (rowRef.current) {
+      try {
+        const dataUrl = await domtoimage.toPng(rowRef.current);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `versus.png`;
+        link.click();
+      } catch (error) {
+        console.error('Error al capturar la fila:', error);
+      }
     }
-  }
+  };
 
   const winnerBattle = (data: PWinnerBattle) => {
     dispatch(winnerBattleThunk(data))
@@ -40,65 +52,42 @@ function TableHorario({ data }: Props) {
     dispatch(deleteBattleThunk(id))
   }
 
-  useEffect(() => {
-    setDataBattle(data.map((item) => {
-      return {
-        _id: item._id,
-        _idOne: item.teamOne?._id || "",
-        teamOne: item.teamOne?.name || "Sin equipo",
-        imageOne: item.teamOne?.image || "",
-        captainOne: item.teamOne?.captain || "",
-        playersOne: item.teamOne?.players || [],
-        _idTwo: item.teamTwo?._id || "",
-        teamTwo: item.teamTwo?.name || "Sin equipo",
-        imageTwo: item.teamTwo?.image || "",
-        captainTwo: item.teamTwo?.captain || "",
-        playersTwo: item.teamTwo?.players || [],
-        date: item.date,
-        hour: item.hour,
-        round: item.round,
-        nro: item.nro,
-        winner: item.winner
-      }
-    }))
-  }, [data])
-
   const columns = [
     columnHelper.accessor("teamOne", {
       id: "teamOne",
       header: () => (
-        <p className="text-sm font-bold text-white">
+        <p className="text-sm text-center font-bold text-white">
           Equipo 1
         </p>
       ),
-      cell: (info) => (
-        <div className="flex justify-between gap-5 items-center" >
-          {info.row.original.imageOne ? <img src={info.row.original.imageOne} alt="team" className="w-10 h-10 rounded-full" /> : <BsMicrosoftTeams className="w-10 h-10 rounded-full text-primary" />}
-          <Button
-            className={info.row.original.winner === info.row.original._idOne ? "bg-green-500" : ""}
-            onClick={() => winnerBattle({
-              id: info.row.original._id,
-              winner: info.row.original._idOne,
-              tournament: id || ""
-            })} >
-            {info.getValue()}
-          </Button>
-          <ShowTeamModal
-            captain={info.row.original.captainOne}
-            players={info.row.original.playersOne}
-          />
-        </div>
-      ),
+      cell: ({ row, getValue }) => {
+        const team = getValue()
+        return (
+          <div className="font-semibold grid grid-cols-[auto_auto_1fr] gap-5 items-center" >
+            <Image src={team?.image} className="w-10 h-10 rounded-full" />
+            <ShowTeamModal captain={team?.captain || ""} players={team?.players || []} />
+            <button
+              className={row.original.winner === row.original.teamOne?._id ? "text-green-500" : ""}
+              onClick={() => winnerBattle({
+                id: row.original._id,
+                winner: row.original.teamOne?._id || "",
+                tournament: id || ""
+              })} >
+              {team ? team.name : "Sin designar"}
+            </button>
+          </div>
+        )
+      },
     }),
     columnHelper.accessor("date", {
       id: "date",
       header: () => (
-        <p className="text-sm font-bold text-white">
+        <p className="text-sm text-center font-bold text-white">
           Fecha
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm capitalize font-bold text-navy-700 dark:text-white">
+        <p className="text-sm text-center capitalize font-bold text-navy-700 dark:text-white">
           {new Date(info.getValue()).toLocaleDateString("es", {
             month: "short",
             day: "numeric",
@@ -112,26 +101,34 @@ function TableHorario({ data }: Props) {
     columnHelper.accessor("teamTwo", {
       id: "teamTwo",
       header: () => (
-        <p className="text-sm font-bold text-white">
+        <p className="text-sm font-bold text-center text-white">
           Equipo 2
         </p>
       ),
-      cell: (info) => (
-        <div className="font-bold flex justify-between items-center gap-5 select-none">
-          {info.row.original.imageTwo ? <img src={info.row.original.imageTwo} alt="team" className="w-10 h-10 rounded-full" /> : <BsMicrosoftTeams className="w-10 h-10 rounded-full text-secondary" />}
-          <Button
-            className={info.row.original.winner === info.row.original._idTwo ? "bg-green-500" : ""}
-            onClick={() => winnerBattle({
-              id: info.row.original._id,
-              winner: info.row.original._idTwo,
-              tournament: id || ""
-            })}
-          >
-            {info.getValue()}
-          </Button>
-          <ShowTeamModal captain={info.row.original.captainTwo} players={info.row.original.playersTwo} />
-        </div>
-      )
+      cell: ({ getValue, row }) => {
+        const team = getValue()
+        return (
+          <div className="font-semibold grid grid-cols-[1fr_auto_auto] items-center gap-5 select-none">
+            <button
+              className={row.original.winner === team?._id ? "text-green-500" : ""}
+              onClick={() => winnerBattle({
+                id: row.original._id,
+                winner: team?._id || "",
+                tournament: id || ""
+              })}
+            >
+              {team ? team.name : "Sin designar"}
+            </button>
+
+            <ShowTeamModal
+              captain={team?.captain || ""}
+              players={team?.players || []}
+            />
+
+            <Image src={team?.image} className="w-10 h-10 rounded-full" />
+          </div>
+        )
+      }
     }),
     columnHelper.accessor("_id", {
       id: "_id",
@@ -141,43 +138,59 @@ function TableHorario({ data }: Props) {
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
-          <Button className="text-red-500 text-lg" onClick={() => deleteBattle(info.row.original._id)} >
-            <MdDeleteForever />
-          </Button>
-          <UpdateBattleDialog
-            currentDate={new Date(info.row.original.date)}
-            currentHour={info.row.original.hour}
-            currentOne={info.row.original._idOne}
-            currentTwo={info.row.original._idTwo}
-            id={info.row.original._id}
+        <div className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
+          <MenuTable
+            onDelete={() => {
+              setSelectBattle(info.row.original)
+              setIsOpenDelete(true)
+            }}
+            onEdit={() => {
+              setSelectBattle(info.row.original)
+              setIsOpenedit(true)
+            }}
           />
-        </p>
+          <Button onClick={handleCapture} >
+            Capturar
+          </Button>
+        </div>
       ),
     })
   ];
 
   const table = useReactTable({
-    data: dataBattle,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     sortDescFirst: true,
   })
 
   return (
-    <div className="rounded-lg">
-      <div className="bg-fondo" >
+    <div className="rounded-lg h-full grid grid-rows-[auto_1fr] gap-5" >
+
+      {selectBattle && <ModalDelete
+        isOpen={isOpenDelete}
+        onClose={() => setIsOpenDelete(false)}
+        onSuccess={() => deleteBattle(selectBattle._id)}
+        title="Eliminar Versus"
+        description="Esta acción no se puede deshacer y se eliminará permanentemente."
+      />}
+
+      {
+        selectBattle && <UpdateBattleDialog
+          isOpen={isOpenedit}
+          onClose={() => setIsOpenedit(false)}
+          battle={selectBattle}
+        />
+      }
+
+      <div className="bg-fondo flex justify-between" >
         <h1 className="text-2xl font-bold text-white p-5">Horarios</h1>
         <div>
           <CreateBattleModal />
         </div>
-
-        <Button onClick={generateBattle} >
-          Generar Horario
-        </Button>
       </div>
 
-      <Table className=" bg-[#111827]" >
+      <Table className="h-full overflow-y-scroll" >
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow className="bg-primary/10" key={headerGroup.id}>
@@ -199,9 +212,9 @@ function TableHorario({ data }: Props) {
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} className=" border-none odd:bg-fondo/50 hover:bg-oscuro" >
+              <TableRow key={row.id} ref={rowRef} className="border-none odd:bg-fondo/50 hover:bg-oscuro" >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

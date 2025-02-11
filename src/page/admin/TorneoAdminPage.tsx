@@ -30,7 +30,8 @@ function TorneoAdminPage() {
   }
 
   return (
-    <section className="p-5 grid grid-rows-[auto_1fr] h-[calc(100vh-200px)]" >
+    <section className="p-5 overflow-hidden grid grid-rows-[auto_1fr] h-[calc(100vh-100px)]" >
+      
       <div className="flex justify-between items-center p-3 pb-8 rounded-xl" >
         <h3 className="text-3xl capitalize font-bold text-white" >
           {currentTournament.name}
@@ -41,15 +42,16 @@ function TorneoAdminPage() {
           </Link>
         </Button>
       </div>
-      <Tabs defaultValue="teams">
-        <TabsList className="bg-fondo" >
+
+      <Tabs defaultValue="teams" className="flex flex-col gap-0 overflow-hidden " >
+        <TabsList className="bg-fondo py-5 h-auto flex justify-start" >
           <TabsTrigger value="teams">Administrar Equipos</TabsTrigger>
           <TabsTrigger value="gameDate">Administrar Horarios</TabsTrigger>
         </TabsList>
-        <TabsContent value="teams" className="h-full" >
+        <TabsContent value="teams" className="overflow-y-auto h-full mt-0" >
           {isLoading ? <p>Cargando...</p> : id && <TableTeam id={id} data={teams} />}
         </TabsContent>
-        <TabsContent value="gameDate">
+        <TabsContent value="gameDate" className="overflow-y-auto h-full mt-0" >
           <TableHorario data={battles} />
         </TabsContent>
       </Tabs>
