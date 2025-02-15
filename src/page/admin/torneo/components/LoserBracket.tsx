@@ -47,7 +47,6 @@ function LoserBracket() {
       renderSeedComponent={({ seed, seedIndex }) => (
         <CardBracket
           id={seed.id as string}
-          tournament={id as string}
           key={seedIndex}
           position={seedIndex}
           teamOne={{
