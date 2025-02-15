@@ -27,11 +27,15 @@ function InputNumber({ label, name, placeholder, required, className, disabled, 
       </label>
 
       <div className="flex items-center gap-5" >
-        <Button onClick={() => {
-          if (value < max) {
-            setValue(parseInt(value) + 1)
-          }
-        }} >
+        <Button
+          disabled={disabled || value >= max}
+          type="button"
+          className="disabled:opacity-50"
+          onClick={() => {
+            if (value < max) {
+              setValue(parseInt(value) + 1)
+            }
+          }} >
           <span className='text-white text-3xl' >+</span>
         </Button>
         <Field
@@ -49,14 +53,18 @@ function InputNumber({ label, name, placeholder, required, className, disabled, 
           disabled={disabled}
           min={min}
           max={max}
-          className={cn("px-4 py-2 w-28 rounded-lg text-xl text-center bg-blue-950/50 outline-none", className)}
+          className={cn("px-4 py-2 w-16 rounded-lg text-xl text-center bg-transparent outline-none", className)}
           {...args}
         />
-        <Button onClick={() => {
-          if (value > min) {
-            setValue(parseInt(value) - 1)
-          }
-        }} >
+        <Button
+          disabled={disabled || value <= min}
+          type="button"
+          className="disabled:opacity-50"
+          onClick={() => {
+            if (value > min) {
+              setValue(parseInt(value) - 1)
+            }
+          }} >
           <span className='text-white text-3xl' >-</span>
         </Button>
       </div>

@@ -3,10 +3,8 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "
 import CreateBattleModal from "../modals/CreateBattleModal";
 import { TBattle } from "@/app/redux/battle/battle";
 import { useAppDispatch } from "@/app/store";
-import { deleteBattleThunk, winnerBattleThunk } from "@/app/redux/battle/battleSlice";
+import { deleteBattleThunk } from "@/app/redux/battle/battleSlice";
 import ShowTeamModal from "../modals/ShowTeamModal";
-import { useParams } from "react-router-dom";
-import { PWinnerBattle } from "@/app/api/battle/battle";
 import MenuTable from "../menu/MenuTable";
 import Image from "../ui/Image";
 import { useRef, useState } from "react";
@@ -27,11 +25,6 @@ function TableHorario({ data }: Props) {
   const [isOpenDelete, setIsOpenDelete] = useState(false)
   const [isOpenedit, setIsOpenedit] = useState(false)
   const rowRef = useRef<HTMLTableRowElement>(null)
-  const { id } = useParams()
-
-  const winnerBattle = (data: PWinnerBattle) => {
-    dispatch(winnerBattleThunk(data))
-  }
 
   const deleteBattle = (id: string) => {
     dispatch(deleteBattleThunk(id))
@@ -51,15 +44,9 @@ function TableHorario({ data }: Props) {
           <div className="font-semibold grid grid-cols-[auto_auto_1fr] gap-5 items-center" >
             <Image src={team?.image} className="w-10 h-10 rounded-full" />
             <ShowTeamModal captain={team?.captain || ""} players={team?.players || []} />
-            <button
-              className={row.original.winner === row.original.teamOne?._id ? "text-green-500" : ""}
-              onClick={() => winnerBattle({
-                id: row.original._id,
-                winner: row.original.teamOne?._id || "",
-                tournament: id || ""
-              })} >
+            <h3 className={row.original.winner === row.original.teamOne?._id ? "text-green-500" : ""} >
               {team ? team.name : "Sin designar"}
-            </button>
+            </h3>
           </div>
         )
       },
@@ -94,16 +81,9 @@ function TableHorario({ data }: Props) {
         const team = getValue()
         return (
           <div className="font-semibold grid grid-cols-[1fr_auto_auto] items-center gap-5 select-none">
-            <button
-              className={row.original.winner === team?._id ? "text-green-500" : ""}
-              onClick={() => winnerBattle({
-                id: row.original._id,
-                winner: team?._id || "",
-                tournament: id || ""
-              })}
-            >
+            <h3 className={row.original.winner === team?._id ? "text-green-500" : ""} >
               {team ? team.name : "Sin designar"}
-            </button>
+            </h3>
 
             <ShowTeamModal
               captain={team?.captain || ""}
@@ -126,8 +106,8 @@ function TableHorario({ data }: Props) {
         <div className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
           <MenuTable
             onDelete={() => {
-              setSelectBattle(info.row.original)
               setIsOpenDelete(true)
+              setSelectBattle(info.row.original)
             }}
             onEdit={() => {
               setSelectBattle(info.row.original)

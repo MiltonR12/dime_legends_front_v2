@@ -21,7 +21,6 @@ export const getTeamByTournamentApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -133,7 +132,6 @@ export const updateTeamApi = async (data: PUpdateTeam) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -173,7 +171,6 @@ export const updateStatusTeamApi = async (data: PUpdateStatusTeam) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -213,7 +210,6 @@ export const deleteTeamApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {

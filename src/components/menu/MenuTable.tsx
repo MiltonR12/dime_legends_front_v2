@@ -10,9 +10,13 @@ import { FaEllipsisV } from "react-icons/fa"
 type Props = {
   onEdit?: () => void
   onDelete?: () => void
+  options?: {
+    onClick: () => void
+    text: string
+  }[]
 }
 
-function MenuTable({ onEdit, onDelete }: Props) {
+function MenuTable({ onEdit, onDelete, options }: Props) {
   return (
     <Menubar className="p-0 border-none bg-transparent" >
       <MenubarMenu>
@@ -20,6 +24,11 @@ function MenuTable({ onEdit, onDelete }: Props) {
           <FaEllipsisV />
         </MenubarTrigger>
         <MenubarContent className="bg-slate-900 text-white" >
+          {options?.map((option, index) => (
+            <MenubarItem key={index} onClick={option.onClick} >
+              {option.text}
+            </MenubarItem>
+          ))}
           <MenubarItem onClick={onEdit} >
             Editar
           </MenubarItem>

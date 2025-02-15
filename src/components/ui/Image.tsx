@@ -1,23 +1,29 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { IconType } from "react-icons"
 
 type Props = {
   src?: string | null
   className?: string
+  noImage?: string | IconType
 }
 
-function Image({ src, className }: Props) {
+function Image({ src, className, noImage: NoImagen = "CN" }: Props) {
 
   if (src === null) {
     return <Avatar className={cn("w-10 h-10", className)} >
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarFallback>
+        {typeof NoImagen === 'string' ? NoImagen : <NoImagen className="text-gray-400 text-xl" />}
+      </AvatarFallback>
     </Avatar>
   }
 
   return (
     <Avatar className={cn("w-10 h-10", className)} >
       <AvatarImage src={src} />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarFallback>
+        {typeof NoImagen === 'string' ? NoImagen : <NoImagen className="text-gray-400 text-xl" />}
+      </AvatarFallback>
     </Avatar>
   )
 }

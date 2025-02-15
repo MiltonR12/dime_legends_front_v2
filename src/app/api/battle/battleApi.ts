@@ -1,6 +1,45 @@
 import axios from "@/lib/axios";
 import { PCreateBattle, PUpdateBattle, PWinnerBattle } from "./battle";
 
+export const getBracketApi = async (id: string, group: "A" | "B") => {
+  try {
+    const res = await axios.get(`/battle/bracket/${id}/${group}`);
+    const body = res.data;
+
+    if (res.status === 200) {
+      return {
+        success: true,
+        message: body.message,
+        status: body.status,
+        data: body.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: body.message,
+        status: body.status,
+        data: null,
+      };
+    }
+  } catch (err: any) {
+    if (err.response) {
+      return {
+        success: false,
+        message: err.response.data.message,
+        status: err.response.data.status,
+        data: null,
+      };
+    } else {
+      return {
+        success: false,
+        message: err.message || "Opps! Algo salió mal, intente más tarde.",
+        status: "error",
+        data: null,
+      };
+    }
+  }
+}
+
 export const getBattleApi = async (id: string) => {
   try {
     const res = await axios.get(`/battle/${id}`);
@@ -21,7 +60,6 @@ export const getBattleApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -61,7 +99,6 @@ export const generateBattleApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -101,7 +138,6 @@ export const createBattleApi = async (data: PCreateBattle) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -141,7 +177,6 @@ export const updateBattleApi = async ({ id, ...data }: PUpdateBattle) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -166,8 +201,6 @@ export const updateWinnerBattleApi = async (data: PWinnerBattle) => {
     const res = await axios.put(`/battle/winner`, data);
     const body = res.data;
 
-    console.log(body);
-
     if (res.status === 200) {
       return {
         success: true,
@@ -183,7 +216,6 @@ export const updateWinnerBattleApi = async (data: PWinnerBattle) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -223,7 +255,6 @@ export const deleteBattleApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {

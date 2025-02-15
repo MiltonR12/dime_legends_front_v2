@@ -3,6 +3,14 @@ import { Team } from "../team/team";
 export interface InitialStateBattle {
   battles: TBattle[];
   isLoading: boolean;
+  winnerBrackets: {
+    round: number;
+    battles: TBattle[];
+  }[];
+  loserBrackets: {
+    round: number;
+    battles: TBattle[];
+  }[];
 }
 
 export interface TBattle {
@@ -15,7 +23,7 @@ export interface TBattle {
   round: number;
   nro: number;
   group: string;
-  winner: string;
+  winner: string | null;
   status: string;
   note: string;
 }

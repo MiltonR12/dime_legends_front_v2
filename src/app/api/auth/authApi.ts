@@ -32,7 +32,6 @@ export const authLoginApi = async ({ email, password }: PLogin) => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -84,7 +83,6 @@ export const authRegisterApi = async (data: PRegister) => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -136,7 +134,6 @@ export const validateTokenApi = async () => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -197,7 +194,6 @@ export const createPageApi = async (data: PCreatePage) => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {

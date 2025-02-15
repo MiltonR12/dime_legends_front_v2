@@ -8,6 +8,8 @@ import TableTeam from "@/components/admin/TableTeam"
 import TableHorario from "@/components/admin/TableHorario"
 import { getBattlesThunk } from "@/app/redux/battle/battleSlice"
 import { Button } from "@/components/ui/button"
+import WinnerBracket from "./torneo/components/WinnerBracket"
+import LoserBracket from "./torneo/components/LoserBracket"
 
 function TorneoAdminPage() {
 
@@ -47,12 +49,20 @@ function TorneoAdminPage() {
         <TabsList className="bg-fondo py-5 h-auto flex justify-start" >
           <TabsTrigger value="teams">Administrar Equipos</TabsTrigger>
           <TabsTrigger value="gameDate">Administrar Horarios</TabsTrigger>
+          <TabsTrigger value="winner">Bracket Ganador</TabsTrigger>
+          <TabsTrigger value="loser">Bracket Perdedor</TabsTrigger>
         </TabsList>
         <TabsContent value="teams" className="overflow-y-auto h-full mt-0" >
           {isLoading ? <p>Cargando...</p> : id && <TableTeam id={id} data={teams} />}
         </TabsContent>
         <TabsContent value="gameDate" className="overflow-y-auto h-full mt-0" >
           <TableHorario data={battles} />
+        </TabsContent>
+        <TabsContent value="winner" className="overflow-y-auto h-full mt-0" >
+          <WinnerBracket />
+        </TabsContent>
+        <TabsContent value="loser" className="overflow-y-auto h-full mt-0" >
+          <LoserBracket />
         </TabsContent>
       </Tabs>
     </section>

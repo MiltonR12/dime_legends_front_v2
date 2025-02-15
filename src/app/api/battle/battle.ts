@@ -3,6 +3,8 @@ export interface PCreateBattle {
   teamOne: string;
   teamTwo: string;
   tournament: string;
+  round: number;
+  group: string;
 }
 
 export interface PUpdateBattle {
@@ -10,10 +12,11 @@ export interface PUpdateBattle {
   date: Date;
   teamOne: string;
   teamTwo: string;
+  round: number;
+  group: string;
 }
 
 export interface PWinnerBattle {
   id: string;
-  winner: string;
-  tournament: string;
+  winner: string | null;
 }

@@ -35,7 +35,6 @@ export const uploadImageApi = async (file: File) => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {

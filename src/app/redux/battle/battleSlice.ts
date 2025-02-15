@@ -5,6 +5,7 @@ import {
   deleteBattleApi,
   generateBattleApi,
   getBattleApi,
+  getBracketApi,
   updateBattleApi,
   updateWinnerBattleApi,
 } from "@/app/api/battle/battleApi";
@@ -17,7 +18,33 @@ import {
 const initialState: InitialStateBattle = {
   battles: [],
   isLoading: false,
+  loserBrackets: [],
+  winnerBrackets: [],
 };
+
+export const getWinnerBracketThunk = createAsyncThunk(
+  "battle/getWinnerBracket",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { success, message, data } = await getBracketApi(id, "A");
+      return success ? data : rejectWithValue(message);
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const getLoserBracketThunk = createAsyncThunk(
+  "battle/getLoserBracket",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { success, message, data } = await getBracketApi(id, "B");
+      return success ? data : rejectWithValue(message);
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 
 export const createBattleThunk = createAsyncThunk(
   "battle/createBattle",
@@ -81,10 +108,10 @@ export const updateBattleThunk = createAsyncThunk(
 
 export const winnerBattleThunk = createAsyncThunk(
   "battle/winnerBattle",
-  async (datos: PWinnerBattle, { rejectWithValue }) => {
+  async (payload: PWinnerBattle, { rejectWithValue }) => {
     try {
-      const { success, message, data } = await updateWinnerBattleApi(datos);
-      return success ? data : rejectWithValue(message);
+      const { success, message } = await updateWinnerBattleApi(payload);
+      return success ? payload : rejectWithValue(message);
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -158,12 +185,44 @@ const battleSlice = createSlice({
       })
       .addCase(winnerBattleThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        const index = state.battles.findIndex(({ _id }) => _id === payload._id);
+        const index = state.battles.findIndex(({ _id }) => _id === payload.id);
         if (index !== -1) {
           state.battles[index].winner = payload.winner;
         }
+        state.winnerBrackets.map((item) => {
+          const index = item.battles.findIndex(({ _id }) => _id === payload.id);
+          if (index !== -1) {
+            item.battles[index].winner = payload.winner;
+          }
+        });
+        state.loserBrackets.map((item) => {
+          const index = item.battles.findIndex(({ _id }) => _id === payload.id);
+          if (index !== -1) {
+            item.battles[index].winner = payload.winner;
+          }
+        });
       })
       .addCase(winnerBattleThunk.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getWinnerBracketThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getWinnerBracketThunk.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.winnerBrackets = payload;
+      })
+      .addCase(getWinnerBracketThunk.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getLoserBracketThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getLoserBracketThunk.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.loserBrackets = payload;
+      })
+      .addCase(getLoserBracketThunk.rejected, (state) => {
         state.isLoading = false;
       });
   },

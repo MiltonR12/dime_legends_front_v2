@@ -21,7 +21,6 @@ export const sendContactApi = async (data: PSendContact) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {

@@ -1,12 +1,14 @@
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from "../alert-dialog"
 import { Button } from "../ui/button"
 import { Formik } from 'formik'
-import SelectTeam from "../select/SelectTeam"
-import { GiCrossedSwords } from "react-icons/gi"
-import { useAppDispatch } from "@/app/store"
-import { updateBattleThunk } from "@/app/redux/battle/battleSlice"
+import { RootState, useAppDispatch } from "@/app/store"
 import InputDatePicker from "../input/inputDatePicker"
 import { TBattle } from "@/app/redux/battle/battle"
+import { useSelector } from "react-redux"
+import InputSelect from "../input/InputSelect"
+import InputNumber from "../input/InputNumber"
+import InputGroupRadioButton from "../input/InputGroupRadioButton"
+import { updateBattleThunk } from "@/app/redux/battle/battleSlice"
 
 type Props = {
   battle: TBattle
@@ -17,6 +19,10 @@ type Props = {
 function UpdateBattleDialog({ battle, isOpen, onClose }: Props) {
 
   const dispatch = useAppDispatch()
+  const { teams } = useSelector((state: RootState) => state.team)
+  const nameTeams = teams
+    .filter((team) => team.status !== "deshabilitado")
+    .map((team) => ({ value: team._id, label: team.name }))
 
   return (
     <AlertDialog open={isOpen} >
@@ -34,13 +40,13 @@ function UpdateBattleDialog({ battle, isOpen, onClose }: Props) {
             date: new Date(battle.date),
             teamOne: battle.teamOne?._id || "",
             teamTwo: battle.teamTwo?._id || "",
+            round: battle.round,
+            group: battle.group ? battle.group : "A"
           }}
           onSubmit={(values, { setSubmitting }) => {
             dispatch(updateBattleThunk({
               id: battle._id,
-              date: new Date(values.date),
-              teamOne: values.teamOne,
-              teamTwo: values.teamTwo
+              ...values
             })).unwrap()
               .then(() => {
                 onClose()
@@ -50,33 +56,31 @@ function UpdateBattleDialog({ battle, isOpen, onClose }: Props) {
               })
           }}
         >
-          {({ handleSubmit, isSubmitting, setFieldValue, values }) => (
+          {({ handleSubmit, isSubmitting }) => (
             <form onSubmit={handleSubmit} >
 
-              <div className="flex items-center justify-center gap-5" >
-                <SelectTeam
-                  setValue={(value) => setFieldValue("teamOne", value)}
-                  value={values.teamOne}
-                  defaultValue={battle.teamOne?._id || ""}
-                />
+              <InputSelect label="Equipo 1" name="teamOne" list={nameTeams} disabled={isSubmitting} />
 
-                <div>
-                  <GiCrossedSwords className="text-3xl" />
-                </div>
-
-                <SelectTeam
-                  setValue={(value) => setFieldValue("teamTwo", value)}
-                  value={values.teamTwo}
-                  defaultValue={battle.teamTwo?._id || ""}
-                />
-              </div>
+              <InputSelect label="Equipo 2" name="teamTwo" list={nameTeams} disabled={isSubmitting} />
 
               <InputDatePicker
                 name="date"
                 label="Hora del encuentro"
               />
 
-              <AlertDialogFooter className="pt-10" >
+              <InputNumber label="Ronda" name="round" max={10} disabled={isSubmitting} />
+
+              <InputGroupRadioButton
+                label="Grupo"
+                name="group"
+                options={[
+                  { value: "A", label: "Winner Bracket" },
+                  { value: "B", label: "Loser Bracket" }
+                ]}
+                disabled={isSubmitting}
+              />
+
+              <AlertDialogFooter>
                 <AlertDialogCancel className="text-black" onClick={onClose} >
                   Cancel
                 </AlertDialogCancel>

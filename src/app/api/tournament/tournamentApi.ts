@@ -25,7 +25,6 @@ export const getTournamentByIdApi = async (id: string) => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -65,7 +64,6 @@ export const getListTournamentApi = async () => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -105,7 +103,6 @@ export const getMyTournamentApi = async () => {
         data: null,
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
@@ -191,7 +188,6 @@ export const createTournamentApi = async (tournament: PTournament) => {
         },
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.response) {
       return {
