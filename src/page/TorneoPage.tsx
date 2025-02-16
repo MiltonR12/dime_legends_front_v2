@@ -162,15 +162,16 @@ function TorneoPage() {
       </div>
 
       <section className="py-10 flex flex-col gap-10 section_funtiona" >
+
         <div className="container" >
           <h3 className="text-xl md:text-3xl font-semibold text-white pb-10" >
             EQUIPOS INSCRITOS
           </h3>
-          <div className="px-16" >
+          <div className="px-8 md:px-16" >
             <Carousel>
               <CarouselContent>
                 {teams.map((team, index) => (
-                  <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 lg:basis-1/4" >
+                  <CarouselItem key={index} className="basis sm:basis-1/3 lg:basis-1/4" >
                     <CardTeam team={team} />
                   </CarouselItem>
                 ))}
@@ -181,23 +182,15 @@ function TorneoPage() {
           </div>
         </div>
 
-        <div className="container px-5" >
+        <div className="md:container px-3 md:px-5" >
           <h3 className="text-xl md:text-3xl font-semibold text-white pb-10" >
             HORARIOS DE JUEGO
           </h3>
-          <div>
-            {battles.map((item) => {
-              return (
-                <CardBattle
-                  key={item._id}
-                  date={item.date}
-                  time={item.hour}
-                  teamA={item.teamOne}
-                  teamB={item.teamTwo}
-                />
-              )
-            })}
-          </div>
+          <ul>
+            {battles.map(({ _id, date, teamOne, teamTwo }) => (
+              <CardBattle key={_id} date={date} teamA={teamOne} teamB={teamTwo} />
+            ))}
+          </ul>
         </div>
       </section>
 

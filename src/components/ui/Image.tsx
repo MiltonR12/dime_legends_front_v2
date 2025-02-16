@@ -5,10 +5,11 @@ import { IconType } from "react-icons"
 type Props = {
   src?: string | null
   className?: string
+  alt?: string
   noImage?: string | IconType
 }
 
-function Image({ src, className, noImage: NoImagen = "CN" }: Props) {
+function Image({ src, className, noImage: NoImagen = "CN", alt }: Props) {
 
   if (src === null) {
     return <Avatar className={cn("w-10 h-10", className)} >
@@ -20,7 +21,7 @@ function Image({ src, className, noImage: NoImagen = "CN" }: Props) {
 
   return (
     <Avatar className={cn("w-10 h-10", className)} >
-      <AvatarImage src={src} />
+      <AvatarImage src={src} alt={alt} />
       <AvatarFallback>
         {typeof NoImagen === 'string' ? NoImagen : <NoImagen className="text-gray-400 text-xl" />}
       </AvatarFallback>

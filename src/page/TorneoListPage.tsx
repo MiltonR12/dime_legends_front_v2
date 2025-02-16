@@ -24,9 +24,9 @@ function TorneoListPage() {
         </h2>
       </div>
 
-      <div className="px-5 max-w-[1800px] mx-auto" >
+      <div className="px-3 md:px-5 max-w-[1800px] mx-auto" >
 
-        <h2 className="text-white py-8 text-3xl md:text-4xl font-medium" >
+        <h2 className="text-white py-4 md:py-8 text-2xl md:text-4xl font-medium" >
           LISTA DE TORNEOS
         </h2>
 
