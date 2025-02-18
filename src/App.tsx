@@ -4,7 +4,6 @@ import AuthLayout from './layout/AuthLayout'
 import LoginPage from './page/auth/LoginPage'
 import RegisterPage from './page/auth/RegisterPage'
 import ProtectLayout from './layout/ProtectLayout'
-import UserPage from './page/admin/UserPage'
 import { useAppDispatch } from './app/store'
 import { useEffect } from 'react'
 import { validateTokenThunk } from './app/redux/auth/authSlice'
@@ -19,6 +18,7 @@ import AboutPage from './page/public/about/AboutPage'
 import ScrollToTop from './components/ScrollToTop'
 import NotFoundPage from './page/public/not-found/NotFoundPage'
 import PublicLayout from './layout/PublicLayout'
+import ProfilePage from './page/public/profile/ProfilePage'
 
 function App() {
 
@@ -45,7 +45,7 @@ function App() {
         </Route>
         <Route path='torneo/team/create/:id' element={<CreateTeamPage />} />
         <Route element={<ProtectLayout />}>
-          <Route path="usuario" element={<UserPage />} />
+          <Route path="usuario" element={<ProfilePage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route path="torneo/:id" element={<TorneoAdminPage />} />
           </Route>

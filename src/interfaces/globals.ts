@@ -1,0 +1,1 @@
+export type INetwork = "facebook" | "twitter" | "instagram" | "linkedin" | "youtube" | "tiktok" | "github" | "discord" | "website" | "whatsapp";
