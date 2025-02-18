@@ -1,9 +1,9 @@
 import axios from "@/lib/axios";
 import { PCreateBattle, PUpdateBattle, PWinnerBattle } from "./battle";
 
-export const getBracketApi = async (id: string, group: "A" | "B") => {
+export const getBracketApi = async (id: string) => {
   try {
-    const res = await axios.get(`/battle/bracket/${id}/${group}`);
+    const res = await axios.get(`/battle/bracket/${id}`);
     const body = res.data;
 
     if (res.status === 200) {

@@ -22,23 +22,11 @@ const initialState: InitialStateBattle = {
   winnerBrackets: [],
 };
 
-export const getWinnerBracketThunk = createAsyncThunk(
-  "battle/getWinnerBracket",
+export const getBracketThunk = createAsyncThunk(
+  "battle/getBracket",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { success, message, data } = await getBracketApi(id, "A");
-      return success ? data : rejectWithValue(message);
-    } catch (err) {
-      return rejectWithValue(err);
-    }
-  }
-);
-
-export const getLoserBracketThunk = createAsyncThunk(
-  "battle/getLoserBracket",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      const { success, message, data } = await getBracketApi(id, "B");
+      const { success, message, data } = await getBracketApi(id);
       return success ? data : rejectWithValue(message);
     } catch (err) {
       return rejectWithValue(err);
@@ -205,26 +193,17 @@ const battleSlice = createSlice({
       .addCase(winnerBattleThunk.rejected, (state) => {
         state.isLoading = false;
       })
-      .addCase(getWinnerBracketThunk.pending, (state) => {
+      .addCase(getBracketThunk.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getWinnerBracketThunk.fulfilled, (state, { payload }) => {
+      .addCase(getBracketThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.winnerBrackets = payload;
+        state.winnerBrackets = payload.winner;
+        state.loserBrackets = payload.loser;
       })
-      .addCase(getWinnerBracketThunk.rejected, (state) => {
+      .addCase(getBracketThunk.rejected, (state) => {
         state.isLoading = false;
       })
-      .addCase(getLoserBracketThunk.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getLoserBracketThunk.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.loserBrackets = payload;
-      })
-      .addCase(getLoserBracketThunk.rejected, (state) => {
-        state.isLoading = false;
-      });
   },
 });
 

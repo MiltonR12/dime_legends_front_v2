@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './page/HomePage'
-import NavBar from './components/ui/NavBar'
 import AuthLayout from './layout/AuthLayout'
 import LoginPage from './page/auth/LoginPage'
 import RegisterPage from './page/auth/RegisterPage'
@@ -19,6 +18,7 @@ import ContactPage from './page/ContactPage'
 import AboutPage from './page/public/about/AboutPage'
 import ScrollToTop from './components/ScrollToTop'
 import NotFoundPage from './page/public/not-found/NotFoundPage'
+import PublicLayout from './layout/PublicLayout'
 
 function App() {
 
@@ -31,17 +31,18 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <NavBar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route element={<AuthLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+          </Route>
+          <Route path="sobre-nosotros" element={<AboutPage />} />
+          <Route path="contacto" element={<ContactPage />} />
+          <Route path="torneos" element={<TorneoListPage />} />
+          <Route path='torneo/:id' element={<TorneoPage />} />
         </Route>
-        <Route path="sobre-nosotros" element={<AboutPage />} />
-        <Route path="contacto" element={<ContactPage /> } />
-        <Route path="torneos" element={<TorneoListPage />} />
-        <Route path='torneo/:id' element={<TorneoPage />} />
         <Route path='torneo/team/create/:id' element={<CreateTeamPage />} />
         <Route element={<ProtectLayout />}>
           <Route path="usuario" element={<UserPage />} />

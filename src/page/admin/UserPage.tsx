@@ -3,24 +3,27 @@ import { RootState, useAppDispatch } from "@/app/store"
 import CreatePageModal from "@/components/modals/CreatePageModal"
 import SectionPage from "@/components/page/SectionPage"
 import { Button } from "@/components/ui/button"
+import Image from "@/components/ui/Image"
 import { useSelector } from "react-redux"
 
 function UserPage() {
 
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useAppDispatch()
+  
+  if (!user) return null
 
   return (
     <main className="pt-24 min-h-screen" >
       <div className="container mx-auto flex flex-col gap-5" >
         <div className="flex gap-10" >
-          <img src={user?.avatar} alt="" width={80} className="rounded-full" />
+          <Image src={user.image} className="w-20 h-20 rounded-full" noImage="CN" />
           <div className="flex flex-col justify-center" >
             <h1 className="font-semibold text-3xl text-primary" >
-              {user?.firstName} {user?.lastName}
+              {user.firstName} {user.lastName}
             </h1>
             <p className="text-info" >
-              {user?.email}
+              {user.email}
             </p>
           </div>
         </div>

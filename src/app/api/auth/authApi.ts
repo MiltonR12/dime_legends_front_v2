@@ -1,6 +1,47 @@
 import axios from "@/lib/axios";
 import { PCreatePage, PLogin, PRegister } from "./auth";
 
+export const authLoginGoogleApi = async (token: string) => {
+  try {
+    const res = await axios.post("/google", { token });
+
+    const body = res.data;
+
+    if (res.status === 200) {
+      localStorage.setItem("token", body.data.token);
+      return {
+        success: true,
+        message: body.message,
+        status: body.status,
+        data: body.data.user,
+      }
+    } else {
+      return {
+        success: false,
+        message: body.message,
+        status: body.status,
+        data: null,
+      }
+    }
+  } catch (err: any) {
+    if (err.response) {
+      return {
+        success: false,
+        message: err.response.data.message,
+        status: err.response.data.status,
+        data: null,
+      }
+    } else {
+      return{
+        success: false,
+        message: err.message || "Opps! Algo salió mal, intente más tarde.",
+        status: "error",
+        data: null,
+      }
+    }
+  }
+};
+
 export const authLoginApi = async ({ email, password }: PLogin) => {
   try {
     const res = await axios.post("/login", {
@@ -217,4 +258,4 @@ export const createPageApi = async (data: PCreatePage) => {
       };
     }
   }
-}
+};

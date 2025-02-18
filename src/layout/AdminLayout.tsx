@@ -2,10 +2,17 @@ import { deleteTournamentThunk, getMyTournamentThunk } from '@/app/redux/tournam
 import { RootState, useAppDispatch } from '@/app/store'
 import MenuTable from '@/components/menu/MenuTable'
 import ModalDelete from '@/components/modals/ModalDelete'
-import { Button } from '@/components/ui/button'
+import Image from '@/components/ui/Image'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarTrigger } from '@/components/ui/sidebar'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
+import logo from '@/assets/imgs/logos/logomandar.png'
+import { CardUser } from '@/components/card/CardUser'
+import { Separator } from '@/components/ui/separator'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { ChevronRight } from 'lucide-react'
+import { TfiCup } from 'react-icons/tfi'
 
 function AdminLayout() {
 
@@ -24,63 +31,89 @@ function AdminLayout() {
     dispatch(getMyTournamentThunk())
   }, [dispatch])
 
-  return <main className='pt-20 grid grid-cols-[auto_1fr] h-screen bg-three-800' >
+  return (
+    <SidebarProvider>
 
-    {tournament && <ModalDelete
-      title='Eliminar Torneo'
-      description='Esta acción no se puede deshacer y se eliminará permanentemente.'
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      onSuccess={() => { handleDelete(tournament) }}
-    />}
+      {tournament && <ModalDelete
+        title='Eliminar Torneo'
+        description='Esta acción no se puede deshacer y se eliminará permanentemente.'
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onSuccess={() => { handleDelete(tournament) }}
+      />}
 
-    <nav className='bg-three-800 border-r border-three-300/20 grid grid-rows-[auto_1fr] w-72' >
-
-      <div>
-        <h2 className='text-white text-2xl font-bold text-center' >
-          Dime Legenes
-        </h2>
-        <div className='p-2 px-5' >
-          <Button variant="rose" asChild>
-            <Link to='/torneo/create' className='w-full h-full0' >
-              Crear Nuevo Torneo
-            </Link>
-          </Button>
+      <Sidebar collapsible="icon" className='bg-fondo' >
+        <SidebarHeader className='flex-row items-center py-5 gap-5' >
+          <Image src={logo} className="w-8 h-8 rounded-lg" />
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <h3 className='text-2xl truncate font-semibold text-white' >
+              Dime Legenes
+            </h3>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <Separator />
+          <SidebarGroup>
+            <SidebarGroupLabel>
+              Administración
+            </SidebarGroupLabel>
+            <SidebarMenu>
+              <Collapsible
+                asChild
+                defaultOpen={true}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Torneos" >
+                      <TfiCup />
+                      <span>Torneos</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub className='border-none' >
+                      {myTournaments.map((item) => (
+                        <SidebarMenuSubItem key={item._id} >
+                          <SidebarMenuSubButton asChild >
+                            <NavLink key={item._id} to={`/admin/torneo/${item._id}`}
+                              className={({ isActive }) =>
+                                `flex items-center justify-between text-lg font-semibold capitalize 
+                              ${isActive ? 'text-white' : 'text-three-400'}`
+                              }
+                            >
+                              <span className='line-clamp-1' >{item.name}</span>
+                              <MenuTable onDelete={() => {
+                                setTournament(item._id)
+                                setIsOpen(true)
+                              }}
+                              />
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <CardUser />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <SidebarInset>
+        <div className='p-3 md:p-5 h-screen overflow-hidden grid grid-rows-[auto_1fr]' >
+          <SidebarTrigger />
+          <main className='h-full overflow-y-auto' >
+            <Outlet />
+          </main>
         </div>
-      </div>
-
-      <div>
-        <ul className='flex flex-col' >
-          {
-            myTournaments.map(tournament => (
-              <li key={tournament._id} className='px-4' >
-                <NavLink to={`/admin/torneo/${tournament._id}`}
-                  className={({ isActive }) =>
-                    `flex items-center border-l-4 justify-between text-lg px-4 py-2 rounded-lg font-semibold capitalize
-                    ${isActive ?
-                      'border-rosePrimary bg-three-700 text-white' :
-                      'border-transparent text-three-400 text-lg'}
-                  `
-                  }
-                >
-                  <span className='line-clamp-1' >{tournament.name}</span>
-                  <MenuTable
-                    onDelete={() => {
-                      setTournament(tournament._id)
-                      setIsOpen(true)
-                    }}
-                  />
-                </NavLink>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </nav>
-    <section>
-      <Outlet />
-    </section>
-  </main>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
 
 export default AdminLayout

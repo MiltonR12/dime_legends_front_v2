@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './sheet'
 import { RxHamburgerMenu } from "react-icons/rx";
+import Image from './Image'
 
 function NavBar() {
 
@@ -45,7 +46,7 @@ function NavBar() {
               {
                 user ? <div>
                   <Link to="/usuario" className='text-white' >
-                    <img src={user.avatar} alt="" className='rounded-full overflow-hidden' />
+                    <Image src={user.image} className='rounded-full overflow-hidden' />
                   </Link>
                 </div> : <Button asChild variant="outline" className='bg-primary border-primary rounded-xl' >
                   <Link to="/login" className='text-white' >
@@ -77,7 +78,7 @@ function NavBar() {
           {
             user ? <div>
               <Link to="/usuario" className='text-white' >
-                <img src={user.avatar} alt="" className='rounded-full overflow-hidden' />
+                <Image src={user.image} className='rounded-full overflow-hidden' />
               </Link>
             </div> : <Button asChild variant="outline" className='bg-primary border-primary rounded-xl' >
               <Link to="/login" className='text-white' >

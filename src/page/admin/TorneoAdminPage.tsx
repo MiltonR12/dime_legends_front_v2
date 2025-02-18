@@ -9,7 +9,6 @@ import TableHorario from "@/components/admin/TableHorario"
 import { getBattlesThunk } from "@/app/redux/battle/battleSlice"
 import { Button } from "@/components/ui/button"
 import WinnerBracket from "./torneo/components/WinnerBracket"
-import LoserBracket from "./torneo/components/LoserBracket"
 
 function TorneoAdminPage() {
 
@@ -32,7 +31,7 @@ function TorneoAdminPage() {
   }
 
   return (
-    <section className="p-5 overflow-hidden grid grid-rows-[auto_1fr] h-[calc(100vh-100px)]" >
+    <section className="overflow-y-scroll grid grid-rows-[auto_1fr] h-full" >
       
       <div className="flex justify-between items-center p-3 pb-8 rounded-xl" >
         <h3 className="text-3xl capitalize font-bold text-white" >
@@ -50,19 +49,15 @@ function TorneoAdminPage() {
           <TabsTrigger value="teams">Administrar Equipos</TabsTrigger>
           <TabsTrigger value="gameDate">Administrar Horarios</TabsTrigger>
           <TabsTrigger value="winner">Bracket Ganador</TabsTrigger>
-          <TabsTrigger value="loser">Bracket Perdedor</TabsTrigger>
         </TabsList>
-        <TabsContent value="teams" className="overflow-y-auto h-full mt-0" >
+        <TabsContent value="teams" className="overflow-y-auto h-full" >
           {isLoading ? <p>Cargando...</p> : id && <TableTeam id={id} data={teams} />}
         </TabsContent>
-        <TabsContent value="gameDate" className="overflow-y-auto h-full mt-0" >
+        <TabsContent value="gameDate" className="overflow-y-auto h-full" >
           <TableHorario data={battles} />
         </TabsContent>
-        <TabsContent value="winner" className="overflow-y-auto h-full mt-0" >
+        <TabsContent value="winner" className="overflow-y-auto h-full" >
           <WinnerBracket />
-        </TabsContent>
-        <TabsContent value="loser" className="overflow-y-auto h-full mt-0" >
-          <LoserBracket />
         </TabsContent>
       </Tabs>
     </section>

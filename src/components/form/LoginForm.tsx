@@ -4,7 +4,9 @@ import { Button } from '../ui/button'
 import { loginValidation } from '@/lib/validations'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/app/store'
-import { authLoginThunk } from '@/app/redux/auth/authSlice'
+import { authLoginGoogleThunk, authLoginThunk } from '@/app/redux/auth/authSlice'
+import { GoogleLogin } from '@react-oauth/google'
+import { CustomToast } from '@/lib/handleToast'
 
 function LoginForm() {
 
@@ -15,7 +17,6 @@ function LoginForm() {
     <Formik
       initialValues={{ email: '', password: '' }}
       onSubmit={(values, { setSubmitting }) => {
-
         dispatch(authLoginThunk(values)).unwrap().then(() => {
           navigate('/usuario')
         }).finally(() => {
@@ -42,6 +43,18 @@ function LoginForm() {
           <Button type='submit' variant="form" size="lg" className='font-bold text-xl' >
             {isSubmitting ? 'Cargando...' : 'Iniciar sesión'}
           </Button>
+
+          <GoogleLogin onSuccess={async (credentialResponse) => {
+              const token = credentialResponse.credential
+              if (!token) return
+              dispatch(authLoginGoogleThunk(token)).unwrap().then(() => {
+                navigate('/usuario')
+              })
+            }}
+            onError={() => {
+              CustomToast.error('Error al iniciar sesión con Google')
+            }}
+          />
 
           <div>
             <p className='inline-block mr-3' >

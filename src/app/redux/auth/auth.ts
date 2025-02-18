@@ -13,7 +13,6 @@ export interface User {
   biography: string;
   image: string;
   contact: string;
-  avatar: string;
   page: {
     name: string;
     description: string;

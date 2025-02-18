@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useDraggable } from 'react-use-draggable-scroll';
-import { getLoserBracketThunk, getWinnerBracketThunk } from '@/app/redux/battle/battleSlice';
+import { getBracketThunk } from '@/app/redux/battle/battleSlice';
 import { RootState, useAppDispatch } from '@/app/store';
 import CardBracket from '@/components/card/CardBracket';
 import { useEffect } from 'react';
@@ -17,10 +17,7 @@ function WinnerBracket() {
   const { events } = useDraggable(ref);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getWinnerBracketThunk(id));
-      dispatch(getLoserBracketThunk(id));
-    }
+    if (id) dispatch(getBracketThunk(id));
   }, [id, dispatch]);
 
   return (
@@ -34,6 +31,7 @@ function WinnerBracket() {
         height: '100%',
       }}
     >
+      
       <h3 className="text-3xl font-bold text-white text-center pb-5">
         Bracket de Ganadores
       </h3>

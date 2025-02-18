@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { initialStateAuth } from "./auth";
 import {
   authLoginApi,
+  authLoginGoogleApi,
   authRegisterApi,
   createPageApi,
   validateTokenApi,
@@ -23,6 +24,22 @@ export const authLoginThunk = createAsyncThunk(
         return futuresyo.data;
       } else {
         return rejectWithValue(futuresyo.message);
+      }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const authLoginGoogleThunk = createAsyncThunk(
+  "auth/loginGoogle",
+  async (token: string, { rejectWithValue }) => {
+    try {
+      const { data, message, success } = await authLoginGoogleApi(token);
+      if (success) {
+        return data;
+      } else {
+        return rejectWithValue(message);
       }
     } catch (err) {
       return rejectWithValue(err);
@@ -96,6 +113,10 @@ const authSlice = createSlice({
       })
       .addCase(authLoginThunk.rejected, (state) => {
         state.user = null;
+      })
+      .addCase(authLoginGoogleThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(createPageThunk.fulfilled, (state, action) => {
         state.user = action.payload;
