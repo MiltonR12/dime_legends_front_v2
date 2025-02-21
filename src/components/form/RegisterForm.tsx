@@ -23,7 +23,6 @@ function RegisterForm() {
       }}
       onSubmit={(values, { setSubmitting }) => {
         dispatch(authRegisterThunk(values)).then(() => {
-          console.log('entro aqui')
           navigate('/login')
         }).catch(() => {
           setSubmitting(false)
@@ -32,16 +31,18 @@ function RegisterForm() {
       validationSchema={registerValidation}
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form onSubmit={handleSubmit} className='flex flex-col gap-3 w-96' >
+        <form onSubmit={handleSubmit} className='flex flex-col gap-3' >
           <div className="grid grid-cols-2 gap-5" >
             <CustomInput
               label='Nombre'
               name='firstName'
+              variant='outline'
             />
 
             <CustomInput
               label='Apellido'
               name='lastName'
+              variant='outline'
             />
           </div>
 
@@ -49,21 +50,24 @@ function RegisterForm() {
             label='Correo'
             name='email'
             type='email'
+            variant="outline"
           />
 
           <CustomInput
             label='Contraseña'
             name='password'
             type='password'
+            variant='outline'
           />
 
           <CustomInput
             label='Contacto'
             name='contact'
             type='number'
+            variant='outline'
           />
 
-          <Button type='submit' variant="form" size="lg" className='font-bold text-xl' >
+          <Button type='submit' variant="rose" size="lg" className='font-bold text-xl' >
             {isSubmitting ? 'Registrando...' : 'Registrarse'}
           </Button>
 

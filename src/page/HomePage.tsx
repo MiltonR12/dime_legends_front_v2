@@ -18,7 +18,7 @@ import banner4 from '@/assets/imgs/banner/flayer.png'
 
 function HomePage() {
   return (
-    <main className='bg-[##1D023E]' >
+    <main className='bg-[#1D023E]' >
 
       <section className='h-screen overflow-hidden relative grid grid-cols-2 bg-[#1D023E]' >
         <div className='absolute z-0' >

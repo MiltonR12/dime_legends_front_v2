@@ -33,11 +33,9 @@ function SectionPage() {
             Descripción: {user.page.description}
           </h4>
 
-          <Button asChild className="bg-slate-950 py-2 h-auto hover:bg-slate-700" >
-            <Link to='/admin' >
-              Administrar Torneos
-            </Link>
-          </Button>
+          <Link to='/admin' className="bg-slate-950 text-center py-2 hover:bg-slate-700" >
+            Administrar Torneos
+          </Link>
 
         </div>
       </div>

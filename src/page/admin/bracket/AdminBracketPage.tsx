@@ -7,8 +7,10 @@ import { useEffect } from 'react';
 import { Bracket } from 'react-brackets';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import CreateBattleModal from '@/components/modals/CreateBattleModal';
 
-function WinnerBracket() {
+function AdminBracketPage() {
+
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { winnerBrackets, loserBrackets } = useSelector((state: RootState) => state.battle);
@@ -31,16 +33,17 @@ function WinnerBracket() {
         height: '100%',
       }}
     >
-      
+
       <h3 className="text-3xl font-bold text-white text-center pb-5">
         Bracket de Ganadores
       </h3>
 
       <Bracket
         rounds={winnerBrackets.map((item) => ({
-          title: `Winner ${item.round}`,
+          title: `Ronda ${item.round}`,
           seeds: item.battles.map(({ _id, teamOne, teamTwo, date, winner }) => ({
             id: _id,
+            _id: _id,
             teams: [
               {
                 name: teamOne?.name || 'Equipo A',
@@ -64,9 +67,15 @@ function WinnerBracket() {
             }),
           })),
         }))}
+        roundTitleComponent={(title, nro) => (
+          <div className='flex gap-5 items-center justify-center' >
+            <h3 className="text-2xl font-bold text-white text-center">{title}</h3>
+            <CreateBattleModal round={nro + 1} />
+          </div>
+        )}
         renderSeedComponent={({ seed, seedIndex }) => (
           <CardBracket
-            id={seed.id as string}
+            id={seed._id}
             key={seedIndex}
             date={seed.date}
             position={seedIndex}
@@ -86,7 +95,7 @@ function WinnerBracket() {
         )}
       />
 
-      <hr style={{ margin: '20px 0', border: '1px solid #ccc' }} />
+      <hr className='my-5 w-full bg-red-200' />
 
       <h3 className="text-3xl font-bold text-white text-center pb-5">
         Bracket de Perdedores
@@ -94,8 +103,9 @@ function WinnerBracket() {
 
       <Bracket
         rounds={loserBrackets.map((item) => ({
-          title: `Loser ${item.round}`,
+          title: `Ronda ${item.round}`,
           seeds: item.battles.map(({ _id, teamOne, teamTwo, date, winner }) => ({
+            _id: _id,
             id: _id,
             teams: [
               {
@@ -120,9 +130,15 @@ function WinnerBracket() {
             }),
           })),
         }))}
+        roundTitleComponent={(title, nro) => (
+          <div className='flex gap-5 items-center justify-center' >
+            <h3 className="text-2xl font-bold text-white text-center">{title}</h3>
+            <CreateBattleModal round={nro + 1} group="B" />
+          </div>
+        )}
         renderSeedComponent={({ seed, seedIndex }) => (
           <CardBracket
-            id={seed.id as string}
+            id={seed._id}
             key={seedIndex}
             position={seedIndex}
             date={seed.date}
@@ -145,4 +161,4 @@ function WinnerBracket() {
   );
 }
 
-export default WinnerBracket;
+export default AdminBracketPage

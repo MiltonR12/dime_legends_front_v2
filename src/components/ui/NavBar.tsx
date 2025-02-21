@@ -5,20 +5,29 @@ import { RootState } from '@/app/store'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './sheet'
 import { RxHamburgerMenu } from "react-icons/rx";
 import Image from './Image'
+import logo from '@/assets/imgs/logos/logomandar.png'
+
+const enlaces = [
+  { name: 'Home', path: '/' },
+  { name: 'Torneos', path: '/torneos' },
+  { name: 'Sobre Nosotros', path: '/sobre-nosotros' },
+  { name: 'Contacto', path: '/contacto' }
+]
 
 function NavBar() {
 
   const { user } = useSelector((state: RootState) => state.auth)
 
   return (
-    <nav className="fixed bg-fondo w-screen py-4 z-50" >
+    <nav className="fixed bg-[#08030e] w-screen py-4 z-50" >
       <div className='container mx-auto flex items-center justify-between px-5' >
 
-        <h2>
-          <Link to="/" className="text-white text-2xl font-semibold">
+        <Link to="/" className='flex items-center gap-5' >
+          <Image src={logo} className='rounded-none' alt='logo' />
+          <h2 className='text-white text-2xl font-semibold' >
             Dime Legends
-          </Link>
-        </h2>
+          </h2>
+        </Link>
 
         <Sheet>
           <SheetTrigger className='md:hidden' >
@@ -32,15 +41,11 @@ function NavBar() {
             <div className='flex gap-10 flex-col' >
 
               <ul className="flex flex-col text-white justify-between items-center gap-5">
-                <li>
-                  <Link to="/" className="">Home</Link>
-                </li>
-                <li>
-                  <Link to="/torneos" className="">Torneos</Link>
-                </li>
-                <li>
-                  <Link to="/contacto" className="">Contacto</Link>
-                </li>
+                {enlaces.map((enlace, index) => (
+                  <li key={index} >
+                    <Link to={enlace.path} >{enlace.name}</Link>
+                  </li>
+                ))}
               </ul>
 
               {
@@ -48,7 +53,7 @@ function NavBar() {
                   <Link to="/usuario" className='text-white' >
                     <Image src={user.image} className='rounded-full overflow-hidden' />
                   </Link>
-                </div> : <Button asChild variant="outline" className='bg-primary border-primary rounded-xl' >
+                </div> : <Button asChild variant="rose" >
                   <Link to="/login" className='text-white' >
                     Iniciar Sesión
                   </Link>
@@ -61,18 +66,13 @@ function NavBar() {
         <div className='hidden md:flex gap-10' >
 
           <ul className="flex text-white justify-between items-center gap-5">
-            <li>
-              <Link to="/" className="">Home</Link>
-            </li>
-            <li>
-              <Link to="/torneos" className="">Torneos</Link>
-            </li>
-            <li>
-              <Link to="/sobre-nosotros" className="">Sobre Nosotros</Link>
-            </li>
-            <li>
-              <Link to="/contacto" className="">Contacto</Link>
-            </li>
+            {enlaces.map((enlace, index) => (
+              <li key={index} >
+                <Link to={enlace.path} className='hover:text-fuchsia-400 transition-colors' >
+                  {enlace.name}
+                </Link>
+              </li>
+            ))}
           </ul>
 
           {
@@ -80,7 +80,7 @@ function NavBar() {
               <Link to="/usuario" className='text-white' >
                 <Image src={user.image} className='rounded-full overflow-hidden' />
               </Link>
-            </div> : <Button asChild variant="outline" className='bg-primary border-primary rounded-xl' >
+            </div> : <Button asChild variant="rose" >
               <Link to="/login" className='text-white' >
                 Iniciar Sesión
               </Link>

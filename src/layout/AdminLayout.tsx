@@ -58,6 +58,53 @@ function AdminLayout() {
               Administración
             </SidebarGroupLabel>
             <SidebarMenu>
+              <Collapsible defaultOpen className="group/collapsible">
+                {myTournaments.map((item) => (
+                  <SidebarMenuItem key={item._id}>
+
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton tooltip="Torneos" >
+                        <TfiCup />
+                        <span>
+                          {item.name}
+                        </span>
+                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        <SidebarMenuSubItem>
+                          <SidebarMenuSubButton>
+                            <NavLink to={`/admin/torneo/${item._id}`} >
+                              Información
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                          <SidebarMenuSubButton>
+                            <NavLink to={`/admin/torneo/equipos/${item._id}`} >
+                              Equipos
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                          <SidebarMenuSubButton>
+                            <NavLink to={`/admin/torneo/versus/${item._id}`} >
+                              Versus
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                          <SidebarMenuSubButton>
+                            <NavLink to={`/admin/torneo/bracket/${item._id}`} >
+                              Bracket
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+
+                  </SidebarMenuItem>
+                ))}
+              </Collapsible>
+            </SidebarMenu>
+
+            <SidebarMenu>
               <Collapsible
                 asChild
                 defaultOpen={true}

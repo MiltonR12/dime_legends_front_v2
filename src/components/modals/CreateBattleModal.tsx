@@ -1,6 +1,5 @@
 import { Formik } from "formik"
 import { Button } from "../ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "../ui/dialog"
 import { validatCreateeBattle } from "@/lib/validateBattle";
 import { RootState, useAppDispatch } from "@/app/store";
 import { createBattleThunk, getBattlesThunk } from "@/app/redux/battle/battleSlice";
@@ -11,7 +10,24 @@ import { useSelector } from "react-redux";
 import InputNumber from "../input/InputNumber";
 import InputGroupRadioButton from "../input/InputGroupRadioButton";
 
-function CreateBattleModal() {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+type Props = {
+  round?: number
+  group?: string
+}
+
+function CreateBattleModal({ round = 0, group = "A" }: Props) {
 
   const dispatch = useAppDispatch()
   const { id } = useParams()
@@ -21,28 +37,28 @@ function CreateBattleModal() {
     .map((team) => ({ value: team._id, label: team.name }))
 
   return (
-    <Dialog>
-      <DialogTrigger asChild >
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <Button variant="secondary" size="lg" >
           Crear Versus
         </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-zinc-950" >
-        <DialogHeader>
-          <DialogTitle>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
             Crear Nuevo Versus
-          </DialogTitle>
-          <DialogDescription>
+          </AlertDialogTitle>
+          <AlertDialogDescription>
             Crea un encuentro entre dos equipos
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         <Formik
           initialValues={{
             date: new Date(),
             teamOne: "",
             teamTwo: "",
-            round: 1,
-            group: "A"
+            round,
+            group
           }}
           onSubmit={(values, { setSubmitting }) => {
             if (id) {
@@ -59,13 +75,9 @@ function CreateBattleModal() {
             <form onSubmit={handleSubmit} >
 
               <InputSelect label="Equipo 1" name="teamOne" list={nameTeams} />
-
               <InputSelect label="Equipo 2" name="teamTwo" list={nameTeams} />
 
-              <InputDatePicker
-                name="date"
-                label="Hora del encuentro"
-              />
+              <InputDatePicker name="date" label="Hora del encuentro" />
 
               <InputNumber label="Ronda" name="round" max={10} disabled={isSubmitting} />
 
@@ -79,18 +91,19 @@ function CreateBattleModal() {
                 disabled={isSubmitting}
               />
 
-              <Button
-                type="submit"
-                variant="form"
-                disabled={isSubmitting}
-              >
-                Crear página
-              </Button>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction>
+                  Crear Versus
+                </AlertDialogAction>
+              </AlertDialogFooter>
             </form>
           )}
         </Formik>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 

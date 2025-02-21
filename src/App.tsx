@@ -19,6 +19,9 @@ import ScrollToTop from './components/ScrollToTop'
 import NotFoundPage from './page/public/not-found/NotFoundPage'
 import PublicLayout from './layout/PublicLayout'
 import ProfilePage from './page/public/profile/ProfilePage'
+import AdminTeamPage from './page/admin/team/AdminTeamPage'
+import AdminBattlePage from './page/admin/battle/AdminBattlePage'
+import AdminBracketPage from './page/admin/bracket/AdminBracketPage'
 
 function App() {
 
@@ -48,6 +51,9 @@ function App() {
           <Route path="usuario" element={<ProfilePage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route path="torneo/:id" element={<TorneoAdminPage />} />
+            <Route path='torneo/equipos/:id' element={<AdminTeamPage />} />
+            <Route path='torneo/versus/:id' element={<AdminBattlePage />} />
+            <Route path="torneo/bracket/:id" element={<AdminBracketPage />} />
           </Route>
           <Route path="torneo/create" element={<CreateTorneoPage />} />
         </Route>

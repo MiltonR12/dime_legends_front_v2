@@ -26,21 +26,23 @@ function LoginForm() {
       validationSchema={loginValidation}
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form onSubmit={handleSubmit} className='flex flex-col gap-5 w-80' >
+        <form onSubmit={handleSubmit} className='flex flex-col gap-5' >
 
           <CustomInput
             label='Correo'
             name='email'
             type='email'
+            variant='outline'
           />
 
           <CustomInput
             label='Contraseña'
             name='password'
             type='password'
+            variant='outline'
           />
 
-          <Button type='submit' variant="form" size="lg" className='font-bold text-xl' >
+          <Button type='submit' variant="rose" size="lg" className='font-bold text-xl' >
             {isSubmitting ? 'Cargando...' : 'Iniciar sesión'}
           </Button>
 
