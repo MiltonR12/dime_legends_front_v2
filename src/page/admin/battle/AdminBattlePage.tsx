@@ -189,23 +189,28 @@ function AdminBattlePage() {
         </div>
       </div>
 
-      <div className="flex gap-5" >
+      <div className="flex flex-col sm:flex-row justify-between gap-5" >
         <input
           type="search"
           placeholder="Buscar..."
           className="bg-three-700 text-white py-2 px-4 rounded-lg outline-none"
         />
 
-        <Select onValueChange={handleFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrar" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="day">Hoy</SelectItem>
-            <SelectItem value="week">Esta Semana</SelectItem>
-            <SelectItem value="month">Este mes</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-5 items-center" >
+          <h4 className="text-white font-bold text-lg">
+            Filtro
+          </h4>
+          <Select onValueChange={handleFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrar" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Hoy</SelectItem>
+              <SelectItem value="week">Esta Semana</SelectItem>
+              <SelectItem value="month">Este mes</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <Table>

@@ -39,7 +39,7 @@ function CreateBattleModal({ round = 0, group = "A" }: Props) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="secondary" size="lg" >
+        <Button variant="secondary" >
           Crear Versus
         </Button>
       </AlertDialogTrigger>
@@ -95,7 +95,7 @@ function CreateBattleModal({ round = 0, group = "A" }: Props) {
                 <AlertDialogCancel>
                   Cancelar
                 </AlertDialogCancel>
-                <AlertDialogAction>
+                <AlertDialogAction type="submit" >
                   Crear Versus
                 </AlertDialogAction>
               </AlertDialogFooter>

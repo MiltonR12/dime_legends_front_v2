@@ -245,13 +245,13 @@ function AdminTeamPage() {
       />}
 
       <div className="flex items-center justify-between" >
-        <h3 className="text-3xl font-semibold text-white" >
+        <h3 className="text-xl sm:text-3xl font-semibold text-white" >
           Lista de Equipos
         </h3>
         <ModalCreateTeam id={id} />
       </div>
 
-      <div className=" flex items-center justify-between" >
+      <div className="flex flex-col sm:flex-row gap-5 sm:items-center justify-between" >
         <input
           type="search"
           placeholder="Buscar..."

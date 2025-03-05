@@ -26,8 +26,6 @@ function TorneoAdminPage() {
   const { tournament } = useSelector((state: RootState) => state.tournament)
   const dispatch = useAppDispatch()
 
-
-
   useEffect(() => {
     if (id) dispatch(getTournamentIdThunk(id))
   }, [dispatch, id])

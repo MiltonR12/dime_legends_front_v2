@@ -1,5 +1,5 @@
 import { FaEye } from "react-icons/fa";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { FaCopy } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { CustomToast } from "@/lib/handleToast";
@@ -26,6 +26,9 @@ function ShowTeamModal({ captain, players }: Props) {
           <DialogTitle className="text-center mb-5" >
             Informacion del equipo
           </DialogTitle>
+          <DialogDescription>
+            Aqui puedes ver la informacion del equipo.
+          </DialogDescription>
           <p>Captain: {captain}</p>
           <div>
             <h3 className="text-primary text-lg font-semibold" >

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -60,6 +61,9 @@ function ModalShowVersus({ battle }: BattlePreviewProps) {
       <DialogContent className="max-w-4xl bg-fondo">
         <DialogHeader>
           <DialogTitle>Previsualización del Versus</DialogTitle>
+          <DialogDescription>
+            Aquí puedes visualizar cómo se verá el versus antes de descargar la imagen.
+          </DialogDescription>
         </DialogHeader>
 
         <div ref={contentRef} className="bg-gradient-to-br from-fondo to-gray-900 p-6 rounded-lg">
