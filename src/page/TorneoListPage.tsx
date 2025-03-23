@@ -4,10 +4,11 @@ import CardTorneo from "@/components/card/CardTorneo"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import torneos_fondo from '@/assets/imgs/fondo/torneos.jpg'
+import CardTorneoSkeleton from "@/components/skeleton/CardTorneoSkeleton"
 
 function TorneoListPage() {
 
-  const { listTournaments } = useSelector((state: RootState) => state.tournament)
+  const { listTournaments, isLoading } = useSelector((state: RootState) => state.tournament)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -31,9 +32,9 @@ function TorneoListPage() {
         </h2>
 
         <div className="grid sm:grid-cols-[repeat(auto-fit,_minmax(450px,1fr))] gap-10" >
-          {listTournaments.map((torneo) => (
-            <CardTorneo key={torneo._id} torneo={torneo} />
-          ))}
+          {isLoading ?
+            Array.from({ length: 6 }).map((_, i) => <CardTorneoSkeleton key={i} />)
+            : listTournaments.map((torneo) => <CardTorneo key={torneo._id} torneo={torneo} />)}
         </div>
       </div>
     </main>

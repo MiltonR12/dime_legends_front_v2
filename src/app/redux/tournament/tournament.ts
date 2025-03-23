@@ -3,7 +3,7 @@ export interface InitialStateTournamet {
   tournaments: Tournament[];
   tournament: TournamentOne | null;
   myTournaments: MyTournament[];
-  loading: boolean;
+  isLoading: boolean;
   isLoadingMy: boolean;
 }
 

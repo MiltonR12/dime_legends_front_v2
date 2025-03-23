@@ -34,7 +34,7 @@ function AdminLayout() {
           </div>
         </SidebarHeader>
         <SidebarContent>
-          <Button variant="secondary" >
+          <Button variant="secondary" asChild >
             <NavLink to="/torneo/create" >
               Crear Torneo
             </NavLink>

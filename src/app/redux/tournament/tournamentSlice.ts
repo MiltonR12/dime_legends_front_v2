@@ -15,7 +15,7 @@ const initialState: InitialStateTournamet = {
   myTournaments: [],
   isLoadingMy: false,
   tournament: null,
-  loading: false,
+  isLoading: false,
 };
 
 export const getTournamentIdThunk = createAsyncThunk(
@@ -105,36 +105,36 @@ const TournamentSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getListTournamentThunk.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
       })
       .addCase(getListTournamentThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         if (action.payload) {
           state.listTournaments = action.payload;
         }
       })
       .addCase(getListTournamentThunk.rejected, (state) => {
-        state.loading = false;
+        state.isLoading = false;
       })
       .addCase(createTournamentThunk.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
       })
       .addCase(createTournamentThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.tournament = action.payload;
       })
       .addCase(createTournamentThunk.rejected, (state) => {
-        state.loading = false;
+        state.isLoading = false;
       })
       .addCase(getTournamentIdThunk.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
       })
       .addCase(getTournamentIdThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.tournament = action.payload as any;
       })
       .addCase(getTournamentIdThunk.rejected, (state) => {
-        state.loading = false;
+        state.isLoading = false;
       })
       .addCase(getMyTournamentThunk.pending, (state) => {
         state.isLoadingMy = true;

@@ -47,7 +47,6 @@ function ModalEditTeam({ data, isOpen, setIsOpen }: Props) {
             }}
             onSubmit={(values, { setSubmitting }) => {
               const { image, ...rest } = values
-              if (!image) return
               dispatch(updateTeamThunk({ ...rest, image, id: data._id }))
                 .then(() => {
                   setIsOpen(false)
