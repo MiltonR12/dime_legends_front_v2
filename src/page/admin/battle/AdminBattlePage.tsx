@@ -56,6 +56,32 @@ function AdminBattlePage() {
   }
 
   const columns = [
+    columnHelper.accessor("group", {
+      id: "group",
+      header: () => (
+        <p className="text-sm text-center font-bold text-white">
+          Grupo
+        </p>
+      ),
+      cell: ({ getValue }) => (
+        <p className={`text-xl text-center font-bold ${getValue() === "A" ? "text-green-500" : "text-yellow-500"}`} >
+          {getValue()}
+        </p>
+      ),
+    }),
+    columnHelper.accessor("round", {
+      id: "round",
+      header: () => (
+        <p className="text-sm text-center font-bold text-white">
+          Ronda
+        </p>
+      ),
+      cell: ({ getValue }) => (
+        <p className={`text-xl text-center font-bold `} >
+          {getValue()}
+        </p>
+      ),
+    }),
     columnHelper.accessor("teamOne", {
       id: "teamOne",
       header: () => (
@@ -68,7 +94,7 @@ function AdminBattlePage() {
         return (
           <div className="font-semibold grid grid-cols-[auto_auto_1fr] gap-5 items-center" >
             <Image src={team?.image} className="w-10 h-10 rounded-full" />
-            <ShowTeamModal captain={team?.captain || ""} players={team?.players || []} />
+            <ShowTeamModal team={row.original.teamOne} />
             <h3 className={row.original.winner === row.original.teamOne?._id ? "text-green-500" : ""} >
               {team ? team.name : "Sin designar"}
             </h3>
@@ -109,15 +135,12 @@ function AdminBattlePage() {
       cell: ({ getValue, row }) => {
         const team = getValue()
         return (
-          <div className="font-semibold grid grid-cols-[1fr_auto_auto] items-center gap-5 select-none">
+          <div className="font-semibold grid grid-cols-[1fr_auto_auto] items-center gap-5">
             <h3 className={row.original.winner === team?._id ? "text-green-500" : ""} >
               {team ? team.name : "Sin designar"}
             </h3>
 
-            <ShowTeamModal
-              captain={team?.captain || ""}
-              players={team?.players || []}
-            />
+            <ShowTeamModal team={row.original.teamTwo} />
 
             <Image src={team?.image} className="w-10 h-10 rounded-full" />
           </div>
