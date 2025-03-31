@@ -43,7 +43,7 @@ function TableHorario({ data }: Props) {
         return (
           <div className="font-semibold grid grid-cols-[auto_auto_1fr] gap-5 items-center" >
             <Image src={team?.image} className="w-10 h-10 rounded-full" />
-            <ShowTeamModal captain={team?.captain || ""} players={team?.players || []} />
+            <ShowTeamModal team={row.original.teamOne} />
             <h3 className={row.original.winner === row.original.teamOne?._id ? "text-green-500" : ""} >
               {team ? team.name : "Sin designar"}
             </h3>
@@ -85,10 +85,7 @@ function TableHorario({ data }: Props) {
               {team ? team.name : "Sin designar"}
             </h3>
 
-            <ShowTeamModal
-              captain={team?.captain || ""}
-              players={team?.players || []}
-            />
+            <ShowTeamModal team={row.original.teamTwo} />
 
             <Image src={team?.image} className="w-10 h-10 rounded-full" />
           </div>
