@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "@tailwindcss/typography";
 
 body {
   @apply bg-[#000217];
@@ -114,4 +115,26 @@ body {
   background-size: cover;
   background-position: bottom;
   background-repeat: no-repeat;
+}
+
+.midium {
+  @apply
+  /* PARRRAFO */
+  prose-p:text-base md:prose-p:text-lg prose-p:text-white prose-p:leading-6
+  /* TITULO */
+  prose-h1:text-xl md:prose-h1:text-3xl prose-h1:text-white prose-h1:dark:text-white prose-h1:font-semibold
+  /* SUBTITULO */
+  prose-h2:text-lg md:prose-h2:text-2xl prose-h2:text-white prose-h2:dark:text-white prose-h2:font-semibold
+  /* LISTAS */
+  prose-ol:text-lg prose-ul:mr-3 prose-ol:leading-6 prose-ul:text-lg prose-li:py-2 prose-li:leading-6 
+  prose-ol:dark:text-white prose-ul:dark:text-white prose-ul:text-white
+  prose-li:text-white prose-li:text-base md:prose-li:text-lg
+  /* IMAGENES */
+  prose-img:my-10 prose-img:w-full
+  /* TEXTO AZUL */
+  prose-strong:font-bold prose-strong:text-white
+  /* BLOCKQUOTE */
+  prose-blockquote:my-10 prose-blockquote:text-base prose-blockquote:bg-gray-100 prose-blockquote:rounded prose-blockquote:dark:bg-gray-800 prose-blockquote:dark:text-white prose-blockquote:min-h-10 prose-blockquote:flex prose-blockquote:items-center
+  /* BASE */
+  text-white
 }

@@ -14,6 +14,7 @@ import UploadBanner from './UploadBanner'
 import InputTextArea from '../input/InputTextArea'
 import InputNumber from '../input/InputNumber'
 import { createTournamentThunk } from '@/app/redux/tournament/tournamentSlice'
+import EditorQuill from '../EditorQuill'
 
 type StatusForm = "basic" | "modality" | "config"
 
@@ -34,8 +35,6 @@ function CreateTorneoForm() {
           dateStart: new Date(),
           description: '',
           game: '',
-          modality: [""],
-          requirements: [""],
           rules: [""],
           award: [""],
           note: '',
@@ -59,8 +58,6 @@ function CreateTorneoForm() {
             maxPlayers,
             maxTeams,
             minPlayers,
-            modality,
-            requirements,
             amount,
             qrImage,
             rules
@@ -74,8 +71,6 @@ function CreateTorneoForm() {
             dateStart: dateStart.toISOString(),
             formUrl,
             award,
-            modality,
-            requirements,
             rules,
             config: {
               minPlayers,
@@ -105,20 +100,23 @@ function CreateTorneoForm() {
               </h3>
 
               <UploadBanner name='image' />
-
               <CustomInput
                 label='Nombre del torneo'
                 name='name'
                 placeholder='Ejemplo: Torneo de LOL'
                 required={true}
               />
-
-              <InputTextArea
-                label='Descripción'
-                name='description'
-                placeholder='Ejemplo: Torneo de LOL para jugadores de nivel 30'
-                required={true}
-              />
+              <div>
+                <label className="font-semibold text-xl">
+                  Descripción
+                </label>
+                <EditorQuill
+                  value={values.description}
+                  onChange={(value) => setFieldValue("description", value)}
+                  className='bg-blue-950/50 rounded-lg border-blue-500'
+                  tools={{ image: false, video: false, listOrder: false, listUnorder: false }}
+                />
+              </div>
 
               <InputDatePicker
                 label='Fecha de inicio'
@@ -147,22 +145,6 @@ function CreateTorneoForm() {
                 list={listGames.map((game) => ({ label: game, value: game }))}
                 label='Juego'
                 name='game'
-              />
-
-              <ArrayInput
-                label='Modalidad'
-                name='modality'
-                placeholder='Ejemplo: 1v1, 2v2, 3v3, 5v5'
-                values={values.modality}
-                required={true}
-              />
-
-              <ArrayInput
-                label='Requisitos'
-                name='requirements'
-                placeholder='Ejemplo: Nivel 30, Rango Oro, etc'
-                values={values.requirements}
-                required={true}
               />
 
               <ArrayInput
@@ -259,13 +241,15 @@ function CreateTorneoForm() {
                 </>
               }
 
-              <Button variant="ghost" type='button' onClick={() => setNextForm("modality")} >
-                Atras
-              </Button>
+              <div className='grid grid-cols-2 gap-5' >
+                <Button variant="ghost" type='button' onClick={() => setNextForm("modality")} >
+                  Atras
+                </Button>
 
-              <Button variant="form" type='submit' disabled={isSubmitting} >
-                Crear torneo
-              </Button>
+                <Button variant="form" type='submit' disabled={isSubmitting} >
+                  Crear torneo
+                </Button>
+              </div>
 
             </div>}
 

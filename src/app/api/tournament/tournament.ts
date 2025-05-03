@@ -19,8 +19,6 @@ export interface PTournament {
   game: string;
   image: File;
   description: string;
-  modality: string[];
-  requirements: string[];
   rules: string[];
   award: string[];
   config: Configuration;

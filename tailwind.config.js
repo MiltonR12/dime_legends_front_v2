@@ -62,7 +62,6 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
   sidebar: {
     DEFAULT: 'hsl(var(--sidebar-background))',
     foreground: 'hsl(var(--sidebar-foreground))',
@@ -72,5 +71,6 @@ module.exports = {
     'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
     border: 'hsl(var(--sidebar-border))',
     ring: 'hsl(var(--sidebar-ring))',
-  }
+  },
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 }
