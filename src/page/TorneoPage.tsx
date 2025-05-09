@@ -91,22 +91,11 @@ function TorneoPage() {
 
         </section>
         <section className="flex flex-col gap-5" >
-          <h3 className="text-white text-6xl font-semibold capitalize" >
+          <h3 className="text-white text-5xl text-center font-semibold capitalize" >
             {tournament.name}
           </h3>
-          <p className="text-white/80 text-lg" >
-            {tournament.description}
-          </p>
-          <h3 className="text-white text-3xl font-medium" >
-            Requisitos
-          </h3>
-          <ul className="flex flex-col gap-2" >
-            {tournament.requirements.map((req, index) => (
-              <li key={index} className="flex items-center gap-2 text-white/80" >
-                <div className="w-3 h-3 rounded-full bg-white/50" /> <span>{req}</span>
-              </li>
-            ))}
-          </ul>
+          
+          <div dangerouslySetInnerHTML={{ __html: tournament.description }} className="text-white/80 text-lg" />
           <h3 className="text-white text-3xl font-medium" >
             Premios
           </h3>
