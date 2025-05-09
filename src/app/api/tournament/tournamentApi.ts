@@ -133,12 +133,7 @@ export const createTournamentApi = async (tournament: PTournament) => {
     tournament.award.forEach(item => {
       formData.append("award", item);
     });
-    tournament.requirements.forEach(item => {
-      formData.append("requirements", item);
-    });
-    tournament.modality.forEach(item => {
-      formData.append("modality", item);
-    });
+
     tournament.rules.forEach(item => {
       formData.append("rules", item);
     });
