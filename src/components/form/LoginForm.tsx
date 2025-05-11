@@ -22,7 +22,7 @@ function LoginForm() {
         dispatch(authLoginThunk(values))
           .unwrap()
           .then(() => {
-            navigate("/usuario")
+            navigate("/perfil")
           })
           .finally(() => {
             setSubmitting(false)
@@ -87,7 +87,7 @@ function LoginForm() {
                   dispatch(authLoginGoogleThunk(token))
                     .unwrap()
                     .then(() => {
-                      navigate("/usuario")
+                      navigate("/perfil")
                     })
                 }}
                 onError={() => {
