@@ -18,9 +18,10 @@ import CardTorneo from "@/components/card/CardTorneo"
 import { CalendarDays, Clock, Trophy, Shield, Users, Gamepad2, Flame, ChevronRight } from "lucide-react"
 import { CircleIcon } from "@/components/icons/globals"
 import { listPosition } from "@/payments/position"
+import LoadingTournament from "@/components/loader/LoadingTournament"
 
 function TorneoPage() {
-  const { tournament, listTournaments } = useSelector((state: RootState) => state.tournament)
+  const { tournament, isLoading, listTournaments } = useSelector((state: RootState) => state.tournament)
   const { teams } = useSelector((state: RootState) => state.team)
   const { battles } = useSelector((state: RootState) => state.battle)
   const { id } = useParams()
@@ -38,9 +39,8 @@ function TorneoPage() {
     }
   }, [id, dispatch])
 
-  if (!id) {
-    return <Navigate to="/torneos" />
-  }
+  if (!id) return <Navigate to="/torneos" />
+  if (isLoading) return <LoadingTournament />
 
   if (!tournament) {
     return (

@@ -41,18 +41,18 @@ function App() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-          </Route>
           <Route path="sobre-nosotros" element={<AboutPage />} />
           <Route path="contacto" element={<ContactPage />} />
           <Route path="torneos" element={<TorneoListPage />} />
           <Route path='torneo/:id' element={<TorneoPage />} />
         </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
         <Route path='torneo/team/create/:id' element={<CreateTeamPage />} />
         <Route element={<ProtectLayout />}>
-          <Route path="usuario" element={<ProfilePage />} />
+          <Route path="perfil" element={<ProfilePage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route path="torneo/:id" element={<TorneoAdminPage />} />
             <Route path='torneo/equipos/:id' element={<AdminTeamPage />} />
