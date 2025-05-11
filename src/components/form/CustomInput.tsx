@@ -2,6 +2,7 @@ import { Field, ErrorMessage } from 'formik'
 import { cn } from '@/lib/utils'
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from 'react';
+import { Users } from 'lucide-react';
 
 interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   label: string
@@ -11,6 +12,7 @@ interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   disabled?: boolean
   required?: boolean
   variant?: "default" | "error" | "success" | "warning" | "outline"
+  icon?: React.ReactNode
 }
 
 function CustomInput({
@@ -21,6 +23,7 @@ function CustomInput({
   required,
   type = "text",
   variant = "default",
+  icon = <Users className="h-4 w-4 text-purple-400" />,
   ...args
 }: Props) {
 
@@ -36,9 +39,13 @@ function CustomInput({
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold text-xl">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+      <div className="flex items-center gap-2 mb-2">
+        {icon}
+        <label className="text-white font-medium">
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </label>
+      </div>
       <div className="relative">
         <Field
           id={name}

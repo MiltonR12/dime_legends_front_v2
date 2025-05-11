@@ -28,7 +28,11 @@ function App() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(validateTokenThunk())
+    const token = localStorage.getItem('token')
+    if (!token) return localStorage.removeItem('token')
+    dispatch(validateTokenThunk()).unwrap().catch(() => {
+      localStorage.removeItem('token')
+    })
   }, [dispatch])
 
   return (

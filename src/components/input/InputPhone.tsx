@@ -1,6 +1,7 @@
 import { ErrorMessage, useField } from 'formik'
 import { cn } from '@/lib/utils'
 import { PhoneInput } from '../ui/phone-input';
+import { Users } from 'lucide-react';
 
 interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   label: string
@@ -10,6 +11,7 @@ interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   disabled?: boolean
   required?: boolean
   variant?: "default" | "error" | "success" | "warning" | "outline"
+  icon?: React.ReactNode
 }
 
 function InputPhone({
@@ -18,6 +20,7 @@ function InputPhone({
   placeholder,
   className,
   required,
+  icon = <Users className="h-4 w-4 text-purple-400" />,
   variant = "default",
 }: Props) {
 
@@ -30,14 +33,18 @@ function InputPhone({
     error: "bg-red-50 border-red-500 focus:ring-red-500",
     success: "bg-green-50 border-green-500 focus:ring-green-500",
     warning: "bg-yellow-50 border-yellow-500 focus:ring-yellow-500",
-    outline: "bg-transparent border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed"
+    outline: "bg-purple-900/20 border-purple-700 text-white placeholder:text-purple-400 focus:border-purple-500"
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold text-xl">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+      <div className="flex items-center gap-2 mb-2">
+        {icon}
+        <label className="text-white font-medium">
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </label>
+      </div>
       <div className="relative">
         <PhoneInput
           id={name}

@@ -67,12 +67,8 @@ export const validateTokenThunk = createAsyncThunk(
   "auth/validateToken",
   async (_, { rejectWithValue }) => {
     try {
-      const { futuresyo } = await validateTokenApi();
-      if (futuresyo.success) {
-        return futuresyo.data;
-      } else {
-        return rejectWithValue(futuresyo.message);
-      }
+      const { data, success, message } = await validateTokenApi();
+      return success ? data : rejectWithValue(message);
     } catch (err) {
       return rejectWithValue(err);
     }

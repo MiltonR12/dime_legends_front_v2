@@ -1,63 +1,91 @@
-import { AiFillDelete } from "react-icons/ai"
-import CustomInput from "./CustomInput"
-import { FieldArray, FieldArrayRenderProps } from "formik"
-import { Button } from "../ui/button"
+import { useField, FieldArray } from "formik"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Plus, Trash2, Users } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-type Props = {
-  name: string,
-  label: string,
-  placeholder?: string,
-  values: string[],
-  required?: boolean
-  disabled?: boolean
-  variant?: "outline" | "default"
+interface ArrayInputProps {
+  name: string
+  values: string[]
+  variant?: "default" | "outline"
+  minPlayers?: number
+  maxPlayers?: number
+  label: string
+  icon?: React.ReactNode
 }
 
-function ArrayInput({ name, label, values, required, placeholder, disabled, variant = "default" }: Props) {
-  return (
-    <div>
-      <FieldArray
-        name={name}
-        render={(actions: FieldArrayRenderProps) => {
-          return (
-            <div className='flex flex-col gap-1' >
-              <div className="flex justify-between items-center" >
-                <label className='font-semibold text-xl' >
-                  {label}
-                </label>
-                <Button type='button' onClick={() => actions.push("")} >
-                  Agregar +
-                </Button>
-              </div>
+function ArrayInput({
+  name,
+  values,
+  variant = "default",
+  minPlayers = 1,
+  maxPlayers = 10,
+  label,
+  icon = <Users className="h-4 w-4 text-purple-400" />
+}: ArrayInputProps) {
 
-              <div className="flex flex-col gap-1" >
-                {values.map((_, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_auto] justify-between items-end gap-x-2" >
-                    <CustomInput
-                      name={`${name}.${index}`}
-                      label={`${label} ${index + 1}`}
-                      type='text'
-                      disabled={disabled}
-                      placeholder={placeholder}
-                      required={required}
-                      variant={variant}
-                    />
+  const [_, meta] = useField(name)
+
+  return (
+
+    <div className="md:col-span-2">
+      <div className="flex items-center gap-2 mb-2">
+        {icon}
+        <label className="text-white font-medium">
+          {label}
+        </label>
+      </div>
+      <div className="space-y-3">
+        <FieldArray name={name} >
+          {({ remove, push }) => (
+            <div className="space-y-3">
+              {values.map((_, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <Input
+                    name={`${name}.${index}`}
+                    placeholder={`Nombre del jugador ${index + 1}`}
+                    className={cn(
+                      "flex-1",
+                      variant === "outline" &&
+                      "bg-purple-900/20 border-purple-700 text-white placeholder:text-purple-400 focus:border-purple-500",
+                      meta.touched && meta.error && "border-red-500",
+                    )}
+                  />
+                  {values.length > minPlayers && (
                     <Button
-                      variant="destructive"
                       type="button"
-                      className="mb-7"
-                      disabled={disabled}
-                      onClick={() => actions.remove(index)}
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => remove(index)}
+                      className="flex-shrink-0 h-10 w-10"
                     >
-                      <AiFillDelete />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
-                  </div>
-                ))}
-              </div>
+                  )}
+                </div>
+              ))}
+
+              {values.length < maxPlayers && (
+                <Button
+                  type="button"
+                  variant={variant === "outline" ? "outline" : "secondary"}
+                  onClick={() => push("")}
+                  className={cn(
+                    "w-full mt-2",
+                    variant === "outline" && "border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:text-white",
+                  )}
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Añadir jugador
+                </Button>
+              )}
+
+              {meta.touched && typeof meta.error === "string" && (
+                <div className="text-red-500 text-sm mt-1">{meta.error}</div>
+              )}
             </div>
-          )
-        }}
-      />
+          )}
+        </FieldArray>
+      </div>
     </div>
   )
 }

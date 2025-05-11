@@ -14,14 +14,14 @@ export const authLoginGoogleApi = async (token: string) => {
         message: body.message,
         status: body.status,
         data: body.data.user,
-      }
+      };
     } else {
       return {
         success: false,
         message: body.message,
         status: body.status,
         data: null,
-      }
+      };
     }
   } catch (err: any) {
     if (err.response) {
@@ -30,14 +30,14 @@ export const authLoginGoogleApi = async (token: string) => {
         message: err.response.data.message,
         status: err.response.data.status,
         data: null,
-      }
+      };
     } else {
-      return{
+      return {
         success: false,
         message: err.message || "Opps! Algo salió mal, intente más tarde.",
         status: "error",
         data: null,
-      }
+      };
     }
   }
 };
@@ -156,45 +156,33 @@ export const validateTokenApi = async () => {
     if (res.status === 200) {
       localStorage.setItem("token", body.data.token);
       return {
-        futuresyo: {
-          success: true,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: body.data.user,
-        },
+        success: true,
+        message: body.message,
+        status: body.status,
+        data: body.data.user,
       };
     } else {
       return {
-        futuresyo: {
-          success: false,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: null,
-        },
+        success: false,
+        message: body.message,
+        status: body.status,
+        data: null,
       };
     }
   } catch (err: any) {
     if (err.response) {
       return {
-        futuresyo: {
-          success: false,
-          code: err.response.data.code,
-          message: err.response.data.message,
-          status: err.response.data.status,
-          data: null,
-        },
+        success: false,
+        message: err.response.data.message,
+        status: err.response.data.status,
+        data: null,
       };
     } else {
       return {
-        futuresyo: {
-          success: false,
-          code: 500,
-          message: err.message || "Opps! Algo salió mal, intente más tarde.",
-          status: "error",
-          data: null,
-        },
+        success: false,
+        message: err.message || "Opps! Algo salió mal, intente más tarde.",
+        status: "error",
+        data: null,
       };
     }
   }

@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { useField } from "formik"
 import { useDropzone } from "react-dropzone"
 import { FiUpload, FiX } from "react-icons/fi";
+import { Button } from "../ui/button";
 
 type Props = {
   name: string
@@ -33,7 +34,7 @@ function UploadField({ name, className }: Props) {
     >
 
       <input {...getInputProps()} />
-      
+
       <div>
         {
           value ? <>
@@ -42,9 +43,13 @@ function UploadField({ name, className }: Props) {
               alt="banner"
               className='mx-auto'
             />
-            <button onClick={() => setValue(null)} className="absolute top-0 right-0 p-1 bg-white rounded-full" >
+            <Button
+              onClick={() => setValue(null)}
+              variant="secondary"
+              className="absolute right-4 top-4 p-2 h-auto rounded-full"
+            >
               <FiX />
-            </button>
+            </Button>
           </>
             :
             <div className="flex flex-col items-center justify-center p-5" >
