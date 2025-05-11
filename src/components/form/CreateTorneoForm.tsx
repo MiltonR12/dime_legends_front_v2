@@ -150,17 +150,13 @@ function CreateTorneoForm() {
               <ArrayInput
                 label='Reglas'
                 name='rules'
-                placeholder='Ejemplo: No hack, No bug, etc'
                 values={values.rules}
-                required={true}
               />
 
               <ArrayInput
                 label='Premios'
                 name='award'
-                placeholder='Ejemplo: 1er lugar: 1000, 2do lugar: 500, etc'
                 values={values.award}
-                required={true}
               />
 
               <InputTextArea
