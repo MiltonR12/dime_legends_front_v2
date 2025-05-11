@@ -41,9 +41,6 @@ const validationSchema = Yup.object({
   captain: Yup.string().required("El nombre del capitán es obligatorio"),
   phone: Yup.string().required("El teléfono es obligatorio"),
   image: Yup.mixed().required("La imagen del equipo es obligatoria"),
-  players: Yup.array()
-    .of(Yup.string().required("El nombre del jugador es obligatorio"))
-    .min(1, "Debe haber al menos un jugador"),
 })
 
 function CreateTeamForm({ id, torneo, onStepChange }: Props) {
@@ -74,6 +71,7 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
             const { image, ...rest } = values
+            console.log("values", values)
             dispatch(createTeamThunk({ ...rest, image, id }))
               .unwrap()
               .then(() => {
