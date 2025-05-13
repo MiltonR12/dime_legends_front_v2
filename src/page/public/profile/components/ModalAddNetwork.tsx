@@ -12,13 +12,18 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Form, Formik } from "formik"
+import { Plus } from "lucide-react"
 
 function ModalAddNetwork() {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button>
-          Agregar Red Social
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" /> Añadir Red
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-slate-950" >

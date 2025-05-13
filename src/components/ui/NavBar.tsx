@@ -88,7 +88,7 @@ function Header() {
 
             {isAuthenticated && (
               <NavLink
-                to="/mis-torneos"
+                to="/admin"
                 label="Mis Torneos"
                 icon={<Crown className="h-4 w-4" />}
                 isActive={isActive("/mis-torneos")}
@@ -128,7 +128,7 @@ function Header() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/mis-torneos" className="flex items-center gap-2 cursor-pointer">
+                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
                         <Trophy className="h-4 w-4 text-purple-400" />
                         <span>Mis Torneos</span>
                       </Link>

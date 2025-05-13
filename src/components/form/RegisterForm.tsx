@@ -123,7 +123,7 @@ function RegisterForm() {
                   dispatch(authLoginGoogleThunk(token))
                     .unwrap()
                     .then(() => {
-                      navigate("/usuario")
+                      navigate("/perfil")
                     })
                 }}
                 theme="filled_black"
