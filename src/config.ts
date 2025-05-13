@@ -2,4 +2,4 @@
 export const URL_API = 'https://dime-legends-back-v2.onrender.com/api'
 
 
-export const GOOGLE_CLIENT_ID = "835575957555-eoa5o8tpmbnn1hr4ce7ngr6ii57oedvi.apps.googleusercontent.com"
+export const GOOGLE_CLIENT_ID = "275723721575-spk4s93td11vp979tdsg026hp9p5jlo7.apps.googleusercontent.com"

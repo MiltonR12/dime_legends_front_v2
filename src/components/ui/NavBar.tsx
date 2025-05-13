@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
 import { useSelector } from "react-redux"
-import type { RootState } from "@/app/store"
+import { useAppDispatch, type RootState } from "@/app/store"
 import { cn } from "@/lib/utils"
 import { Button } from "./button"
 import { Gamepad2, Trophy, Users, Calendar, Menu, ChevronDown, LogOut, User, Settings, Crown } from "lucide-react"
@@ -16,6 +16,8 @@ import {
 } from "./dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "./sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
+import logo from '@/assets/imgs/logomandar.png'
+import { authLogout } from "@/app/redux/auth/authSlice"
 
 interface NavLinkProps {
   to: string
@@ -30,6 +32,7 @@ function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const dispatch = useAppDispatch()
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`)
@@ -56,17 +59,13 @@ function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="p-1.5 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg">
-              <Gamepad2 className="h-5 w-5 text-white" />
-            </div>
+            <img src={logo} alt="Logo" className="h-10 w-10" />
             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
               DIME LEGENDS
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
             <NavLink
               to="/torneos"
@@ -75,14 +74,14 @@ function Header() {
               isActive={isActive("/torneos")}
             />
             <NavLink
-              to="/equipos"
-              label="Equipos"
+              to="/sobre-nosotros"
+              label="Sobre Nosotros"
               icon={<Users className="h-4 w-4" />}
               isActive={isActive("/equipos")}
             />
             <NavLink
-              to="/calendario"
-              label="Calendario"
+              to="/contacto"
+              label="Contacto"
               icon={<Calendar className="h-4 w-4" />}
               isActive={isActive("/calendario")}
             />
@@ -97,7 +96,6 @@ function Header() {
             )}
           </nav>
 
-          {/* Auth Buttons or User Menu */}
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
@@ -142,7 +140,9 @@ function Header() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-purple-800/50" />
-                    <DropdownMenuItem className="flex items-center gap-2 text-red-400 focus:text-red-400 cursor-pointer">
+                    <DropdownMenuItem
+                      onClick={() => dispatch(authLogout())}
+                      className="flex items-center gap-2 text-red-400 focus:text-red-400 cursor-pointer">
                       <LogOut className="h-4 w-4" />
                       <span>Cerrar Sesión</span>
                     </DropdownMenuItem>
@@ -223,8 +223,8 @@ function Header() {
                       variant="destructive"
                       className="w-full justify-start"
                       onClick={() => {
-                        // Logout logic here
                         setIsMobileMenuOpen(false)
+                        dispatch(authLogout())
                       }}
                     >
                       <LogOut className="h-4 w-4 mr-2" /> Cerrar Sesión
@@ -282,14 +282,14 @@ function MobileNavigation({ isAuthenticated }: { isAuthenticated: boolean }) {
         isActive={isActive("/torneos")}
       />
       <MobileNavLink
-        to="/equipos"
-        label="Equipos"
+        to="/sobre-nosotros"
+        label="Sobre Nosotros"
         icon={<Users className="h-5 w-5" />}
         isActive={isActive("/equipos")}
       />
       <MobileNavLink
-        to="/calendario"
-        label="Calendario"
+        to="/contacto"
+        label="Contacto"
         icon={<Calendar className="h-5 w-5" />}
         isActive={isActive("/calendario")}
       />

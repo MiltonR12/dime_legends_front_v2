@@ -13,8 +13,6 @@ import {
   Trophy,
   Users,
   Calendar,
-  HelpCircle,
-  Shield,
 } from "lucide-react"
 import SocialButton from "../footer/SocialButton"
 import CommunityLink from "../footer/CommunityLink"
@@ -60,10 +58,10 @@ function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Enlaces rápidos</h4>
             <ul className="space-y-2">
               <FooterLink href="/torneos" icon={<Trophy size={16} />} text="Torneos" />
-              <FooterLink href="/equipos" icon={<Users size={16} />} text="Equipos" />
-              <FooterLink href="/calendario" icon={<Calendar size={16} />} text="Calendario" />
-              <FooterLink href="/faq" icon={<HelpCircle size={16} />} text="Preguntas frecuentes" />
-              <FooterLink href="/reglas" icon={<Shield size={16} />} text="Reglas y políticas" />
+              <FooterLink href="/sobre-nosotros" icon={<Users size={16} />} text="Sobre Nosotros" />
+              <FooterLink href="/contacto" icon={<Calendar size={16} />} text="Contacto" />
+              {/* <FooterLink href="/faq" icon={<HelpCircle size={16} />} text="Preguntas frecuentes" /> */}
+              {/* <FooterLink href="/reglas" icon={<Shield size={16} />} text="Reglas y políticas" /> */}
             </ul>
           </div>
 

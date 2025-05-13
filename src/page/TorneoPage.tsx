@@ -4,7 +4,7 @@ import { getListTournamentThunk, getTournamentIdThunk } from "@/app/redux/tourna
 import { type RootState, useAppDispatch } from "@/app/store"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { Link, Navigate, useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -39,7 +39,6 @@ function TorneoPage() {
     }
   }, [id, dispatch])
 
-  if (!id) return <Navigate to="/torneos" />
   if (isLoading) return <LoadingTournament />
 
   if (!tournament) {
@@ -148,7 +147,7 @@ function TorneoPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-10">
+      <div className="container mx-auto px-2 mt-10">
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="grid grid-cols-4 mb-8 bg-purple-900/30 p-1 rounded-xl">
             <TabsTrigger value="info" className="data-[state=active]:bg-purple-700 data-[state=active]:text-white">
@@ -179,7 +178,7 @@ function TorneoPage() {
                 <Separator className="my-4 bg-purple-700/30" />
                 <div
                   dangerouslySetInnerHTML={{ __html: tournament.description }}
-                  className="text-purple-200 max-w-none midium"
+                  className="text-purple-200 max-w-none midium overflow-x-hidden"
                 />
               </div>
 
