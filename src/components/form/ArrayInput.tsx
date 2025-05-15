@@ -1,5 +1,4 @@
-import { useField, FieldArray } from "formik"
-import { Input } from "@/components/ui/input"
+import { ErrorMessage, Field, FieldArray } from "formik"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -24,8 +23,6 @@ function ArrayInput({
   icon = <Users className="h-4 w-4 text-purple-400" />
 }: ArrayInputProps) {
 
-  const [_, meta] = useField(name)
-
   return (
 
     <div className="md:col-span-2">
@@ -41,14 +38,13 @@ function ArrayInput({
             <div className="space-y-3">
               {values.map((_, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <Input
+                  <Field
                     name={`${name}.${index}`}
                     placeholder={`Nombre del jugador ${index + 1}`}
                     className={cn(
                       "flex-1",
                       variant === "outline" &&
                       "bg-purple-900/20 border-purple-700 text-white placeholder:text-purple-400 focus:border-purple-500",
-                      meta.touched && meta.error && "border-red-500",
                     )}
                   />
                   {values.length > minPlayers && (
@@ -79,9 +75,11 @@ function ArrayInput({
                 </Button>
               )}
 
-              {meta.touched && typeof meta.error === "string" && (
-                <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-              )}
+              <ErrorMessage name={name}>
+                {(msg) => (
+                  <div className="text-red-500 text-sm mt-1">{msg + " "}</div>
+                )}
+              </ErrorMessage>
             </div>
           )}
         </FieldArray>

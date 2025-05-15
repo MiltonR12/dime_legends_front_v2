@@ -12,10 +12,7 @@ function UploadPhoto({ name }: Props) {
   const { setValue } = helpers
   const { value } = meta
   const { getInputProps, getRootProps } = useDropzone({
-    onDropAccepted: (files) => {
-      console.log(files[0])
-      setValue(files[0])
-    },
+    onDropAccepted: (files) => { setValue(files[0]) },
     accept: {
       'image/png': [".png", ".jpeg", ".jpg"],
     }
