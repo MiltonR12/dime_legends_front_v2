@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 interface ArrayInputProps {
   name: string
   values: string[]
-  variant?: "default" | "outline"
+  variant?: "default" | "outline" | "dark"
   minPlayers?: number
   maxPlayers?: number
   label: string
@@ -42,9 +42,11 @@ function ArrayInput({
                     name={`${name}.${index}`}
                     placeholder={`Nombre del jugador ${index + 1}`}
                     className={cn(
-                      "flex-1",
+                      "flex-1 bg-transparent outline-none py-2 px-4",
                       variant === "outline" &&
                       "bg-purple-900/20 border-purple-700 text-white placeholder:text-purple-400 focus:border-purple-500",
+                      variant === "dark" &&
+                      "bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:border-purple-500"
                     )}
                   />
                   {values.length > minPlayers && (
@@ -53,7 +55,7 @@ function ArrayInput({
                       variant="destructive"
                       size="icon"
                       onClick={() => remove(index)}
-                      className="flex-shrink-0 h-10 w-10"
+                      className={"flex-shrink-0 h-10 w-10"}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -64,11 +66,12 @@ function ArrayInput({
               {values.length < maxPlayers && (
                 <Button
                   type="button"
-                  variant={variant === "outline" ? "outline" : "secondary"}
+                  variant={variant === "dark" ? "outline" : variant === "outline" ? "outline" : "secondary"}
                   onClick={() => push("")}
                   className={cn(
                     "w-full mt-2",
                     variant === "outline" && "border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:text-white",
+                    variant === "dark" && "border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white"
                   )}
                 >
                   <Plus className="mr-2 h-4 w-4" /> Añadir jugador
