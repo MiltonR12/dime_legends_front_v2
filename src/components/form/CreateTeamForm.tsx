@@ -1,23 +1,20 @@
 import { Formik } from "formik"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
 import { useAppDispatch } from "@/app/store"
 import { createTeamThunk } from "@/app/redux/team/teamSlice"
 import type { TournamentOne } from "@/app/redux/tournament/tournament"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import CustomInput from "./CustomInput"
 import ArrayInput from "./ArrayInput"
 import InputUploadImage from "../input/InputUploadImage"
-import UploadField from "./UploadField"
 import InputPhone from "../input/InputPhone"
 import {
   CheckCircle,
   AlertCircle,
-  ArrowRight,
   ArrowLeft,
   Upload,
   Users,
@@ -25,9 +22,16 @@ import {
   Trophy,
   Loader2,
 } from "lucide-react"
-import { DownloadIcon } from "../icons/globals"
+import { bancoSimpleABI } from "@/payments/bancoSimpleABI"
+import { BrowserProvider, Contract, parseEther } from 'ethers';
 
 type PageForm = "payment" | "register" | "success"
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 type Props = {
   id: string
@@ -35,7 +39,8 @@ type Props = {
   onStepChange?: (step: number) => void
 }
 
-// Validation schema
+const CONTRACT_ADDRESS = "0x86cA07C6D491Ad7A535c26c5e35442f3e26e8497";
+
 const validationSchema = Yup.object({
   name: Yup.string().required("El nombre del equipo es obligatorio"),
   captain: Yup.string().required("El nombre del capitán es obligatorio"),
@@ -46,8 +51,47 @@ const validationSchema = Yup.object({
 })
 
 function CreateTeamForm({ id, torneo, onStepChange }: Props) {
+
   const [page, setPage] = useState<PageForm>(torneo.payment ? "payment" : "register")
   const dispatch = useAppDispatch()
+
+  const [contract, setContract] = useState<Contract | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+ const depositar = async (amount: string) => {
+  if (!window.ethereum || !contract || !amount) return;
+
+  const amountEth = parseFloat(amount) / 100;
+  const amountWei = parseEther(amountEth.toString());
+
+  try {
+    setIsLoading(true);
+
+    const tx = await contract.depositar({ value: amountWei });
+    await tx.wait();
+    setPage("register");
+  } catch (error) {
+    console.error("Error al depositar:", error);
+    alert("Error: Revisa el monto o la conexión.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  // const depositar = async (amount: string) => {
+  //   if (!window.ethereum) return alert("Instala Metamask");
+  //   const prov = new BrowserProvider(window.ethereum);
+  //   await prov.send("eth_requestAccounts", []);
+  //   const signer = await prov.getSigner();
+  //   const contrato = new Contract(CONTRACT_ADDRESS, bancoSimpleABI, signer);
+  //   if (!amount) return;
+  //   setIsLoading(true);
+  //   const tx = await contrato.depositar({ value: BigInt(amount) });
+  //   await tx.wait();
+  //   setIsLoading(false);
+  //   const saldo = await contrato.ObtenerSaldo();
+  //   alert(saldo.toString());
+  // };
 
   const updateStep = (newPage: PageForm) => {
     setPage(newPage)
@@ -57,6 +101,19 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
       else if (newPage === "success") onStepChange(3)
     }
   }
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (!window.ethereum) return alert("Instala Metamask");
+      const prov = new BrowserProvider(window.ethereum);
+      await prov.send("eth_requestAccounts", []);
+      const signer = await prov.getSigner();
+      await signer.getAddress();
+      const contrato = new Contract(CONTRACT_ADDRESS, bancoSimpleABI, signer);
+      setContract(contrato);
+    };
+    connectWallet();
+  }, []);
 
   return (
     <div>
@@ -69,6 +126,8 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
             image: null as File | null,
             voucher: null as File | null,
             players: [""],
+            amount: "",
+            account: "",
           }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
@@ -85,7 +144,7 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
         >
           {({ handleSubmit, values, isSubmitting, errors, touched }) => (
             <form onSubmit={handleSubmit}>
-              {page === "payment" && (
+              {/* {page === "payment" && (
                 <div className="flex flex-col gap-6">
                   <Alert className="bg-purple-900/30 border-purple-700">
                     <AlertCircle className="h-4 w-4 text-purple-400" />
@@ -154,6 +213,53 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
                       </div>
                     </div>
                   </div>
+                </div>
+              )} */}
+
+              {page === "payment" && (
+                <div className="flex flex-col gap-6">
+                  <Alert className="bg-purple-900/30 border-purple-700">
+                    <AlertCircle className="h-4 w-4 text-purple-400" />
+                    <AlertDescription className="text-purple-200">
+                      Para completar tu inscripción, realiza el pago de {torneo.payment?.amount} Bs y sube el
+                      comprobante.
+                    </AlertDescription>
+                  </Alert>
+
+                  <div>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <Badge className="bg-purple-600">Paso 1</Badge>
+                      <h3 className="text-xl font-semibold text-white">Realiza el pago</h3>
+
+                    </div>
+
+                    <CustomInput
+                      label="Amount (Base)"
+                      name="amount"
+                      disabled={isSubmitting}
+                      variant="outline"
+                      placeholder="Ej: 100 Base"
+                      icon={<Users className="h-4 w-4 text-purple-400" />}
+                    />
+                    <Button
+                      variant="form"
+                      type="button"
+                      onClick={() => depositar(values.amount)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="h-5 w-5 animate-spin" /> Procesando...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <Upload className="h-4 w-4" /> Depositar
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+
                 </div>
               )}
 
