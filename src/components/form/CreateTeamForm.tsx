@@ -39,7 +39,7 @@ type Props = {
   onStepChange?: (step: number) => void
 }
 
-const CONTRACT_ADDRESS = "0x86cA07C6D491Ad7A535c26c5e35442f3e26e8497";
+const CONTRACT_ADDRESS = "0x51Dc88d3877cD93CC57B692cAd09227931722d1B";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("El nombre del equipo es obligatorio"),
