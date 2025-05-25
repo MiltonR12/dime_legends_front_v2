@@ -79,8 +79,6 @@ export interface TournamentOne {
   imageQr: string | null;
   account: string | null;
   description: string;
-  modality: string[];
-  requirements: string[];
   rules: string[];
   award: string[];
   note: string;

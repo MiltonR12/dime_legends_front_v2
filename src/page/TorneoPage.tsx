@@ -305,8 +305,16 @@ function TorneoPage() {
 
               {battles.length > 0 ? (
                 <ul className="space-y-4">
-                  {battles.map(({ _id, date, teamOne, teamTwo }) => (
-                    <CardBattle key={_id} date={date} teamA={teamOne} teamB={teamTwo} />
+                  {battles.map(({ _id, date, teamOne, teamTwo, winner, round, group }) => (
+                    <CardBattle
+                      key={_id}
+                      date={date}
+                      teamA={teamOne}
+                      teamB={teamTwo}
+                      winner={winner}
+                      round={round}
+                      group={group}
+                    />
                   ))}
                 </ul>
               ) : (

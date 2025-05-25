@@ -144,3 +144,18 @@ export interface RGetMyTournament {
     updatedAt: string;
   }[];
 }
+
+export interface PUpdateTournament {
+  _id: string;
+  name?: string;
+  formUrl?: string;
+  dateStart?: string;
+  game?: string;
+  image?: File;
+  description?: string;
+  rules?: string[];
+  award?: string[];
+  config?: Configuration;
+  payment?: IPayment | null;
+  status?: boolean;
+}
