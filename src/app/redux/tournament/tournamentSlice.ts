@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { InitialStateTournamet } from "./tournament";
-import { PTournament } from "@/app/api/tournament/tournament";
+import { PTournament, PUpdateTournament } from "@/app/api/tournament/tournament";
 import {
   createTournamentApi,
   deleteTournamentApi,
   getListTournamentApi,
   getMyTournamentApi,
   getTournamentByIdApi,
+  updateTournamentApi,
 } from "@/app/api/tournament/tournamentApi";
 
 const initialState: InitialStateTournamet = {
@@ -76,6 +77,18 @@ export const createTournamentThunk = createAsyncThunk(
       } else {
         return rejectWithValue(futuresyo.message);
       }
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const updateTournamentThunk = createAsyncThunk(
+  "tournament/updateTournament",
+  async (payload: PUpdateTournament, { rejectWithValue }) => {
+    try {
+      const { success, data, message } = await updateTournamentApi(payload);
+      return success ? data : rejectWithValue(message);
     } catch (err) {
       return rejectWithValue(err);
     }
