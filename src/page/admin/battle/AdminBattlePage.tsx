@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getTournamentIdThunk } from "@/app/redux/tournament/tournamentSlice";
+import { getTeamByTournamentThunk } from "@/app/redux/team/teamSlice";
 
 const columnHelper = createColumnHelper<TBattle>();
 
@@ -186,7 +186,7 @@ function AdminBattlePage() {
   useEffect(() => {
     if (id) {
       dispatch(getBattlesThunk(id))
-      dispatch(getTournamentIdThunk(id))
+      dispatch(getTeamByTournamentThunk(id))
     }
   }, [dispatch, id])
 
