@@ -1,13 +1,21 @@
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from "../alert-dialog"
-import { Button } from "../ui/button"
-import { Formik } from 'formik'
-import { RootState, useAppDispatch } from "@/app/store"
-import InputDatePicker from "../input/inputDatePicker"
-import { TBattle } from "@/app/redux/battle/battle"
-import { useSelector } from "react-redux"
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import InputSelect from "../input/InputSelect"
 import InputNumber from "../input/InputNumber"
 import InputGroupRadioButton from "../input/InputGroupRadioButton"
+import { Calendar, Hash, Users, Loader2, Save, Swords } from "lucide-react"
+import InputDatePicker from "../input/inputDatePicker"
+import { Form, Formik } from "formik"
+import { TBattle } from "@/app/redux/battle/battle"
+import { RootState, useAppDispatch } from "@/app/store"
+import { useSelector } from "react-redux"
 import { updateBattleThunk } from "@/app/redux/battle/battleSlice"
 
 type Props = {
@@ -26,13 +34,13 @@ function UpdateBattleDialog({ battle, isOpen, onClose }: Props) {
 
   return (
     <AlertDialog open={isOpen} >
-      <AlertDialogContent className="bg-zinc-950" >
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Editar Horario
+      <AlertDialogContent className="bg-slate-900 border border-slate-700 p-0 max-w-2xl">
+        <AlertDialogHeader className="bg-slate-800 px-6 py-4">
+          <AlertDialogTitle className="text-xl text-white flex items-center gap-2">
+            <Swords className="h-5 w-5 text-purple-400" /> Actualizar Versus
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            Por favor, edita la información del horario a continuación.
+          <AlertDialogDescription className="text-slate-300">
+            Modifica los detalles del enfrentamiento entre equipos en el torneo
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Formik
@@ -57,38 +65,95 @@ function UpdateBattleDialog({ battle, isOpen, onClose }: Props) {
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
-            <form onSubmit={handleSubmit} >
+            <Form onSubmit={handleSubmit} className="p-6">
+              <div className="space-y-6">
+                <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className="h-5 w-5 text-purple-400" />
+                    <h3 className="text-lg font-medium text-white">Equipos Participantes</h3>
+                  </div>
 
-              <InputSelect label="Equipo 1" name="teamOne" list={nameTeams} disabled={isSubmitting} />
+                  <div className="space-y-4">
+                    <InputSelect
+                      label="Equipo 1"
+                      name="teamOne"
+                      list={nameTeams}
+                      placeholder="Selecciona el primer equipo"
+                    />
 
-              <InputSelect label="Equipo 2" name="teamTwo" list={nameTeams} disabled={isSubmitting} />
+                    <InputSelect
+                      label="Equipo 2"
+                      name="teamTwo"
+                      list={nameTeams}
+                      placeholder="Selecciona el segundo equipo"
+                    />
+                  </div>
+                </div>
 
-              <InputDatePicker
-                name="date"
-                label="Hora del encuentro"
-              />
+                {/* Date and Round */}
+                <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Calendar className="h-5 w-5 text-purple-400" />
+                    <h3 className="text-lg font-medium text-white">Detalles del Enfrentamiento</h3>
+                  </div>
 
-              <InputNumber label="Ronda" name="round" max={10} disabled={isSubmitting} />
+                  <div className="space-y-4">
+                    <InputDatePicker
+                      name="date"
+                      label="Fecha y hora del encuentro"
+                    // icon={<Calendar className="h-4 w-4 text-purple-400" />}
+                    />
 
-              <InputGroupRadioButton
-                label="Grupo"
-                name="group"
-                options={[
-                  { value: "A", label: "Winner Bracket" },
-                  { value: "B", label: "Loser Bracket" }
-                ]}
-                disabled={isSubmitting}
-              />
+                    <div className="grid grid-cols-[auto_1fr] gap-6">
+                      <InputNumber
+                        label="Ronda"
+                        name="round"
+                        max={10}
+                        disabled={isSubmitting}
+                        icon={<Hash className="h-4 w-4 text-purple-400" />}
+                      />
 
-              <AlertDialogFooter>
-                <AlertDialogCancel className="text-black" onClick={onClose} >
-                  Cancel
-                </AlertDialogCancel>
-                <Button type="submit" >
-                  {isSubmitting ? "Enviando..." : "Guardar"}
+                      <InputGroupRadioButton
+                        label="Grupo"
+                        name="group"
+                        options={[
+                          { value: "A", label: "Winner Bracket" },
+                          { value: "B", label: "Loser Bracket" },
+                        ]}
+                        disabled={isSubmitting}
+                      // icon={<Users className="h-4 w-4 text-purple-400" />}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onClose()}
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white"
+                >
+                  Cancelar
                 </Button>
-              </AlertDialogFooter>
-            </form>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-[#CB3CFF] to-[#7F25FB] hover:opacity-90 text-white"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" /> Creando...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Save className="h-4 w-4" /> Crear Versus
+                    </span>
+                  )}
+                </Button>
+              </div>
+            </Form>
           )}
         </Formik>
       </AlertDialogContent>

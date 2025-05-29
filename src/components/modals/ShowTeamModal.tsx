@@ -12,6 +12,7 @@ interface Props {
 }
 
 function ShowTeamModal({ team, trigger }: Props) {
+
   const [isOpen, setIsOpen] = useState(false)
   const [copiedField, setCopiedField] = useState<string | null>(null)
 

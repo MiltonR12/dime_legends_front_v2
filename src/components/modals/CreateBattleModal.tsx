@@ -34,7 +34,7 @@ function CreateBattleModal({ round = 0, group = "A" }: Props) {
   const nameTeams = teams
     .filter((team) => team.status !== "inactive")
     .map((team) => ({ value: team._id, label: team.name }))
-
+ 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>

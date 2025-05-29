@@ -58,13 +58,7 @@ function AdminBracketPage() {
                 id: teamTwo?._id,
               },
             ],
-            date: new Date(date).toLocaleString('es', {
-              weekday: 'long',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
+            date: date,
           })),
         }))}
         roundTitleComponent={(title, nro) => (
@@ -121,13 +115,7 @@ function AdminBracketPage() {
                 id: teamTwo?._id,
               },
             ],
-            date: new Date(date).toLocaleString('es', {
-              weekday: 'long',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
+            date: date,
           })),
         }))}
         roundTitleComponent={(title, nro) => (
