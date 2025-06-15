@@ -77,14 +77,10 @@ export const validateTokenThunk = createAsyncThunk(
 
 export const createPageThunk = createAsyncThunk(
   "auth/createPage",
-  async (data: PCreatePage, { rejectWithValue }) => {
+  async (payload: PCreatePage, { rejectWithValue }) => {
     try {
-      const { futuresyo } = await createPageApi(data);
-      if (futuresyo.success) {
-        return futuresyo.data;
-      } else {
-        return rejectWithValue(futuresyo.message);
-      }
+      const { data, message, success } = await createPageApi(payload);
+      return success ? data : rejectWithValue(message);
     } catch (err) {
       return rejectWithValue(err);
     }

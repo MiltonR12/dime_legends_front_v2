@@ -17,7 +17,7 @@ function InputDatePicker({ label, name, required, className }: Props) {
 
   return (
     <div className='flex flex-col gap-2' >
-      <label htmlFor={name} className='font-semibold text-xl' >
+      <label className="text-white font-medium">
         {label} {required && <span className='text-red-500' >*</span>}
       </label>
 

@@ -22,6 +22,7 @@ import ProfilePage from './page/public/profile/ProfilePage'
 import AdminTeamPage from './page/admin/team/AdminTeamPage'
 import AdminBattlePage from './page/admin/battle/AdminBattlePage'
 import AdminBracketPage from './page/admin/bracket/AdminBracketPage'
+import DashboardPage from './page/admin/dashboard/DashboardPage'
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
         <Route element={<ProtectLayout />}>
           <Route path="perfil" element={<ProfilePage />} />
           <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<DashboardPage />} />
             <Route path="torneo/:id" element={<TorneoAdminPage />} />
             <Route path='torneo/equipos/:id' element={<AdminTeamPage />} />
             <Route path='torneo/versus/:id' element={<AdminBattlePage />} />

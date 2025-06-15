@@ -34,7 +34,7 @@ function InputComboBox({ label, name, required, list }: Props) {
 
   return (
     <div className='flex flex-col gap-2' >
-      <label htmlFor={name} className='font-semibold text-xl' >
+      <label htmlFor={name} className='font-semibold text-white text-xl' >
         {label} {required && <span className='text-red-500' >*</span>}
       </label>
 

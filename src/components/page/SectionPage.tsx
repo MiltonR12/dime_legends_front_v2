@@ -30,8 +30,6 @@ function SectionPage() {
     navigator.clipboard.writeText(url)
     setCopiedUrl(url)
     CustomToast.info("URL copiada al portapapeles")
-
-    // Reset the copied state after 2 seconds
     setTimeout(() => {
       setCopiedUrl(null)
     }, 2000)

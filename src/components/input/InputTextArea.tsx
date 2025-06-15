@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { ErrorMessage, Field } from "formik"
+import { Label } from "../ui/label"
 
 type Props = {
   label: string
@@ -20,9 +21,9 @@ function InputTextArea({ label, name, placeholder, required, className, disabled
 
   return (
     <div className='flex flex-col gap-2' >
-      <label htmlFor={name} className='font-semibold text-xl' >
+      <Label htmlFor={name} className='font-semibold text-xl text-white' >
         {label} {required && <span className='text-red-500' >*</span>}
-      </label>
+      </Label>
 
       <Field name={name} >
         {({ field }: any) => (

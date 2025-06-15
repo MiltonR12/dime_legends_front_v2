@@ -204,45 +204,33 @@ export const createPageApi = async (data: PCreatePage) => {
 
     if (res.status === 200) {
       return {
-        futuresyo: {
-          success: true,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: body.data,
-        },
+        success: true,
+        message: body.message,
+        status: body.status,
+        data: body.data,
       };
     } else {
       return {
-        futuresyo: {
-          success: false,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: null,
-        },
+        success: false,
+        message: body.message,
+        status: body.status,
+        data: null,
       };
     }
   } catch (err: any) {
     if (err.response) {
       return {
-        futuresyo: {
-          success: false,
-          code: err.response.data.code,
-          message: err.response.data.message,
-          status: err.response.data.status,
-          data: null,
-        },
+        success: false,
+        message: err.response.data.message,
+        status: err.response.data.status,
+        data: null,
       };
     } else {
       return {
-        futuresyo: {
-          success: false,
-          code: 500,
-          message: err.message || "Opps! Algo salió mal, intente más tarde.",
-          status: "error",
-          data: null,
-        },
+        success: false,
+        message: err.message || "Opps! Algo salió mal, intente más tarde.",
+        status: "error",
+        data: null,
       };
     }
   }

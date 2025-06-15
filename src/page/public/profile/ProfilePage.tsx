@@ -42,10 +42,12 @@ function ProfilePage() {
         </div>
 
         <div className="grid md:grid-cols-[300px_1fr] gap-8">
-          {/* Left Sidebar - User Profile Summary */}
           <div className="space-y-6">
-            {/* Profile Card */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <Card className="bg-purple-950/30 border-purple-800/50 backdrop-blur-sm overflow-hidden">
                 <div className="h-24 bg-gradient-to-r from-purple-800/50 to-pink-800/50"></div>
                 <div className="px-6 pb-6 -mt-12">

@@ -34,7 +34,7 @@ function CustomInput({
     error: "bg-red-50 border-red-500 focus:ring-red-500",
     success: "bg-green-50 border-green-500 focus:ring-green-500",
     warning: "bg-yellow-50 border-yellow-500 focus:ring-yellow-500",
-    outline: "bg-transparent border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed",
+    outline: "bg-transparent text-white/80 border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed",
     dark: "bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:border-purple-500"
   }
 
