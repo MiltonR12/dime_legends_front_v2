@@ -16,7 +16,7 @@ function InputTextArea({ label, name, placeholder, required, className, disabled
 
   const variantClasses = {
     default: "bg-blue-950/50 rounded-lg",
-    outline: "bg-transparent border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed"
+    outline: "bg-transparent text-white border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed"
   }
 
   return (

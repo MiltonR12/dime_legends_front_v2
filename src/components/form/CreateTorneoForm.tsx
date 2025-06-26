@@ -23,7 +23,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ImageIcon,
   FileText,
   Gamepad2,
   Users,
@@ -211,13 +210,6 @@ function CreateTorneoForm() {
               <Form className="space-y-6">
                 {nextForm === "basic" && (
                   <div className="space-y-6 flex flex-col">
-
-                    <div className="bg-purple-900/20 p-6 rounded-lg border border-purple-800/30">
-                      <div className="flex items-center gap-3 mb-4">
-                        <ImageIcon className="h-5 w-5 text-purple-400" />
-                        <h3 className="text-white font-semibold">Banner del torneo</h3>
-                      </div>
-                    </div>
 
                     <UploadPhoto name="image" />
 
