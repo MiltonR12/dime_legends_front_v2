@@ -166,6 +166,9 @@ const TournamentSlice = createSlice({
           (tournament) => tournament._id !== payload
         );
       })
+      .addCase(updateTournamentThunk.fulfilled, (state, { payload }) => {
+        state.tournament = payload;
+      })
   },
 });
 

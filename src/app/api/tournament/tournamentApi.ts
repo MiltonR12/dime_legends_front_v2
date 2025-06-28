@@ -223,6 +223,9 @@ export const updateTournamentApi = async (tournament: PUpdateTournament) => {
       formData.append("dateStart", tournament.dateStart);
     if (tournament.formUrl) formData.append("formUrl", tournament.formUrl);
 
+    if (tournament.status !== undefined) {
+      formData.append("status", tournament.status.toString());
+    }
     if (tournament.award) {
       tournament.award.forEach((item) => {
         formData.append("award", item);
@@ -276,12 +279,13 @@ export const updateTournamentApi = async (tournament: PUpdateTournament) => {
     });
     const body = res.data;
 
+    console.log(body.data);
     if (res.status === 200) {
       return {
         success: true,
         message: body.message,
         status: body.status,
-        data: body.data.user,
+        data: body.data,
       };
     } else {
       return {

@@ -5,9 +5,6 @@ import { CustomToast } from "@/lib/handleToast";
 const instance = axios.create({
   baseURL: URL_API,
   timeout: 6000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 instance.interceptors.request.use((config) => {
@@ -27,7 +24,6 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-
     if (error.response.status >= 400) {
       CustomToast.error(error.response.data.message);
     }

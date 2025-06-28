@@ -10,11 +10,9 @@ import { Gamepad2, Trophy, Zap, ChevronRight, Crown, Users, Calendar } from "luc
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-// Import images
 import fanny_image from "@/assets/imgs/personajes/fanny.png"
 import personajes_image from "@/assets/imgs/personajes/personajes.png"
 import esmeralda from "@/assets/imgs/personajes/esmeralda.png"
-import nana from "@/assets/imgs/personajes/nana.png"
 import banner1 from "@/assets/imgs/banner/pausa.png"
 import banner2 from "@/assets/imgs/banner/sabado.png"
 import banner3 from "@/assets/imgs/banner/domingo.png"
@@ -347,7 +345,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Become Organizer Section */}
       <section className="py-20 px-4 bg-purple-950/30 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-20">
           <motion.img
@@ -441,14 +438,13 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600/20 rounded-full filter blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-pink-600/20 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
         </div>
 
-        <div className="container mx-auto relative z-10">
+        <div className="container mx-auto relative z-10 py-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -491,18 +487,6 @@ function HomePage() {
               </motion.div>
             </div>
           </motion.div>
-        </div>
-
-        <div className="absolute -left-32 bottom-0 opacity-20 h-3/4">
-          <motion.img
-            src={nana}
-            alt="Personaje"
-            className="h-full object-contain"
-            initial={{ y: 100, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 0.2 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          />
         </div>
       </section>
 

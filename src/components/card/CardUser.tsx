@@ -104,7 +104,7 @@ export function CardUser() {
                 asChild
                 className="hover:bg-purple-900/30 hover:text-white transition-colors duration-200 rounded-lg cursor-pointer md:p-4 focus:bg-purple-900/30 focus:text-white"
               >
-                <Link to="/usuario" className="flex items-center gap-3 px-2 py-2">
+                <Link to="/" className="flex items-center gap-3 px-2 py-2">
                   <div className="w-6 h-6 bg-indigo-600/20 rounded-md flex items-center justify-center">
                     <Home className="h-3 w-3 text-indigo-400" />
                   </div>
