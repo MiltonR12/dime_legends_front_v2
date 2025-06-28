@@ -33,18 +33,16 @@ body {
 }
 
 .fondo_portada {
-  background: linear-gradient(rgba(0, 0, 0, 0) 10%, rgb(0, 2, 23)) 40%,
-    url(./assets/imgs/fondo.jpg);
+  background: url(./assets/imgs/personajes/personajes.png);
   background-size: cover;
   background-position: bottom;
   background-repeat: no-repeat;
 }
-
 .fondo_participa {
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgb(0, 2, 23, 0.7)),
-    url(./assets/imgs/fondo_2.jpg);
-  background-size: cover;
-  background-position: bottom;
+  background: linear-gradient(270deg, oklch(29.1% 0.149 302.717), rgba(59, 7, 100, .5)),
+    url(./assets/imgs/personajes/personajes.png);
+  background-size: 50%;
+  background-position: left;
   background-repeat: no-repeat;
 }
 

@@ -1,18 +1,15 @@
-import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import Footer from "@/components/ui/Footer"
 import { BankDepositIcon, CompleteIcon, MedalIcon, RegisterIcon } from "@/components/icons/globals"
 import { FaUsers } from "react-icons/fa"
 import { TfiCup } from "react-icons/tfi"
 import { RiOrganizationChart } from "react-icons/ri"
-import { Gamepad2, Trophy, Zap, ChevronRight, Crown, Users, Calendar } from "lucide-react"
+import { Gamepad2, Trophy, Zap, Crown, Users, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 import fanny_image from "@/assets/imgs/personajes/fanny.png"
-import personajes_image from "@/assets/imgs/personajes/personajes.png"
-import esmeralda from "@/assets/imgs/personajes/esmeralda.png"
 import banner1 from "@/assets/imgs/banner/pausa.png"
 import banner2 from "@/assets/imgs/banner/sabado.png"
 import banner3 from "@/assets/imgs/banner/domingo.png"
@@ -25,131 +22,103 @@ import OrganizerFeature from "@/components/card/OrganizerFeature"
 
 function HomePage() {
 
-  const heroRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  })
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"])
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-
   return (
     <main className="bg-gradient-to-b from-purple-950 to-black overflow-hidden">
-      <section ref={heroRef} className="min-h-screen relative flex items-center justify-center overflow-hidden">
+      <div className="bg-purple-950" >
+        <section className="min-h-screen fondo_participa relative flex items-center justify-center overflow-hidden">
 
-        <div className="absolute inset-0 z-0 opacity-30">
-          <motion.img
-            style={{ y, opacity }}
-            src={personajes_image}
-            alt="Personajes de fondo"
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
-
-        <div className="container mx-auto grid md:grid-cols-2 gap-8 relative z-10 px-4 py-20">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col justify-center"
-          >
-            <Badge
-              className="w-fit mb-6 bg-purple-600/80 hover:bg-purple-600 text-white px-4 py-1.5 text-sm backdrop-blur-sm"
-              variant="default"
+          <div className="container mx-auto grid md:grid-cols-2 gap-8 relative z-10 px-4 py-20">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="flex flex-col justify-center"
             >
-              ¡NUEVA TEMPORADA DE TORNEOS!
-            </Badge>
+              <Badge
+                className="w-fit mb-6 bg-purple-600/80 hover:bg-purple-600 text-white px-4 py-1.5 text-sm backdrop-blur-sm"
+                variant="default"
+              >
+                ¡NUEVA TEMPORADA DE TORNEOS!
+              </Badge>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">DIME</span>{" "}
-              <span className="text-white">LEGENDS</span>
-            </h1>
+              <h1 className="text-5xl md:text-7xl font-bold mb-4">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+                  DIME
+                </span>{" "}
+                <span className="text-white">LEGENDS</span>
+              </h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl text-purple-200 mb-8 max-w-xl"
-            >
-              Participa en la competencia más épica de gaming, forma tu equipo y demuestra que eres el mejor.{" "}
-              <span className="font-bold text-white">¡El trono te espera!</span>
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-xl md:text-2xl text-purple-200 mb-8 max-w-xl"
+              >
+                Participa en la competencia más épica de gaming, forma tu equipo y demuestra que eres el mejor.{" "}
+                <span className="font-bold text-white">¡El trono te espera!</span>
+              </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full sm:w-auto text-lg py-6 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.5)] border-none transition-all duration-300"
-                >
-                  <Link to="/torneos" className="flex items-center gap-2">
-                    <Trophy className="h-5 w-5" /> Ver Torneos
-                  </Link>
-                </Button>
-              </motion.div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="w-full sm:w-auto text-lg py-6 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.5)] border-none transition-all duration-300"
+                  >
+                    <Link to="/torneos" className="flex items-center gap-2">
+                      <Trophy className="h-5 w-5" /> Ver Torneos
+                    </Link>
+                  </Button>
+                </motion.div>
 
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="w-full sm:w-auto text-lg py-6 px-8 border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:text-white"
-                >
-                  <Link to="/register" className="flex items-center gap-2">
-                    <Users className="h-5 w-5" /> Crear Cuenta
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
-
-            <div className="mt-12 flex items-center gap-4">
-              <div className="flex -space-x-4">
-                <div className="w-10 h-10 rounded-full bg-purple-700 flex items-center justify-center text-white">
-                  <Users className="h-5 w-5" />
-                </div>
-                <div className="w-10 h-10 rounded-full bg-pink-700 flex items-center justify-center text-white">
-                  <Trophy className="h-5 w-5" />
-                </div>
-                <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white">
-                  <Gamepad2 className="h-5 w-5" />
-                </div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto text-lg py-6 px-8 border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:text-white"
+                  >
+                    <Link to="/register" className="flex items-center gap-2">
+                      <Users className="h-5 w-5" /> Crear Cuenta
+                    </Link>
+                  </Button>
+                </motion.div>
               </div>
-              <p className="text-purple-300 text-sm">+1,500 jugadores ya son parte de nuestra comunidad</p>
-            </div>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex justify-center items-center relative"
-          >
-            <div className="absolute w-[400px] h-[400px] rounded-full bg-gradient-to-r from-purple-600/30 to-pink-600/30 filter blur-3xl"></div>
-            <motion.img
-              src={fanny_image}
-              alt="Personaje principal"
-              className="z-10 max-h-[80vh] object-contain"
-              initial={{ y: 20 }}
-              animate={{ y: -20 }}
-              transition={{ repeat: Number.POSITIVE_INFINITY, repeatType: "reverse", duration: 2, ease: "easeInOut" }}
-            />
-          </motion.div>
-        </div>
+              <div className="mt-12 flex items-center gap-4">
+                <div className="flex -space-x-4">
+                  <div className="w-10 h-10 rounded-full bg-purple-700 flex items-center justify-center text-white">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-pink-700 flex items-center justify-center text-white">
+                    <Trophy className="h-5 w-5" />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white">
+                    <Gamepad2 className="h-5 w-5" />
+                  </div>
+                </div>
+                <p className="text-purple-300 text-sm">+1,500 jugadores ya son parte de nuestra comunidad</p>
+              </div>
+            </motion.div>
 
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center z-20">
-          <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.5, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
-          >
-            <a href="#how-it-works" className="text-purple-300 flex flex-col items-center">
-              <span className="text-sm mb-2">Descubre más</span>
-              <ChevronRight className="h-6 w-6 rotate-90" />
-            </a>
-          </motion.div>
-        </div>
-      </section>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex justify-center items-center relative"
+            >
+              <motion.img
+                src={fanny_image}
+                alt="Personaje principal"
+                className="z-10 max-h-[80vh] object-contain"
+                initial={{ y: 20 }}
+                animate={{ y: -20 }}
+                transition={{ repeat: Number.POSITIVE_INFINITY, repeatType: "reverse", duration: 2, ease: "easeInOut" }}
+              />
+            </motion.div>
+          </div>
+        </section>
+      </div>
 
       {/* How it works section */}
       <section id="how-it-works" className="py-20 px-4">
@@ -346,18 +315,6 @@ function HomePage() {
       </section>
 
       <section className="py-20 px-4 bg-purple-950/30 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-20">
-          <motion.img
-            src={esmeralda}
-            alt="Personaje"
-            className="h-full object-contain object-right"
-            initial={{ x: 100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 0.2 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          />
-        </div>
-
         <div className="container mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
