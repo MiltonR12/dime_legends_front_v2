@@ -46,7 +46,6 @@ function AdminLayout() {
         collapsible="icon"
         className="border-r border-purple-800/30 bg-gradient-to-b from-purple-950/95 to-black/95 backdrop-blur-sm"
       >
-        {/* Header */}
         <SidebarHeader className="flex-row items-center py-6 px-4 gap-4 border-b border-purple-800/30">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-lg blur-sm"></div>
@@ -61,7 +60,6 @@ function AdminLayout() {
         </SidebarHeader>
 
         <SidebarContent className="px-3 py-4 space-y-4">
-          {/* Create Tournament Button */}
           <div className="px-1">
             <Button
               asChild
@@ -100,7 +98,7 @@ function AdminLayout() {
                 </div>
               ) : (
                 myTournaments.map((item) => (
-                  <Collapsible key={item._id} defaultOpen className="group/collapsible">
+                  <Collapsible key={item._id} className="group/collapsible">
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
@@ -110,7 +108,9 @@ function AdminLayout() {
                           <div className="w-6 h-6 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-md flex items-center justify-center">
                             <Trophy className="h-3 w-3 text-purple-400" />
                           </div>
-                          <span className="font-medium truncate">{item.name}</span>
+                          <span className="font-medium capitalize truncate">
+                            {item.name?.toLowerCase().slice(0, 30)}
+                          </span>
                           <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-purple-400" />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>

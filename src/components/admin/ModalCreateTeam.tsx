@@ -32,6 +32,7 @@ type Props = {
 }
 
 function ModalCreateTeam({ id }: Props) {
+
   const dispatch = useAppDispatch()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -76,9 +77,7 @@ function ModalCreateTeam({ id }: Props) {
           }}
           validationSchema={teamSchema}
           onSubmit={(values, { setSubmitting }) => {
-            const { image, ...rest } = values
-            if (!image) return
-            dispatch(createTeamThunk({ image, id, voucher: null, ...rest }))
+            dispatch(createTeamThunk({ id, voucher: null, ...values }))
               .then(() => { setIsOpen(false) })
               .finally(() => { setSubmitting(false) })
           }}
