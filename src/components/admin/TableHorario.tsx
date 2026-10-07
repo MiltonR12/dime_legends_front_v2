@@ -1,9 +1,8 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import CreateBattleModal from "../modals/CreateBattleModal";
-import { TBattle } from "@/app/redux/battle/battle";
-import { useAppDispatch } from "@/app/store";
-import { deleteBattleThunk } from "@/app/redux/battle/battleSlice";
+import { TBattle } from "@/app/api/battle/battle.types";
+import { useDeleteBattle } from "@/hooks/battle";
 import ShowTeamModal from "../modals/ShowTeamModal";
 import MenuTable from "../menu/MenuTable";
 import Image from "../ui/Image";
@@ -20,14 +19,14 @@ type Props = {
 
 function TableHorario({ data }: Props) {
 
-  const dispatch = useAppDispatch()
+  const { mutate: removeBattle } = useDeleteBattle()
   const [selectBattle, setSelectBattle] = useState<TBattle | null>(null)
   const [isOpenDelete, setIsOpenDelete] = useState(false)
   const [isOpenedit, setIsOpenedit] = useState(false)
   const rowRef = useRef<HTMLTableRowElement>(null)
 
   const deleteBattle = (id: string) => {
-    dispatch(deleteBattleThunk(id))
+    removeBattle(id)
   }
 
   const columns = [

@@ -1,10 +1,11 @@
-import { RootState } from '@/app/store'
-import { useSelector } from 'react-redux'
+import { useAuth } from '@/hooks/auth'
 import { Navigate, Outlet } from 'react-router-dom'
 
 function ProtectLayout() {
 
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) return null
 
   if (!isAuthenticated) {
     return <Navigate to='/' />

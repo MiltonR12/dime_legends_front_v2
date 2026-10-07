@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik"
 import * as Yup from "yup"
-import { sendContactApi } from "@/app/api/contact/contactApi"
+import { useSendContact } from "@/hooks/contact"
 import { CustomToast } from "@/lib/handleToast"
 import CustomInput from "@/components/form/CustomInput"
 import InputTextArea from "@/components/input/InputTextArea"
@@ -22,6 +22,7 @@ const validateSchema = Yup.object().shape({
 })
 
 function ContactPage() {
+  const { mutateAsync: sendContact } = useSendContact()
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-950 to-black">
       {/* Hero Section */}
@@ -165,7 +166,7 @@ function ContactPage() {
                     message: "",
                   }}
                   onSubmit={({ email, firstName, lastName, message, phone }, { setSubmitting, resetForm }) => {
-                    sendContactApi({
+                    sendContact({
                       email,
                       message,
                       phone,
@@ -174,6 +175,7 @@ function ContactPage() {
                       .then(() => {
                         CustomToast.success("Mensaje enviado correctamente")
                       })
+                      .catch(() => undefined)
                       .finally(() => {
                         setSubmitting(false)
                         resetForm()

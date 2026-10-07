@@ -1,4 +1,4 @@
-import type { ListTournament } from "@/app/redux/tournament/tournament"
+import type { ListTournament } from "@/app/api/tournament/tournament.types"
 import { ListaGamesImage } from "@/payments/games"
 import { Link } from "react-router-dom"
 import Image from "../ui/Image"

@@ -2,9 +2,8 @@ import { Formik } from "formik"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
-import { useAppDispatch } from "@/app/store"
-import { createTeamThunk } from "@/app/redux/team/teamSlice"
-import type { TournamentOne } from "@/app/redux/tournament/tournament"
+import { useCreateTeam } from "@/hooks/team"
+import type { TournamentOne } from "@/app/api/tournament/tournament.types"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
@@ -47,7 +46,7 @@ const validationSchema = Yup.object({
 
 function CreateTeamForm({ id, torneo, onStepChange }: Props) {
   const [page, setPage] = useState<PageForm>(torneo.payment ? "payment" : "register")
-  const dispatch = useAppDispatch()
+  const { mutateAsync: createTeam } = useCreateTeam()
 
   const updateStep = (newPage: PageForm) => {
     setPage(newPage)
@@ -73,11 +72,11 @@ function CreateTeamForm({ id, torneo, onStepChange }: Props) {
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
             const { image, ...rest } = values
-            dispatch(createTeamThunk({ ...rest, image, id }))
-              .unwrap()
+            createTeam({ ...rest, image, id })
               .then(() => {
                 updateStep("success")
               })
+              .catch(() => undefined)
               .finally(() => {
                 setSubmitting(false)
               })

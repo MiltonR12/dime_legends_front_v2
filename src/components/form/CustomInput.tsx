@@ -12,7 +12,7 @@ interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
   disabled?: boolean
   required?: boolean
   variant?: "default" | "error" | "success" | "warning" | "outline" | "dark"
-  icon?: React.ReactNode
+  icon?: React.ReactNode | null
 }
 
 function CustomInput({
@@ -35,14 +35,14 @@ function CustomInput({
     success: "bg-green-50 border-green-500 focus:ring-green-500",
     warning: "bg-yellow-50 border-yellow-500 focus:ring-yellow-500",
     outline: "bg-transparent text-white/80 border-b border-gray-300 focus:ring-gray-500 border-opacity-80 border-dashed",
-    dark: "bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:border-purple-500"
+    dark: "h-10 rounded-md border border-admin-border bg-admin-input text-sm text-admin-text placeholder:text-admin-muted focus:border-admin-accent"
   }
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         {icon}
-        <label className="text-white font-medium">
+        <label className={cn("font-medium text-white", variant === "dark" && "text-sm text-admin-text")}>
           {label}
           {required && <span className="text-red-500">*</span>}
         </label>
@@ -71,9 +71,9 @@ function CustomInput({
           </button>
         )}
       </div>
-      <div className="h-5">
+      <div className="h-3">
         <ErrorMessage name={name}>
-          {msg => <span className="text-red-500">{msg}</span>}
+          {msg => <span className="text-red-500 text-sm">{msg}</span>}
         </ErrorMessage>
       </div>
     </div>

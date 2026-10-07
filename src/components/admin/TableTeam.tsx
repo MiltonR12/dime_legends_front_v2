@@ -13,13 +13,12 @@ import { Accordion, AccordionContent, AccordionItem } from "../ui/accordion";
 import { GrStatusGood } from "react-icons/gr";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
-import { Team } from "@/app/redux/team/team";
+import { Team } from "@/app/api/team/team.types";
 import { ImageTable } from "../icons/Image";
 import MenuTable from "../menu/MenuTable";
-import { useAppDispatch } from "@/app/store";
+import { useDeleteTeam } from "@/hooks/team";
 import { useState } from "react";
 import ModalDelete from "../modals/ModalDelete";
-import { deleteTeamThunk } from "@/app/redux/team/teamSlice";
 import { Button } from "../ui/button";
 import DirectionIcon from "../icons/DirectionIcon";
 import ModalEditTeam from "./ModalEditTeam";
@@ -46,7 +45,7 @@ type Props = {
 
 function TableTeam({ data = [], id }: Props) {
 
-  const dispatch = useAppDispatch()
+  const { mutateAsync: deleteTeam } = useDeleteTeam()
   const [isOpenDelete, setIsOpenDelete] = useState(false)
   const [isOpenEdit, setIsOpenEdit] = useState(false)
   const [showPlayers, setShowPlayers] = useState("")
@@ -64,9 +63,11 @@ function TableTeam({ data = [], id }: Props) {
   }
 
   const handleDelete = (id: string) => {
-    dispatch(deleteTeamThunk(id)).then(() => {
-      setIsOpenDelete(false)
-    })
+    deleteTeam(id)
+      .then(() => {
+        setIsOpenDelete(false)
+      })
+      .catch(() => undefined)
   }
 
   const handleShowPlayers = (id: string) => {

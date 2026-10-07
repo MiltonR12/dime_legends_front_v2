@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import CustomInput from "@/components/form/CustomInput"
 import { createPageValidation } from "@/lib/validations"
-import { useAppDispatch } from "@/app/store"
-import { createPageThunk } from "@/app/redux/auth/authSlice"
+import { useCreateUserPage } from "@/hooks/auth"
 import UploadPhoto from "@/components/input/UploadPhoto"
 import InputTextArea from "@/components/input/InputTextArea"
 import { Crown, Users, ImageIcon, FileText } from "lucide-react"
@@ -19,7 +18,7 @@ import { Badge } from "@/components/ui/badge"
 
 function CreatePageModal() {
 
-  const dispatch = useAppDispatch()
+  const { mutateAsync: createPage } = useCreateUserPage()
 
   return (
     <Dialog>
@@ -57,14 +56,12 @@ function CreatePageModal() {
             }}
             onSubmit={({ description, image, name }, { setSubmitting }) => {
               if (!image) return
-              dispatch(
-                createPageThunk({
-                  description,
-                  image,
-                  name,
-                }),
-              )
-                .unwrap()
+              createPage({
+                description,
+                image,
+                name,
+              })
+                .catch(() => undefined)
                 .finally(() => {
                   setSubmitting(false)
                 })

@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { motion } from "framer-motion"
-import { useSelector } from "react-redux"
-import { useAppDispatch, type RootState } from "@/app/store"
+import { useAuth, useLogout } from "@/hooks/auth"
 import { cn } from "@/lib/utils"
 import { Button } from "./button"
 import { Gamepad2, Trophy, Users, Calendar, Menu, ChevronDown, LogOut, User, Settings, Crown } from "lucide-react"
@@ -17,8 +16,6 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "./sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 import logo from '@/assets/imgs/logomandar.png'
-import { authLogout } from "@/app/redux/auth/authSlice"
-
 interface NavLinkProps {
   to: string
   label: string
@@ -31,8 +28,8 @@ function Header() {
   const location = useLocation()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth)
-  const dispatch = useAppDispatch()
+  const { user, isAuthenticated } = useAuth()
+  const logout = useLogout()
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`)
@@ -141,7 +138,7 @@ function Header() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-purple-800/50" />
                     <DropdownMenuItem
-                      onClick={() => dispatch(authLogout())}
+                      onClick={() => logout()}
                       className="flex items-center gap-2 text-red-400 focus:text-red-400 cursor-pointer">
                       <LogOut className="h-4 w-4" />
                       <span>Cerrar Sesión</span>
@@ -224,7 +221,7 @@ function Header() {
                       className="w-full justify-start"
                       onClick={() => {
                         setIsMobileMenuOpen(false)
-                        dispatch(authLogout())
+                        logout()
                       }}
                     >
                       <LogOut className="h-4 w-4 mr-2" /> Cerrar Sesión

@@ -1,237 +1,42 @@
 import axios from "@/lib/axios";
-import { PCreatePage, PLogin, PRegister } from "./auth";
+import type { ApiResponse } from "../response";
+import type { PCreatePage, PLogin, PRegister } from "./auth";
+import type { User } from "./auth.types";
+
+type Session = { token: string; user: User };
+
+const saveSession = ({ token, user }: Session) => {
+  localStorage.setItem("token", token);
+  return user;
+};
 
 export const authLoginGoogleApi = async (token: string) => {
-  try {
-    const res = await axios.post("/google", { token });
-
-    const body = res.data;
-
-    if (res.status === 200) {
-      localStorage.setItem("token", body.data.token);
-      return {
-        success: true,
-        message: body.message,
-        status: body.status,
-        data: body.data.user,
-      };
-    } else {
-      return {
-        success: false,
-        message: body.message,
-        status: body.status,
-        data: null,
-      };
-    }
-  } catch (err: any) {
-    if (err.response) {
-      return {
-        success: false,
-        message: err.response.data.message,
-        status: err.response.data.status,
-        data: null,
-      };
-    } else {
-      return {
-        success: false,
-        message: err.message || "Opps! Algo salió mal, intente más tarde.",
-        status: "error",
-        data: null,
-      };
-    }
-  }
+  const { data } = await axios.post<ApiResponse<Session>>("/google", { token });
+  return saveSession(data.data);
 };
 
 export const authLoginApi = async ({ email, password }: PLogin) => {
-  try {
-    const res = await axios.post("/login", {
-      email,
-      password,
-    });
-
-    const body = res.data;
-
-    if (res.status === 200) {
-      localStorage.setItem("token", body.data.token);
-      return {
-        futuresyo: {
-          success: true,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: body.data.user,
-        },
-      };
-    } else {
-      return {
-        futuresyo: {
-          success: false,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: null,
-        },
-      };
-    }
-  } catch (err: any) {
-    if (err.response) {
-      return {
-        futuresyo: {
-          success: false,
-          code: err.response.data.code,
-          message: err.response.data.message,
-          status: err.response.data.status,
-          data: null,
-        },
-      };
-    } else {
-      return {
-        futuresyo: {
-          success: false,
-          code: 500,
-          message: err.message || "Opps! Algo salió mal, intente más tarde.",
-          status: "error",
-          data: null,
-        },
-      };
-    }
-  }
+  const { data } = await axios.post<ApiResponse<Session>>("/login", { email, password });
+  return saveSession(data.data);
 };
 
-export const authRegisterApi = async (data: PRegister) => {
-  try {
-    const res = await axios.post("/register", data);
-    const body = res.data;
-
-    if (res.status === 200) {
-      return {
-        futuresyo: {
-          success: true,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: body.data.user,
-        },
-      };
-    } else {
-      return {
-        futuresyo: {
-          success: false,
-          code: body.code,
-          message: body.message,
-          status: body.status,
-          data: null,
-        },
-      };
-    }
-  } catch (err: any) {
-    if (err.response) {
-      return {
-        futuresyo: {
-          success: false,
-          code: err.response.data.code,
-          message: err.response.data.message,
-          status: err.response.data.status,
-          data: null,
-        },
-      };
-    } else {
-      return {
-        futuresyo: {
-          success: false,
-          code: 500,
-          message: err.message || "Opps! Algo salió mal, intente más tarde.",
-          status: "error",
-          data: null,
-        },
-      };
-    }
-  }
+export const authRegisterApi = async (payload: PRegister) => {
+  await axios.post<ApiResponse>("/register", payload);
 };
 
 export const validateTokenApi = async () => {
-  try {
-    const res = await axios.get("/validate-token");
-    const body = res.data;
-    if (res.status === 200) {
-      localStorage.setItem("token", body.data.token);
-      return {
-        success: true,
-        message: body.message,
-        status: body.status,
-        data: body.data.user,
-      };
-    } else {
-      return {
-        success: false,
-        message: body.message,
-        status: body.status,
-        data: null,
-      };
-    }
-  } catch (err: any) {
-    if (err.response) {
-      return {
-        success: false,
-        message: err.response.data.message,
-        status: err.response.data.status,
-        data: null,
-      };
-    } else {
-      return {
-        success: false,
-        message: err.message || "Opps! Algo salió mal, intente más tarde.",
-        status: "error",
-        data: null,
-      };
-    }
-  }
+  const { data } = await axios.get<ApiResponse<Session>>("/validate-token");
+  return saveSession(data.data);
 };
 
-export const createPageApi = async (data: PCreatePage) => {
-  try {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("image", data.image);
+export const createPageApi = async (payload: PCreatePage) => {
+  const formData = new FormData();
+  formData.append("name", payload.name);
+  formData.append("description", payload.description);
+  formData.append("image", payload.image);
 
-    const res = await axios.post("/page", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    const body = res.data;
-
-    if (res.status === 200) {
-      return {
-        success: true,
-        message: body.message,
-        status: body.status,
-        data: body.data,
-      };
-    } else {
-      return {
-        success: false,
-        message: body.message,
-        status: body.status,
-        data: null,
-      };
-    }
-  } catch (err: any) {
-    if (err.response) {
-      return {
-        success: false,
-        message: err.response.data.message,
-        status: err.response.data.status,
-        data: null,
-      };
-    } else {
-      return {
-        success: false,
-        message: err.message || "Opps! Algo salió mal, intente más tarde.",
-        status: "error",
-        data: null,
-      };
-    }
-  }
+  const { data } = await axios.post<ApiResponse<User>>("/page", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data.data;
 };

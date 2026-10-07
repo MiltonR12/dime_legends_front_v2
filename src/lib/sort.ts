@@ -1,4 +1,4 @@
-import { TBattle } from "@/app/redux/battle/battle";
+import { TBattle } from "@/app/api/battle/battle.types";
 
 export const groupBattlesByRound = (battles: TBattle[]) => {
   const grouped = battles.reduce((acc, battle) => {

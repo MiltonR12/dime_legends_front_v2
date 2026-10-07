@@ -1,8 +1,7 @@
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useAuth } from "@/hooks/auth"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import type { RootState } from "@/app/store"
 import { CustomToast } from "@/lib/handleToast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -23,7 +22,7 @@ import {
 import ModalAddNetwork from "@/page/public/profile/components/ModalAddNetwork"
 
 function SectionPage() {
-  const { user } = useSelector((state: RootState) => state.auth)
+  const { user } = useAuth()
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null)
 
   const copyUrl = (url: string) => {
@@ -72,7 +71,7 @@ function SectionPage() {
           </div>
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-purple-400" />
-            <span className="text-purple-200">{page.description.length} caracteres en la descripción</span>
+            <span className="text-purple-200">{page.description?.length ?? 0} caracteres en la descripción</span>
           </div>
         </CardContent>
         <CardFooter>

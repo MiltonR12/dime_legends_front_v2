@@ -6,13 +6,15 @@ import { ErrorMessage, useField } from "formik"
 import { useDropzone } from "react-dropzone"
 import { ImageIcon, Upload, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { useState } from "react"
 
 type Props = {
   name: string
+  plain?: boolean
 }
 
-function UploadPhoto({ name }: Props) {
+function UploadPhoto({ name, plain = false }: Props) {
   
   const [, meta, helpers] = useField(name)
   const { setValue } = helpers
@@ -42,9 +44,11 @@ function UploadPhoto({ name }: Props) {
 
   const getDropzoneStyles = () => {
     if (isDragReject) return "border-red-500/50 bg-red-950/20"
-    if (isDragAccept || isDragActive) return "border-purple-400 bg-purple-950/30 scale-[1.02]"
-    if (value) return "border-purple-600/50 bg-purple-950/20"
-    return "border-purple-700/50 bg-purple-950/10 hover:border-purple-500/70 hover:bg-purple-950/20"
+    if (isDragAccept || isDragActive) return plain ? "border-admin-accent bg-admin-row" : "border-purple-400 bg-purple-950/30 scale-[1.02]"
+    if (value) return plain ? "border-admin-border bg-admin-input" : "border-purple-600/50 bg-purple-950/20"
+    return plain
+      ? "border-admin-border bg-admin-input hover:border-admin-accent"
+      : "border-purple-700/50 bg-purple-950/10 hover:border-purple-500/70 hover:bg-purple-950/20"
   }
 
   return (
@@ -53,7 +57,7 @@ function UploadPhoto({ name }: Props) {
         {...getRootProps()}
         className={`
           relative cursor-pointer transition-all duration-300 ease-in-out
-          border-2 border-dashed rounded-xl p-6
+          border border-dashed rounded-lg p-4
           ${getDropzoneStyles()}
         `}
       >
@@ -90,16 +94,26 @@ function UploadPhoto({ name }: Props) {
             </Button>
 
             {/* File info */}
-            <div className="mt-4 p-3 bg-purple-900/30 rounded-lg border border-purple-800/30">
+            <div className={cn("mt-4 rounded-lg border p-3", plain ? "border-admin-border bg-admin-input" : "border-purple-800/30 bg-purple-900/30")}>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-green-600/20 rounded-full flex items-center justify-center">
                   <Check className="h-3 w-3 text-green-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-medium text-sm truncate">{value.name}</p>
-                  <p className="text-purple-300 text-xs">{(value.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p className={cn("text-xs", plain ? "text-admin-muted" : "text-purple-300")}>{(value.size / 1024 / 1024).toFixed(2)} MB</p>
                 </div>
               </div>
+            </div>
+          </div>
+        ) : plain ? (
+          <div className="flex items-center gap-3 py-2 text-left">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-admin-border bg-admin-bg">
+              <ImageIcon className="h-4 w-4 text-admin-muted" />
+            </div>
+            <div>
+              <p className="text-sm text-admin-text">{isDragActive ? "Suelta la imagen" : "Sube una imagen"}</p>
+              <p className="text-xs text-admin-muted">PNG, JPG o WEBP · máx. 5 MB</p>
             </div>
           </div>
         ) : (

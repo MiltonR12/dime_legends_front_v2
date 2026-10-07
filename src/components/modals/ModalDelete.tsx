@@ -20,20 +20,20 @@ type Props = {
 function ModalDelete({ onSuccess, isOpen, onClose, title, description }: Props) {
   return (
     <AlertDialog open={isOpen} >
-      <AlertDialogContent className="bg-slate-950 max-w-md md:rounded-3xl border-none" >
+      <AlertDialogContent className="max-w-md border-admin-border bg-admin-surface" >
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-center text-xl" >
-            {title || "Estas seguro de eliminar?"}
+          <AlertDialogTitle className="text-admin-text" >
+            {title || "¿Eliminar este equipo?"}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-center text-lg" >
-            {description || "Esta acción no se puede deshacer y se eliminará permanentemente."}
+          <AlertDialogDescription className="text-admin-muted" >
+            {description || "Esta acción no se puede deshacer."}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="grid grid-cols-2 gap-5" >
-          <AlertDialogCancel className="bg-slate-900 text-white" onClick={onClose} >
+        <AlertDialogFooter>
+          <AlertDialogCancel className="border-admin-border bg-transparent text-admin-text hover:bg-admin-input" onClick={onClose} >
             Cancelar
           </AlertDialogCancel>
-          <AlertDialogAction className="text-white bg-red-600" onClick={onSuccess} >
+          <AlertDialogAction className="bg-red-700 text-white hover:bg-red-600" onClick={onSuccess} >
             Eliminar
           </AlertDialogAction>
         </AlertDialogFooter>

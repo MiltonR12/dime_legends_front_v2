@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { useAppDispatch } from "@/app/store"
-import { updateStatusTeamThunk } from "@/app/redux/team/teamSlice"
+import { useUpdateTeamStatus } from "@/hooks/team"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { UserCheck, UserX, Clock, Loader2 } from "lucide-react"
 
@@ -10,19 +9,15 @@ interface SelectStatusTeamProps {
 }
 
 function SelectStatusTeam({ _id, defaultValue }: SelectStatusTeamProps) {
-  const dispatch = useAppDispatch()
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutateAsync: updateStatus, isPending: isLoading } = useUpdateTeamStatus()
   const [currentStatus, setCurrentStatus] = useState(defaultValue)
 
   const handleStatusChange = async (newStatus: string) => {
-    setIsLoading(true)
     try {
-      await dispatch(updateStatusTeamThunk({ id: _id, status: newStatus })).unwrap()
+      await updateStatus({ id: _id, status: newStatus })
       setCurrentStatus(newStatus)
     } catch (error) {
       console.error("Error updating team status:", error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -54,7 +49,7 @@ function SelectStatusTeam({ _id, defaultValue }: SelectStatusTeamProps) {
 
   return (
     <Select value={currentStatus} onValueChange={handleStatusChange} disabled={isLoading}>
-      <SelectTrigger className="w-32 h-8 bg-slate-800 border-slate-600 text-xs">
+      <SelectTrigger className="h-8 w-32 border-admin-border bg-admin-input text-xs text-admin-text shadow-none">
         <SelectValue>
           <div className={`flex items-center gap-1 ${getStatusColor(currentStatus)}`}>
             {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : getStatusIcon(currentStatus)}
@@ -66,20 +61,20 @@ function SelectStatusTeam({ _id, defaultValue }: SelectStatusTeamProps) {
           </div>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent className="bg-slate-800 border-slate-700">
-        <SelectItem value="active" className="text-slate-300 hover:text-white">
+      <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
+        <SelectItem value="active" className="focus:bg-admin-row focus:text-admin-text">
           <div className="flex items-center gap-2 text-green-400">
             <UserCheck className="h-3 w-3" />
             Activo
           </div>
         </SelectItem>
-        <SelectItem value="inactive" className="text-slate-300 hover:text-white">
+        <SelectItem value="inactive" className="focus:bg-admin-row focus:text-admin-text">
           <div className="flex items-center gap-2 text-red-400">
             <UserX className="h-3 w-3" />
             Inactivo
           </div>
         </SelectItem>
-        <SelectItem value="pending" className="text-slate-300 hover:text-white">
+        <SelectItem value="pending" className="focus:bg-admin-row focus:text-admin-text">
           <div className="flex items-center gap-2 text-yellow-400">
             <Clock className="h-3 w-3" />
             Pendiente

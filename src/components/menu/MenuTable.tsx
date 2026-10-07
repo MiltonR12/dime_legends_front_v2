@@ -20,10 +20,10 @@ function MenuTable({ onEdit, onDelete, options }: Props) {
   return (
     <Menubar className="p-0 border-none bg-transparent" >
       <MenubarMenu>
-        <MenubarTrigger className="data-[state=open]:bg-three-700 text-white data-[state=open]:text-white cursor-pointer" >
+        <MenubarTrigger className="cursor-pointer text-admin-muted data-[state=open]:bg-admin-input data-[state=open]:text-admin-text" >
           <FaEllipsisV />
         </MenubarTrigger>
-        <MenubarContent className="bg-slate-900 text-white" >
+        <MenubarContent className="border-admin-border bg-admin-surface text-admin-text" >
           {options?.map((option, index) => (
             <MenubarItem key={index} onClick={option.onClick} >
               {option.text}

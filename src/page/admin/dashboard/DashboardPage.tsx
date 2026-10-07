@@ -1,8 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Separator } from "@/components/ui/separator"
 import {
   Trophy,
   Users,
@@ -12,9 +10,7 @@ import {
   Star,
   AlertCircle,
   Plus,
-  Eye,
   BarChart3,
-  Gamepad2,
   Target,
   Zap,
 } from "lucide-react"
@@ -106,19 +102,17 @@ const dashboardData = {
 
 function DashboardPage() {
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-            Dashboard
-          </h1>
-          <p className="text-purple-300 mt-1">Gestiona tus torneos y revisa el rendimiento</p>
+          <h1 className="text-2xl font-semibold text-admin-text">Dashboard</h1>
+          <p className="mt-1 text-sm text-admin-muted">Gestión de competencias y eventos</p>
         </div>
         <div className="flex gap-3">
           <Button
             asChild
             variant="outline"
-            className="border-purple-600/50 text-purple-300 hover:bg-purple-900/30 hover:text-white"
+            className="border-admin-border bg-transparent text-admin-muted hover:bg-admin-surface hover:text-admin-text"
           >
             <Link to="/reportes">
               <BarChart3 className="h-4 w-4 mr-2" />
@@ -127,9 +121,9 @@ function DashboardPage() {
           </Button>
           <Button
             asChild
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
+            className="bg-admin-accent text-white shadow-none hover:bg-admin-accent-hover"
           >
-            <Link to="/torneo/create">
+            <Link to="/admin/torneo/create">
               <Plus className="h-4 w-4 mr-2" />
               Crear Torneo
             </Link>
@@ -141,12 +135,12 @@ function DashboardPage() {
         <CardTag 
           title="Total Torneos"
           value={dashboardData.stats.totalTournaments}
-          icon={<Trophy className="h-4 w-4 text-purple-400" />}
+          icon={<Trophy className="h-4 w-4 text-admin-muted" />}
         />
         <CardTag
           title="Participantes"
           value={dashboardData.stats.totalParticipants}
-          icon={<Users className="h-4 w-4 text-pink-400" />}
+          icon={<Users className="h-4 w-4 text-admin-muted" />}
         />
         <CardTag
           title="Ingresos Totales"
@@ -164,80 +158,54 @@ function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Tournaments */}
         <div className="lg:col-span-2">
-          <Card className="bg-gradient-to-br from-purple-950 to-black border-purple-800 backdrop-blur-sm">
+          <Card className="border-admin-border bg-admin-surface shadow-none">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-purple-400" />
-                    Torneos Recientes
-                  </CardTitle>
-                  <CardDescription className="text-purple-300">Gestiona tus torneos más recientes</CardDescription>
+                  <CardTitle className="text-admin-text">Listado</CardTitle>
+                  <CardDescription className="text-admin-muted">Torneos recientes</CardDescription>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-purple-600/50 text-purple-300 hover:bg-purple-900/30"
+                  className="border-admin-border text-admin-muted hover:bg-admin-input hover:text-admin-text"
                 >
                   Ver todos
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {dashboardData.recentTournaments.map((tournament) => (
-                <div
-                  key={tournament.id}
-                  className="flex items-center justify-between p-4 bg-purple-900/20 rounded-lg border border-purple-800/30 hover:bg-purple-900/30 transition-colors duration-200"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-lg flex items-center justify-center">
-                      <Gamepad2 className="h-6 w-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white">{tournament.name}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm text-purple-300">{tournament.game}</span>
-                        <Separator orientation="vertical" className="h-3 bg-purple-700" />
-                        <span className="text-sm text-purple-300">{tournament.participants} participantes</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
-                      <div className="text-sm font-medium text-white">${tournament.prize}</div>
-                      <Badge
-                        variant={
-                          tournament.status === "active"
-                            ? "default"
-                            : tournament.status === "upcoming"
-                              ? "secondary"
-                              : "outline"
-                        }
-                        className={
-                          tournament.status === "active"
-                            ? "bg-green-600/20 text-green-400 border-green-600/50"
-                            : tournament.status === "upcoming"
-                              ? "bg-blue-600/20 text-blue-400 border-blue-600/50"
-                              : "bg-gray-600/20 text-gray-400 border-gray-600/50"
-                        }
+            <CardContent className="px-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="text-admin-muted">
+                    <tr className="border-b border-admin-border">
+                      <th className="px-6 py-3 font-medium">Nombre</th>
+                      <th className="px-4 py-3 font-medium">Juego</th>
+                      <th className="px-4 py-3 font-medium">Cupos</th>
+                      <th className="px-4 py-3 font-medium">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dashboardData.recentTournaments.map((tournament, index) => (
+                      <tr
+                        key={tournament.id}
+                        className={index === 0 ? "bg-admin-row text-admin-text" : "text-admin-text"}
                       >
-                        {tournament.status === "active"
-                          ? "Activo"
-                          : tournament.status === "upcoming"
-                            ? "Próximo"
-                            : "Completado"}
-                      </Badge>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-purple-600/50 text-purple-300 hover:bg-purple-900/30"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                        <td className="px-6 py-3">{tournament.name}</td>
+                        <td className="px-4 py-3">{tournament.game}</td>
+                        <td className="px-4 py-3">{tournament.participants}</td>
+                        <td className={`px-4 py-3 ${index === 0 ? "text-admin-accent" : "text-admin-muted"}`}>
+                          {tournament.status === "active"
+                            ? "Activo"
+                            : tournament.status === "upcoming"
+                              ? "Próximo"
+                              : "Cerrado"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -245,25 +213,25 @@ function DashboardPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Upcoming Events */}
-          <Card className="bg-gradient-to-br from-purple-950 to-black border-purple-800 backdrop-blur-sm">
+          <Card className="border-admin-border bg-admin-surface shadow-none">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-purple-400" />
+              <CardTitle className="flex items-center gap-2 text-admin-text">
+                <Calendar className="h-5 w-5 text-admin-muted" />
                 Próximos Eventos
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {dashboardData.upcomingEvents.map((event) => (
-                <div key={event.id} className="flex items-start gap-3 p-3 bg-purple-900/20 rounded-lg">
+                <div key={event.id} className="flex items-start gap-3 p-3 rounded-lg bg-admin-input">
                   <div
                     className={`w-2 h-2 rounded-full mt-2 ${event.type === "match" ? "bg-green-400" : event.type === "deadline" ? "bg-red-400" : "bg-blue-400"
                       }`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{event.title}</p>
+                    <p className="truncate text-sm font-medium text-admin-text">{event.title}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <Clock className="h-3 w-3 text-purple-400" />
-                      <span className="text-xs text-purple-300">
+                      <Clock className="h-3 w-3 text-admin-muted" />
+                      <span className="text-xs text-admin-muted">
                         {event.date} - {event.time}
                       </span>
                     </div>
@@ -274,16 +242,16 @@ function DashboardPage() {
           </Card>
 
           {/* Notifications */}
-          <Card className="bg-gradient-to-br from-purple-950 to-black border-purple-800 backdrop-blur-sm">
+          <Card className="border-admin-border bg-admin-surface shadow-none">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-purple-400" />
+              <CardTitle className="flex items-center gap-2 text-admin-text">
+                <AlertCircle className="h-5 w-5 text-admin-muted" />
                 Notificaciones
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {dashboardData.notifications.map((notification) => (
-                <div key={notification.id} className="flex items-start gap-3 p-3 bg-purple-900/20 rounded-lg">
+                <div key={notification.id} className="flex items-start gap-3 p-3 rounded-lg bg-admin-input">
                   <div
                     className={`w-2 h-2 rounded-full mt-2 ${notification.type === "info"
                         ? "bg-blue-400"
@@ -293,8 +261,8 @@ function DashboardPage() {
                       }`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white">{notification.message}</p>
-                    <span className="text-xs text-purple-400">{notification.time}</span>
+                    <p className="text-sm text-admin-text">{notification.message}</p>
+                    <span className="text-xs text-admin-muted">{notification.time}</span>
                   </div>
                 </div>
               ))}
@@ -302,36 +270,36 @@ function DashboardPage() {
           </Card>
 
           {/* Quick Stats */}
-          <Card className="bg-gradient-to-br from-purple-950 to-black border-purple-800 backdrop-blur-sm">
+          <Card className="border-admin-border bg-admin-surface shadow-none">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Target className="h-5 w-5 text-purple-400" />
+              <CardTitle className="flex items-center gap-2 text-admin-text">
+                <Target className="h-5 w-5 text-admin-muted" />
                 Estadísticas Rápidas
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-purple-300">Promedio de participantes</span>
-                  <span className="text-white font-medium">{dashboardData.stats.avgParticipants}</span>
+                  <span className="text-admin-muted">Promedio de participantes</span>
+                  <span className="font-medium text-admin-text">{dashboardData.stats.avgParticipants}</span>
                 </div>
-                <Progress value={77} className="h-2 bg-purple-900/30" />
+                <Progress value={77} className="h-2 bg-admin-input" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-purple-300">Tasa de finalización</span>
-                  <span className="text-white font-medium">94%</span>
+                  <span className="text-admin-muted">Tasa de finalización</span>
+                  <span className="font-medium text-admin-text">94%</span>
                 </div>
-                <Progress value={94} className="h-2 bg-purple-900/30" />
+                <Progress value={94} className="h-2 bg-admin-input" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-purple-300">Satisfacción promedio</span>
-                  <span className="text-white font-medium flex items-center gap-1">
+                  <span className="text-admin-muted">Satisfacción promedio</span>
+                  <span className="flex items-center gap-1 font-medium text-admin-text">
                     4.8 <Star className="h-3 w-3 text-yellow-400 fill-current" />
                   </span>
                 </div>
-                <Progress value={96} className="h-2 bg-purple-900/30" />
+                <Progress value={96} className="h-2 bg-admin-input" />
               </div>
             </CardContent>
           </Card>

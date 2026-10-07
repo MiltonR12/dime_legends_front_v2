@@ -44,7 +44,29 @@ module.exports = {
           3: "#2D3748",
           4: "#4A5568",
           5: "#6B7280",
-        }
+        },
+        admin: {
+          bg: "var(--admin-bg)",
+          sidebar: "var(--admin-sidebar)",
+          surface: "var(--admin-surface)",
+          input: "var(--admin-input)",
+          border: "var(--admin-border)",
+          text: "var(--admin-text)",
+          muted: "var(--admin-muted)",
+          accent: "var(--admin-accent)",
+          "accent-hover": "var(--admin-accent-hover)",
+          row: "var(--admin-row)",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -61,16 +83,6 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
-  },
-  sidebar: {
-    DEFAULT: 'hsl(var(--sidebar-background))',
-    foreground: 'hsl(var(--sidebar-foreground))',
-    primary: 'hsl(var(--sidebar-primary))',
-    'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-    accent: 'hsl(var(--sidebar-accent))',
-    'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-    border: 'hsl(var(--sidebar-border))',
-    ring: 'hsl(var(--sidebar-ring))',
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 }

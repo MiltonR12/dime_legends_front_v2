@@ -1,4 +1,4 @@
-import type { Team } from "@/app/redux/team/team"
+import type { Team } from "@/app/api/team/team.types"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"

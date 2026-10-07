@@ -24,8 +24,12 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status >= 400) {
-      CustomToast.error(error.response.data.message);
+    if (error.response) {
+      if (error.response.status >= 400) {
+        CustomToast.error(error.response.data?.message ?? "Ocurrió un error");
+      }
+    } else {
+      CustomToast.error(error.message || "No se pudo conectar con el servidor");
     }
     return Promise.reject(error);
   }

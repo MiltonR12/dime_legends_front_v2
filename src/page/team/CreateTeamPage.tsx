@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { type RootState, useAppDispatch } from "@/app/store"
-import { getTournamentIdThunk } from "@/app/redux/tournament/tournamentSlice"
+import { useTournament } from "@/hooks/tournament"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Calendar, Users, Shield, Info, AlertCircle } from "lucide-react"
@@ -14,14 +12,9 @@ import LoadingTournament from "@/components/loader/LoadingTournament"
 function RegisterTeamPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const { tournament, isLoading } = useSelector((state: RootState) => state.tournament)
+  const { data: tournament, isLoading } = useTournament(id)
   const [currentStep, setCurrentStep] = useState(1)
   const [totalSteps, setTotalSteps] = useState(2)
-
-  useEffect(() => {
-    if (id) dispatch(getTournamentIdThunk(id))
-  }, [id, dispatch])
 
   useEffect(() => {
     if (tournament?.payment) {

@@ -1,4 +1,4 @@
-import { Team } from "@/app/redux/team/team"
+import { Team } from "@/app/api/team/team.types"
 import { FaRegTimesCircle } from "react-icons/fa";
 import { GrStatusGood } from "react-icons/gr";
 import { IoMdTime } from "react-icons/io";

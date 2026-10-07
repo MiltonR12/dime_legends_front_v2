@@ -1,7 +1,6 @@
 import { Form, Formik } from "formik"
 import { Link, useNavigate } from "react-router-dom"
-import { useAppDispatch } from "@/app/store"
-import { authLoginGoogleThunk, authRegisterThunk } from "@/app/redux/auth/authSlice"
+import { useLoginGoogle, useRegister } from "@/hooks/auth"
 import { registerValidation } from "@/lib/validations"
 import { GoogleLogin } from "@react-oauth/google"
 import { Button } from "@/components/ui/button"
@@ -12,7 +11,8 @@ import CustomInput from "./CustomInput"
 import InputPhone from "../input/InputPhone"
 
 function RegisterForm() {
-  const dispatch = useAppDispatch()
+  const { mutateAsync: registerUser } = useRegister()
+  const { mutateAsync: loginGoogle } = useLoginGoogle()
   const navigate = useNavigate()
 
   return (
@@ -25,7 +25,7 @@ function RegisterForm() {
         contact: 0,
       }}
       onSubmit={(values, { setSubmitting }) => {
-        dispatch(authRegisterThunk(values))
+        registerUser(values)
           .then(() => {
             navigate("/login")
           })
@@ -120,11 +120,11 @@ function RegisterForm() {
                 onSuccess={async (credentialResponse) => {
                   const token = credentialResponse.credential
                   if (!token) return
-                  dispatch(authLoginGoogleThunk(token))
-                    .unwrap()
+                  loginGoogle(token)
                     .then(() => {
                       navigate("/perfil")
                     })
+                    .catch(() => undefined)
                 }}
                 theme="filled_black"
                 shape="pill"

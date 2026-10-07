@@ -8,6 +8,32 @@ body {
   @apply text-[#f5f5f5];
 }
 
+:root {
+  --admin-bg: #0c0c14;
+  --admin-sidebar: #0e0e16;
+  --admin-surface: #16161f;
+  --admin-input: #101018;
+  --admin-border: #2c2c3a;
+  --admin-text: #f5f5f7;
+  --admin-muted: #9b9baa;
+  --admin-accent: #7c3aed;
+  --admin-accent-hover: #6d28d9;
+  --admin-row: #3b2f66;
+}
+
+.admin-theme {
+  --sidebar-background: 240 18% 7%;
+  --sidebar-foreground: 240 6% 96%;
+  --sidebar-primary: 263 84% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 12% 14%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 240 12% 20%;
+  --sidebar-ring: 263 84% 58%;
+  background-color: var(--admin-bg);
+  color: var(--admin-text);
+}
+
 @layer base {
   :root {
     --sidebar-background: 0 0% 98%;

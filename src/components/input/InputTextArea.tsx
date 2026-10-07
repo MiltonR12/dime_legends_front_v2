@@ -8,11 +8,12 @@ type Props = {
   placeholder?: string
   required?: boolean
   className?: string
+  labelClassName?: string
   disabled?: boolean
   variant?: "default" | "outline"
 }
 
-function InputTextArea({ label, name, placeholder, required, className, disabled, variant = "default" }: Props) {
+function InputTextArea({ label, name, placeholder, required, className, labelClassName, disabled, variant = "default" }: Props) {
 
   const variantClasses = {
     default: "bg-blue-950/50 rounded-lg",
@@ -21,7 +22,7 @@ function InputTextArea({ label, name, placeholder, required, className, disabled
 
   return (
     <div className='flex flex-col gap-2' >
-      <Label htmlFor={name} className='font-semibold text-xl text-white' >
+      <Label htmlFor={name} className={cn('font-semibold text-xl text-white', labelClassName)} >
         {label} {required && <span className='text-red-500' >*</span>}
       </Label>
 

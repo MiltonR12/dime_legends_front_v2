@@ -47,7 +47,7 @@ function InputNumber({ label, name, placeholder, required, disabled, min = 1, ma
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         {icon}
-        <label htmlFor={name} className="text-white font-medium">
+        <label htmlFor={name} className="text-sm font-medium text-admin-text">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       </div>
@@ -59,7 +59,7 @@ function InputNumber({ label, name, placeholder, required, disabled, min = 1, ma
           size="icon"
           disabled={disabled || value <= min}
           onClick={handleDecrement}
-          className="rounded-r-none border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+          className="rounded-r-none border-admin-border bg-admin-input text-admin-muted hover:bg-admin-surface hover:text-admin-text"
         >
           <Minus className="h-4 w-4" />
         </Button>
@@ -71,7 +71,7 @@ function InputNumber({ label, name, placeholder, required, disabled, min = 1, ma
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          className="rounded-none border-x-0 border-slate-700 bg-slate-900 text-white text-center w-16"
+          className="w-16 rounded-none border-x-0 border-admin-border bg-admin-input text-center text-sm text-admin-text"
           {...args}
         />
 
@@ -81,7 +81,7 @@ function InputNumber({ label, name, placeholder, required, disabled, min = 1, ma
           size="icon"
           disabled={disabled || value >= max}
           onClick={handleIncrement}
-          className="rounded-l-none border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+          className="rounded-l-none border-admin-border bg-admin-input text-admin-muted hover:bg-admin-surface hover:text-admin-text"
         >
           <Plus className="h-4 w-4" />
         </Button>

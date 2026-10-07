@@ -1,6 +1,4 @@
-import { getTeamByTournamentThunk } from "@/app/redux/team/teamSlice"
-import { type RootState, useAppDispatch } from "@/app/store"
-import { useEffect } from "react"
+import { useDeleteTeam, useTeamsByTournament } from "@/hooks/team"
 import { useParams } from "react-router-dom"
 import {
   type ColumnFiltersState,
@@ -11,9 +9,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Fragment } from "react/jsx-runtime"
-import type { Team } from "@/app/redux/team/team"
+import type { Team } from "@/app/api/team/team.types"
 import { useState } from "react"
-import { deleteTeamThunk } from "@/app/redux/team/teamSlice"
 import {
   Dialog,
   DialogContent,
@@ -23,16 +20,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { CustomToast } from "@/lib/handleToast"
-import { useSelector } from "react-redux"
 import ModalDelete from "@/components/modals/ModalDelete"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion"
 import SelectStatusTeam from "@/components/select/SelectStatusTeam"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import CardTag from "@/page/admin/dashboard/components/CardTag"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,33 +39,26 @@ import {
 import {
   Users,
   Search,
-  Filter,
   MoreHorizontal,
   Edit,
   Trash2,
-  Phone,
-  Calendar,
   ChevronDown,
   ChevronRight,
   Receipt,
   UserCheck,
-  UserX,
   Clock,
   Copy,
-  TrendingUp,
-  Award,
-  Shield,
 } from "lucide-react"
 import ModalCreateTeam from "@/components/admin/ModalCreateTeam"
 import ModalEditTeam from "@/components/admin/ModalEditTeam"
-import TagInformation from "./components/TagInformation"
 
 const columnHelper = createColumnHelper<Team>()
+const NO_TEAMS: Team[] = []
 
 function AdminTeamPage() {
   const { id } = useParams()
-  const dispatch = useAppDispatch()
-  const { teams } = useSelector((state: RootState) => state.team)
+  const { data: teams = NO_TEAMS } = useTeamsByTournament(id)
+  const { mutateAsync: deleteTeam } = useDeleteTeam()
 
   const [isOpenDelete, setIsOpenDelete] = useState(false)
   const [isOpenEdit, setIsOpenEdit] = useState(false)
@@ -107,10 +95,12 @@ function AdminTeamPage() {
   }
 
   const handleDelete = (id: string) => {
-    dispatch(deleteTeamThunk(id)).then(() => {
-      setIsOpenDelete(false)
-      CustomToast.success("Equipo eliminado correctamente")
-    })
+    deleteTeam(id)
+      .then(() => {
+        setIsOpenDelete(false)
+        CustomToast.success("Equipo eliminado correctamente")
+      })
+      .catch(() => undefined)
   }
 
   const handleShowPlayers = (id: string) => {
@@ -120,52 +110,28 @@ function AdminTeamPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return (
-          <Badge className="bg-green-600/20 text-green-400 border-green-600/30 hover:bg-green-600/30">
-            <UserCheck className="h-3 w-3 mr-1" />
-            Habilitado
-          </Badge>
-        )
+        return <span className="text-sm text-admin-accent">Habilitado</span>
       case "inactive":
-        return (
-          <Badge className="bg-red-600/20 text-red-400 border-red-600/30 hover:bg-red-600/30">
-            <UserX className="h-3 w-3 mr-1" />
-            Deshabilitado
-          </Badge>
-        )
+        return <span className="text-sm text-red-300">Deshabilitado</span>
       case "pending":
-        return (
-          <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-600/30 hover:bg-yellow-600/30">
-            <Clock className="h-3 w-3 mr-1" />
-            Pendiente
-          </Badge>
-        )
+        return <span className="text-sm text-admin-muted">Pendiente</span>
       default:
-        return (
-          <Badge variant="secondary">
-            <Shield className="h-3 w-3 mr-1" />
-            Desconocido
-          </Badge>
-        )
+        return <span className="text-sm text-admin-muted">Desconocido</span>
     }
   }
 
   const columns = [
     columnHelper.accessor("name", {
       id: "name",
-      header: () => (
-        <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-purple-400" />
-          <span className="text-sm font-semibold text-white">Equipo</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-admin-muted">Equipo</span>,
       cell: (info) => (
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => handleShowPlayers(info.row.original._id)}
-            className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-700"
+            className="h-8 w-8 p-0 text-admin-muted hover:bg-admin-input hover:text-admin-text"
+            aria-label="Ver jugadores"
           >
             {showPlayers === info.row.original._id ? (
               <ChevronDown className="h-4 w-4" />
@@ -173,21 +139,14 @@ function AdminTeamPage() {
               <ChevronRight className="h-4 w-4" />
             )}
           </Button>
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <img
-                src={info.row.original.image || "/placeholder.svg?height=40&width=40"}
-                alt={info.row.original.name}
-                className="w-10 h-10 rounded-lg object-cover border border-slate-600"
-              />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-slate-800 rounded-full flex items-center justify-center">
-                <Award className="h-2.5 w-2.5 text-purple-400" />
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-white">{info.getValue()}</p>
-              <p className="text-xs text-slate-400">{info.row.original.players?.length || 0} jugadores</p>
-            </div>
+          <img
+            src={info.row.original.image || "/placeholder.svg"}
+            alt=""
+            className="h-10 w-10 rounded-md border border-admin-border object-cover"
+          />
+          <div>
+            <p className="text-sm font-medium text-admin-text">{info.getValue()}</p>
+            <p className="text-xs text-admin-muted">{info.row.original.players?.length || 0} jugadores</p>
           </div>
         </div>
       ),
@@ -200,36 +159,19 @@ function AdminTeamPage() {
 
     columnHelper.accessor("captain", {
       id: "captain",
-      header: () => (
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-purple-400" />
-          <span className="text-sm font-semibold text-white">Capitán</span>
-        </div>
-      ),
-      cell: (info) => (
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-            {info.getValue().charAt(0).toUpperCase()}
-          </div>
-          <span className="text-sm text-white font-medium">{info.getValue()}</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-admin-muted">Capitán</span>,
+      cell: (info) => <span className="text-sm text-admin-text">{info.getValue()}</span>,
     }),
 
     columnHelper.accessor("phone", {
       id: "phone",
-      header: () => (
-        <div className="flex items-center gap-2">
-          <Phone className="h-4 w-4 text-purple-400" />
-          <span className="text-sm font-semibold text-white">Contacto</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-admin-muted">Contacto</span>,
       cell: (info) => (
         <Button
           variant="ghost"
           size="sm"
           onClick={() => copyPhone(info.getValue())}
-          className="text-slate-300 hover:text-white hover:bg-slate-700 font-mono text-sm"
+          className="font-mono text-sm text-admin-muted hover:bg-admin-input hover:text-admin-text"
         >
           <Copy className="h-3 w-3 mr-2" />
           {info.getValue()}
@@ -239,26 +181,16 @@ function AdminTeamPage() {
 
     columnHelper.accessor("status", {
       id: "status",
-      header: () => (
-        <div className="flex items-center gap-2">
-          <TrendingUp className="h-4 w-4 text-purple-400" />
-          <span className="text-sm font-semibold text-white">Estado</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-admin-muted">Estado</span>,
       cell: (info) => getStatusBadge(info.getValue()),
       filterFn: (rows, id, value) => rows.getValue(id) === value,
     }),
 
     columnHelper.accessor("createdAt", {
       id: "createdAt",
-      header: () => (
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-purple-400" />
-          <span className="text-sm font-semibold text-white">Registro</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-admin-muted">Registro</span>,
       cell: (info) => (
-        <div className="text-sm text-slate-300">
+        <div className="text-sm text-admin-muted">
           {new Date(info.getValue()).toLocaleDateString("es", {
             day: "2-digit",
             month: "short",
@@ -270,7 +202,7 @@ function AdminTeamPage() {
 
     columnHelper.accessor("_id", {
       id: "_id",
-      header: () => <span className="text-sm font-semibold text-white">Acciones</span>,
+      header: () => <span className="text-sm font-medium text-admin-muted">Acciones</span>,
       cell: (info) => (
         <div className="flex items-center gap-2">
           <SelectStatusTeam _id={info.row.original._id} defaultValue={info.row.original.status} />
@@ -278,17 +210,17 @@ function AdminTeamPage() {
           {info.row.original.voucher && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <Button variant="ghost" size="sm" className="text-admin-muted hover:bg-admin-input hover:text-admin-text">
                   <Receipt className="h-4 w-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-700 max-w-md">
+              <DialogContent className="max-w-md border-admin-border bg-admin-surface">
                 <DialogHeader>
-                  <DialogTitle className="text-white flex items-center gap-2">
-                    <Receipt className="h-5 w-5 text-purple-400" />
-                    Comprobante de Pago
+                  <DialogTitle className="flex items-center gap-2 text-admin-text">
+                    <Receipt className="h-5 w-5 text-admin-muted" />
+                    Comprobante de pago
                   </DialogTitle>
-                  <DialogDescription className="text-slate-400">
+                  <DialogDescription className="text-admin-muted">
                     Comprobante del equipo {info.row.original.name}
                   </DialogDescription>
                 </DialogHeader>
@@ -296,7 +228,7 @@ function AdminTeamPage() {
                   <img
                     src={info.row.original.voucher || "/placeholder.svg"}
                     alt="Comprobante"
-                    className="w-full rounded-lg border border-slate-600"
+                    className="w-full rounded-lg border border-admin-border"
                   />
                 </div>
               </DialogContent>
@@ -305,19 +237,19 @@ function AdminTeamPage() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-admin-muted hover:bg-admin-input hover:text-admin-text">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-slate-800 border-slate-700" align="end">
-              <DropdownMenuLabel className="text-slate-300">Acciones</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuContent className="border-admin-border bg-admin-surface" align="end">
+              <DropdownMenuLabel className="text-admin-muted">Acciones</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-admin-border" />
               <DropdownMenuItem
                 onClick={() => {
                   setTeam(info.row.original)
                   setIsOpenEdit(true)
                 }}
-                className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer"
+                className="cursor-pointer text-admin-text focus:bg-admin-row focus:text-admin-text"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Editar
@@ -327,7 +259,7 @@ function AdminTeamPage() {
                   setTeam(info.row.original)
                   setIsOpenDelete(true)
                 }}
-                className="text-red-400 hover:text-red-300 hover:bg-red-950/50 cursor-pointer"
+                className="cursor-pointer text-red-300 focus:bg-red-950/40 focus:text-red-200"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Eliminar
@@ -347,10 +279,6 @@ function AdminTeamPage() {
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  useEffect(() => {
-    if (id) dispatch(getTeamByTournamentThunk(id))
-  }, [dispatch, id])
-
   if (!id) return null
 
   // Estadísticas
@@ -360,8 +288,7 @@ function AdminTeamPage() {
   const totalPlayers = teams.reduce((acc, team) => acc + (team.players?.length || 0), 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 p-6">
-      <div className=" mx-auto space-y-6">
+    <div className="space-y-6">
         {/* Modales */}
         {team && <ModalEditTeam data={team} isOpen={isOpenEdit} setIsOpen={setIsOpenEdit} />}
         {team && (
@@ -375,166 +302,129 @@ function AdminTeamPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Gestión de Equipos</h1>
-            <p className="text-slate-400">Administra los equipos registrados en el torneo</p>
+            <h1 className="text-2xl font-semibold text-admin-text">Equipos</h1>
+            <p className="mt-1 text-sm text-admin-muted">Inscripciones de este torneo</p>
           </div>
           <ModalCreateTeam id={id} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <TagInformation 
-            total={totalTeams}
-            subtitle="Total Equipos"
-            icon={<Users className="h-5 w-5 text-blue-400" />}
-          />
-
-          <TagInformation 
-            total={activeTeams}
-            subtitle="Equipos Activos"
-            icon={<UserCheck className="h-5 w-5 text-green-400" />}
-          />
-
-          <TagInformation 
-            total={pendingTeams}
-            subtitle="Equipos Pendientes"
-            icon={<Clock className="h-5 w-5 text-yellow-400" />}
-          />
-
-          <TagInformation 
-            total={totalPlayers}
-            subtitle="Total Jugadores"
-            icon={<Award className="h-5 w-5 text-purple-400" />}
-          />
-
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <CardTag title="Total equipos" value={totalTeams} icon={<Users className="h-4 w-4 text-admin-muted" />} />
+          <CardTag title="Habilitados" value={activeTeams} icon={<UserCheck className="h-4 w-4 text-admin-muted" />} />
+          <CardTag title="Pendientes" value={pendingTeams} icon={<Clock className="h-4 w-4 text-admin-muted" />} />
+          <CardTag title="Jugadores" value={totalPlayers} icon={<Users className="h-4 w-4 text-admin-muted" />} />
         </div>
 
-        {/* Controles */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-              <div className="flex flex-col sm:flex-row gap-4 sm:items-center flex-1">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <Card className="border-admin-border bg-admin-surface shadow-none">
+          <CardHeader>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <CardTitle className="text-admin-text">Listado</CardTitle>
+                <CardDescription className="text-admin-muted">Equipos inscritos en el torneo</CardDescription>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-admin-muted" />
                   <Input
                     type="search"
                     placeholder="Buscar equipos..."
                     value={searchValue}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-10 bg-slate-900 border-slate-700 text-white placeholder:text-slate-400 focus:border-purple-500"
+                    className="h-10 w-full border-admin-border bg-admin-input pl-10 text-sm text-admin-text shadow-none placeholder:text-admin-muted focus-visible:ring-admin-accent sm:w-64"
                   />
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-slate-400" />
-                  <Select onValueChange={handleFilterStatus}>
-                    <SelectTrigger className="w-40 bg-slate-900 border-slate-700 text-white">
-                      <SelectValue placeholder="Estado" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="all" className="text-slate-300 hover:text-white">
-                        Todos
-                      </SelectItem>
-                      <SelectItem value="active" className="text-slate-300 hover:text-white">
-                        Habilitados
-                      </SelectItem>
-                      <SelectItem value="inactive" className="text-slate-300 hover:text-white">
-                        Deshabilitados
-                      </SelectItem>
-                      <SelectItem value="pending" className="text-slate-300 hover:text-white">
-                        Pendientes
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select onValueChange={handleFilterStatus}>
+                  <SelectTrigger className="h-10 w-full border-admin-border bg-admin-input text-admin-text shadow-none sm:w-44">
+                    <SelectValue placeholder="Estado" />
+                  </SelectTrigger>
+                  <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
+                    <SelectItem value="all" className="focus:bg-admin-row focus:text-admin-text">Todos</SelectItem>
+                    <SelectItem value="active" className="focus:bg-admin-row focus:text-admin-text">Habilitados</SelectItem>
+                    <SelectItem value="inactive" className="focus:bg-admin-row focus:text-admin-text">Deshabilitados</SelectItem>
+                    <SelectItem value="pending" className="focus:bg-admin-row focus:text-admin-text">Pendientes</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Tabla */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardContent className="p-0">
+          </CardHeader>
+          <CardContent className="px-0">
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
+              <table className="w-full text-left text-sm">
+                <thead className="text-admin-muted">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} className="border-slate-700 hover:bg-slate-800/50">
+                    <tr key={headerGroup.id} className="border-b border-admin-border">
                       {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id} className="text-slate-300 font-semibold">
+                        <th key={header.id} className="px-4 py-3 font-medium">
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableHead>
+                        </th>
                       ))}
-                    </TableRow>
+                    </tr>
                   ))}
-                </TableHeader>
-                <TableBody>
+                </thead>
+                <tbody>
                   {table.getRowModel().rows.length ? (
                     table.getRowModel().rows.map((row) => (
                       <Fragment key={row.id}>
-                        <TableRow className="border-slate-700 hover:bg-slate-800/30 transition-colors">
+                        <tr className="border-b border-admin-border text-admin-text hover:bg-admin-input">
                           {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id} className="py-4">
+                            <td key={cell.id} className="px-4 py-3">
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </TableCell>
+                            </td>
                           ))}
-                        </TableRow>
+                        </tr>
 
-                        <TableRow className="border-slate-700">
-                          <TableCell className="py-0 border-none" colSpan={columns.length}>
+                        <tr className="border-b border-admin-border">
+                          <td className="p-0" colSpan={columns.length}>
                             <Accordion type="single" collapsible value={showPlayers}>
                               <AccordionItem className="border-none" value={row.original._id}>
                                 <AccordionContent className="px-4 pb-4">
-                                  <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
-                                    <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                                      <Users className="h-4 w-4 text-purple-400" />
-                                      Jugadores del equipo ({row.original.players?.length || 0})
+                                  <div className="rounded-lg border border-admin-border bg-admin-input p-4">
+                                    <h4 className="mb-3 text-sm font-medium text-admin-text">
+                                      Jugadores ({row.original.players?.length || 0})
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                      {row.original.players?.map((player, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-center gap-2 p-2 bg-slate-800 rounded-md border border-slate-600"
-                                        >
-                                          <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                            {index + 1}
+                                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                                      {row.original.players?.length ? (
+                                        row.original.players.map((player, index) => (
+                                          <div
+                                            key={`${player}-${index}`}
+                                            className="flex items-center gap-2 rounded-md border border-admin-border bg-admin-bg px-3 py-2"
+                                          >
+                                            <span className="text-xs text-admin-muted">{index + 1}</span>
+                                            <span className="text-sm text-admin-text">{player}</span>
                                           </div>
-                                          <span className="text-slate-300 text-sm">{player}</span>
-                                        </div>
-                                      )) || (
-                                        <p className="text-slate-400 text-sm col-span-full">
-                                          No hay jugadores registrados
-                                        </p>
+                                        ))
+                                      ) : (
+                                        <p className="text-sm text-admin-muted">No hay jugadores registrados</p>
                                       )}
                                     </div>
                                   </div>
                                 </AccordionContent>
                               </AccordionItem>
                             </Accordion>
-                          </TableCell>
-                        </TableRow>
+                          </td>
+                        </tr>
                       </Fragment>
                     ))
                   ) : (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="text-center py-12">
+                    <tr>
+                      <td colSpan={columns.length} className="px-4 py-12 text-center">
                         <div className="flex flex-col items-center gap-3">
-                          <Users className="h-12 w-12 text-slate-600" />
+                          <Users className="h-8 w-8 text-admin-muted" />
                           <div>
-                            <h3 className="text-xl font-semibold text-slate-400 mb-1">No hay equipos registrados</h3>
-                            <p className="text-slate-500">Los equipos aparecerán aquí cuando se registren al torneo</p>
+                            <h3 className="text-sm font-medium text-admin-text">No hay equipos</h3>
+                            <p className="text-sm text-admin-muted">Aparecen aquí cuando se inscriben al torneo</p>
                           </div>
                         </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   )}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
-      </div>
     </div>
   )
 }

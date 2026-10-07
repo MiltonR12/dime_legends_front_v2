@@ -1,9 +1,7 @@
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useAuth, useLogout } from "@/hooks/auth"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { authLogout } from "@/app/redux/auth/authSlice"
-import { type RootState, useAppDispatch } from "@/app/store"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -15,8 +13,8 @@ import SectionPage from "@/components/page/SectionPage"
 import { ArrowLeft, User, Mail, Phone, Shield, Settings, LogOut, Edit, Trophy, Calendar, Users } from "lucide-react"
 
 function ProfilePage() {
-  const { user } = useSelector((state: RootState) => state.auth)
-  const dispatch = useAppDispatch()
+  const { user } = useAuth()
+  const logout = useLogout()
   const [activeTab, setActiveTab] = useState("info")
 
   if (!user) return null
@@ -142,7 +140,7 @@ function ProfilePage() {
                   >
                     <Shield className="mr-2 h-4 w-4" /> Privacidad
                   </Button>
-                  <Button variant="destructive" className="w-full justify-start" onClick={() => dispatch(authLogout())}>
+                  <Button variant="destructive" className="w-full justify-start" onClick={() => logout()}>
                     <LogOut className="mr-2 h-4 w-4" /> Cerrar Sesión
                   </Button>
                 </CardContent>

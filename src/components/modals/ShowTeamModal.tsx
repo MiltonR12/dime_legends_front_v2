@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { CustomToast } from "@/lib/handleToast"
-import type { Team } from "@/app/redux/team/team"
+import type { Team } from "@/app/api/team/team.types"
 import { Eye, Copy, Check, User, Phone, Users, X, Shield } from "lucide-react"
 
 interface Props {
@@ -51,7 +51,7 @@ function ShowTeamModal({ team, trigger }: Props) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-purple-400 hover:text-white hover:bg-purple-900/50"
+            className="h-8 w-8 text-admin-muted hover:bg-admin-input hover:text-admin-text"
           >
             <Eye className="h-4 w-4" />
           </Button>

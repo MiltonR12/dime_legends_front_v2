@@ -1,9 +1,9 @@
-import { getBattlesThunk } from "@/app/redux/battle/battleSlice"
-import { getTeamByTournamentThunk } from "@/app/redux/team/teamSlice"
-import { getListTournamentThunk, getTournamentIdThunk } from "@/app/redux/tournament/tournamentSlice"
-import { type RootState, useAppDispatch } from "@/app/store"
-import { useEffect } from "react"
-import { useSelector } from "react-redux"
+import type { TBattle } from "@/app/api/battle/battle.types"
+import type { Team } from "@/app/api/team/team.types"
+import type { ListTournament } from "@/app/api/tournament/tournament.types"
+import { useBattles } from "@/hooks/battle"
+import { useTeamsByTournament } from "@/hooks/team"
+import { useTournament, useTournaments } from "@/hooks/tournament"
 import { Link, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { ListaGamesImage } from "@/payments/games"
+import { bannerUrls } from "@/components/input/BannerGallery"
 import CardTeam from "@/components/card/CardTeam"
 import CardBattle from "@/components/card/CardBattle"
 import CardTorneo from "@/components/card/CardTorneo"
@@ -19,25 +20,18 @@ import { CalendarDays, Clock, Trophy, Shield, Users, Gamepad2, Flame, ChevronRig
 import { CircleIcon } from "@/components/icons/globals"
 import { listPosition } from "@/payments/position"
 import LoadingTournament from "@/components/loader/LoadingTournament"
+import BracketCanvas from "@/components/bracket/BracketCanvas"
+
+const NO_TOURNAMENTS: ListTournament[] = []
+const NO_TEAMS: Team[] = []
+const NO_BATTLES: TBattle[] = []
 
 function TorneoPage() {
-  const { tournament, isLoading, listTournaments } = useSelector((state: RootState) => state.tournament)
-  const { teams } = useSelector((state: RootState) => state.team)
-  const { battles } = useSelector((state: RootState) => state.battle)
   const { id } = useParams()
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(getListTournamentThunk())
-  }, [dispatch])
-
-  useEffect(() => {
-    if (id) {
-      dispatch(getTournamentIdThunk(id))
-      dispatch(getTeamByTournamentThunk(id))
-      dispatch(getBattlesThunk(id))
-    }
-  }, [id, dispatch])
+  const { data: tournament, isLoading } = useTournament(id)
+  const { data: listTournaments = NO_TOURNAMENTS } = useTournaments()
+  const { data: teams = NO_TEAMS } = useTeamsByTournament(id)
+  const { data: battles = NO_BATTLES } = useBattles(id)
 
   if (isLoading) return <LoadingTournament />
 
@@ -57,17 +51,33 @@ function TorneoPage() {
 
   const date = new Date(tournament.dateStart)
   const game = ListaGamesImage.find((game) => game.name === tournament.game)
+  const banners = bannerUrls(tournament)
+  const cover = banners[0] || "/placeholder.svg"
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-950 to-black pt-16 pb-10">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/40 to-black z-10"></div>
         <div className="h-[40vh] md:h-[50vh] overflow-hidden">
-          <img
-            src={tournament.image || "/placeholder.svg"}
-            alt={tournament.name}
-            className="w-full h-full object-cover object-center"
-          />
+          {banners.length > 1 ? (
+            <Carousel opts={{ loop: true }} className="h-full">
+              <CarouselContent className="ml-0 h-[40vh] md:h-[50vh]">
+                {banners.map((src, index) => (
+                  <CarouselItem key={`${src}-${index}`} className="h-full pl-0">
+                    <img src={src} alt={tournament.name} className="h-full w-full object-cover object-center" />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-4 border-none bg-black/40 text-white hover:bg-black/60" />
+              <CarouselNext className="right-4 border-none bg-black/40 text-white hover:bg-black/60" />
+            </Carousel>
+          ) : (
+            <img
+              src={cover}
+              alt={tournament.name}
+              className="w-full h-full object-cover object-center"
+            />
+          )}
         </div>
 
         <div className="container mx-auto px-4 relative z-20 -mt-20">
@@ -76,7 +86,7 @@ function TorneoPage() {
               <DialogTrigger asChild>
                 <div className="rounded-lg overflow-hidden border-4 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] cursor-pointer transform hover:scale-105 transition-transform duration-300">
                   <img
-                    src={tournament.image || "/placeholder.svg"}
+                    src={cover}
                     alt={tournament.name}
                     className="w-32 h-32 md:w-40 md:h-40 object-cover"
                   />
@@ -87,7 +97,7 @@ function TorneoPage() {
                   <DialogTitle>Vista previa</DialogTitle>
                 </DialogHeader>
                 <div>
-                  <img src={tournament.image || "/placeholder.svg"} alt={tournament.name} className="w-full h-auto" />
+                  <img src={cover} alt={tournament.name} className="w-full h-auto" />
                 </div>
               </DialogContent>
             </Dialog>
@@ -149,7 +159,7 @@ function TorneoPage() {
 
       <div className="container mx-auto px-2 mt-10">
         <Tabs defaultValue="info" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-8 bg-purple-900/30 p-1 rounded-xl">
+          <TabsList className="grid grid-cols-5 mb-8 bg-purple-900/30 p-1 rounded-xl">
             <TabsTrigger value="info" className="data-[state=active]:bg-purple-700 data-[state=active]:text-white">
               Información
             </TabsTrigger>
@@ -158,6 +168,9 @@ function TorneoPage() {
             </TabsTrigger>
             <TabsTrigger value="schedule" className="data-[state=active]:bg-purple-700 data-[state=active]:text-white">
               Horarios
+            </TabsTrigger>
+            <TabsTrigger value="bracket" className="data-[state=active]:bg-purple-700 data-[state=active]:text-white">
+              Bracket
             </TabsTrigger>
             <TabsTrigger value="related" className="data-[state=active]:bg-purple-700 data-[state=active]:text-white">
               Relacionados
@@ -324,6 +337,12 @@ function TorneoPage() {
                   <p className="text-sm mt-2">Vuelve pronto para ver las actualizaciones</p>
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="bracket" className="animate-in fade-in-50 duration-300">
+            <div className="admin-theme h-[70vh] min-h-[420px] overflow-hidden rounded-xl border border-purple-800/50">
+              <BracketCanvas tournamentId={tournament._id} readOnly />
             </div>
           </TabsContent>
 

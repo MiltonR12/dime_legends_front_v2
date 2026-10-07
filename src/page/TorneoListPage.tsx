@@ -1,8 +1,7 @@
-import { getListTournamentThunk } from "@/app/redux/tournament/tournamentSlice"
-import { type RootState, useAppDispatch } from "@/app/store"
+import { useTournaments } from "@/hooks/tournament"
+import type { ListTournament } from "@/app/api/tournament/tournament.types"
 import CardTorneo from "@/components/card/CardTorneo"
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import { useState } from "react"
 import torneos_fondo from "@/assets/imgs/fondo/torneos.jpg"
 import CardTorneoSkeleton from "@/components/skeleton/CardTorneoSkeleton"
 import { Button } from "@/components/ui/button"
@@ -11,16 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Trophy, Search, Filter, Calendar, Gamepad2, Flame } from "lucide-react"
 
+const NO_TOURNAMENTS: ListTournament[] = []
+
 function TorneoListPage() {
-  const { listTournaments, isLoading } = useSelector((state: RootState) => state.tournament)
-  const dispatch = useAppDispatch()
+  const { data: listTournaments = NO_TOURNAMENTS, isLoading } = useTournaments()
   const [searchTerm, setSearchTerm] = useState("")
   const [gameFilter, setGameFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
-
-  useEffect(() => {
-    dispatch(getListTournamentThunk())
-  }, [dispatch])
 
   // Filter tournaments based on search and filters
   const filteredTournaments = listTournaments.filter((tournament) => {

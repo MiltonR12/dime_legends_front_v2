@@ -1,7 +1,6 @@
 import { Form, Formik } from "formik"
 import { Link, useNavigate } from "react-router-dom"
-import { useAppDispatch } from "@/app/store"
-import { authLoginGoogleThunk, authLoginThunk } from "@/app/redux/auth/authSlice"
+import { useLogin, useLoginGoogle } from "@/hooks/auth"
 import { loginValidation } from "@/lib/validations"
 import { GoogleLogin } from "@react-oauth/google"
 import { CustomToast } from "@/lib/handleToast"
@@ -12,18 +11,19 @@ import CustomInput from "./CustomInput"
 
 function LoginForm() {
 
-  const dispatch = useAppDispatch()
+  const { mutateAsync: login } = useLogin()
+  const { mutateAsync: loginGoogle } = useLoginGoogle()
   const navigate = useNavigate()
 
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       onSubmit={(values, { setSubmitting }) => {
-        dispatch(authLoginThunk(values))
-          .unwrap()
+        login(values)
           .then(() => {
             navigate("/perfil")
           })
+          .catch(() => undefined)
           .finally(() => {
             setSubmitting(false)
           })
@@ -84,11 +84,11 @@ function LoginForm() {
                 onSuccess={async (credentialResponse) => {
                   const token = credentialResponse.credential
                   if (!token) return
-                  dispatch(authLoginGoogleThunk(token))
-                    .unwrap()
+                  loginGoogle(token)
                     .then(() => {
                       navigate("/perfil")
                     })
+                    .catch(() => undefined)
                 }}
                 onError={() => {
                   CustomToast.error("Error al iniciar sesión con Google")

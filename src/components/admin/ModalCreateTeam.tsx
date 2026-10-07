@@ -1,8 +1,7 @@
 import { useState } from "react"
 import { Form, Formik } from "formik"
 import * as Yup from "yup"
-import { createTeamThunk } from "@/app/redux/team/teamSlice"
-import { useAppDispatch } from "@/app/store"
+import { useCreateTeam } from "@/hooks/team"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -15,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import ArrayInput from "../form/ArrayInput"
 import InputUploadImage from "../input/InputUploadImage"
 import CustomInput from "../form/CustomInput"
-import { Users, User, ImageIcon, Save, X, Loader2, Phone, PlusCircle } from "lucide-react"
+import { Users, Save, X, Loader2, PlusCircle } from "lucide-react"
 
 // Validation schema
 const teamSchema = Yup.object({
@@ -33,36 +32,36 @@ type Props = {
 
 function ModalCreateTeam({ id }: Props) {
 
-  const dispatch = useAppDispatch()
+  const { mutateAsync: createTeam } = useCreateTeam()
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <Button
-          className="bg-gradient-to-r from-[#CB3CFF] to-[#7F25FB] rounded-xl text-white"
+          className="bg-admin-accent text-white shadow-none hover:bg-admin-accent-hover"
           onClick={() => setIsOpen(true)}
         >
           <PlusCircle className="h-4 w-4 mr-2" /> Crear Equipo
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="bg-slate-900 border border-slate-700 p-0 max-w-2xl">
-        <AlertDialogHeader className="bg-slate-800 px-6 py-4">
+      <AlertDialogContent className="max-w-2xl border-admin-border bg-admin-surface p-0">
+        <AlertDialogHeader className="border-b border-admin-border px-6 py-4">
           <div className="flex items-center justify-between">
-            <AlertDialogTitle className="text-xl text-white flex items-center gap-2">
-              <Users className="h-5 w-5 text-purple-400" /> Crear Nuevo Equipo
+            <AlertDialogTitle className="flex items-center gap-2 text-xl text-admin-text">
+              <Users className="h-5 w-5 text-admin-muted" /> Crear equipo
             </AlertDialogTitle>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="h-8 w-8 rounded-full text-slate-400 hover:text-white hover:bg-slate-700"
+              className="h-8 w-8 rounded-full text-admin-muted hover:bg-admin-input hover:text-admin-text"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
-          <AlertDialogDescription className="text-slate-300">
+          <AlertDialogDescription className="text-admin-muted">
             Completa la información para registrar un nuevo equipo en el torneo.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -77,47 +76,43 @@ function ModalCreateTeam({ id }: Props) {
           }}
           validationSchema={teamSchema}
           onSubmit={(values, { setSubmitting }) => {
-            dispatch(createTeamThunk({ id, voucher: null, ...values }))
+            createTeam({ id, voucher: null, ...values })
               .then(() => { setIsOpen(false) })
+              .catch(() => undefined)
               .finally(() => { setSubmitting(false) })
           }}
         >
           {({ isSubmitting, values }) => (
             <Form className="overflow-y-auto px-6 py-6">
-              <div className="space-y-6">
-                <div className="md:col-span-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <ImageIcon className="h-4 w-4 text-purple-400" />
-                    <label className="text-white font-medium">Logo del equipo</label>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0 pt-1">
+                    <p className="mb-2 text-sm font-medium text-admin-text">Logo</p>
+                    <InputUploadImage name="image" compact />
                   </div>
-                  <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-                    <InputUploadImage name="image" />
+                  <div className="min-w-0 flex-1 space-y-4">
+                    <CustomInput
+                      label="Nombre del equipo"
+                      icon={null}
+                      name="name"
+                      disabled={isSubmitting}
+                      variant="dark"
+                      placeholder="Ej: Los Invencibles"
+                    />
+                    <CustomInput
+                      label="Nombre del capitán"
+                      icon={null}
+                      name="captain"
+                      disabled={isSubmitting}
+                      variant="dark"
+                      placeholder="Nombre completo del capitán"
+                    />
                   </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <CustomInput
-                    label="Nombre del equipo"
-                    icon={<User className="h-4 w-4 text-purple-400" />}
-                    name="name"
-                    disabled={isSubmitting}
-                    variant="dark"
-                    placeholder="Ej: Los Invencibles"
-                  />
-
-                  <CustomInput
-                    label="Nombre del capitán"
-                    icon={<User className="h-4 w-4 text-purple-400" />}
-                    name="captain"
-                    disabled={isSubmitting}
-                    variant="dark"
-                    placeholder="Nombre completo del capitán"
-                  />
                 </div>
 
                 <CustomInput
                   label="Teléfono de contacto"
-                  icon={<Phone className="h-4 w-4 text-purple-400" />}
+                  icon={null}
                   name="phone"
                   disabled={isSubmitting}
                   variant="dark"
@@ -126,25 +121,25 @@ function ModalCreateTeam({ id }: Props) {
 
                 <ArrayInput
                   label="Jugadores"
-                  icon={<Users className="h-4 w-4 text-purple-400" />}
+                  icon={null}
                   name="players"
                   values={values.players}
                   variant="dark"
                 />
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                <div className="flex justify-end gap-3 border-t border-admin-border pt-4">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setIsOpen(false)}
-                    className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white"
+                    className="border-admin-border bg-transparent text-admin-text hover:bg-admin-input"
                   >
                     Cancelar
                   </Button>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-gradient-to-r from-[#CB3CFF] to-[#7F25FB] hover:opacity-90 text-white"
+                    className="bg-admin-accent text-white hover:bg-admin-accent-hover"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">

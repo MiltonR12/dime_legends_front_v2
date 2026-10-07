@@ -55,7 +55,7 @@ function ModalShowVersus({ battle }: BattlePreviewProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Generar Imagen</Button>
+        <Button type="button" variant="outline" className="h-8 border-admin-border bg-transparent text-admin-muted hover:bg-admin-input hover:text-admin-text">Imagen</Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-4xl bg-fondo">

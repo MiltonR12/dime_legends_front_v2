@@ -1,5 +1,5 @@
-import { TBattle } from "@/app/redux/battle/battle"
-import { Team } from "@/app/redux/team/team"
+import { TBattle } from "@/app/api/battle/battle.types"
+import { Team } from "@/app/api/team/team.types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 import CardTeam from "./CardTeam"
 import { groupBattlesByRound } from "@/lib/sort"
