@@ -1,4 +1,5 @@
 import axios from "@/lib/axios";
+import { uploadFile } from "../upload/uploadApi";
 import type { ApiResponse } from "../response";
 import type { PCreatePage, PLogin, PRegister } from "./auth";
 import type { User } from "./auth.types";
@@ -30,13 +31,11 @@ export const validateTokenApi = async () => {
 };
 
 export const createPageApi = async (payload: PCreatePage) => {
-  const formData = new FormData();
-  formData.append("name", payload.name);
-  formData.append("description", payload.description);
-  formData.append("image", payload.image);
-
-  const { data } = await axios.post<ApiResponse<User>>("/page", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+  const image = await uploadFile(payload.image, "page");
+  const { data } = await axios.post<ApiResponse<User>>("/page", {
+    name: payload.name,
+    description: payload.description,
+    image,
   });
   return data.data;
 };
