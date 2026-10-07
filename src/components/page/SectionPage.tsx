@@ -20,6 +20,8 @@ import {
   Check,
 } from "lucide-react"
 import ModalAddNetwork from "@/page/public/profile/components/ModalAddNetwork"
+import CreatePageModal from "@/components/modals/CreatePageModal"
+import { isOrganizer, pageReview } from "@/lib/roles"
 
 function SectionPage() {
   const { user } = useAuth()
@@ -36,6 +38,10 @@ function SectionPage() {
 
   if (!user?.page) return null
   const page = user.page
+  const review = pageReview(user)
+  const canManage = isOrganizer(user)
+  const reviewLabel =
+    review === "pending" ? "Solicitud pendiente" : review === "rejected" ? "Solicitud rechazada" : "Página de organizador"
 
   return (
     <motion.section
@@ -48,7 +54,7 @@ function SectionPage() {
       <Card className="bg-purple-950/30 border-purple-800/50 backdrop-blur-sm overflow-hidden">
         <div className="h-24 bg-gradient-to-r from-purple-800/50 to-pink-800/50 relative">
           <Badge className="absolute top-4 right-4 bg-purple-700 hover:bg-purple-600 text-white">
-            Página de Organizador
+            {reviewLabel}
           </Badge>
         </div>
         <CardHeader>
@@ -74,15 +80,30 @@ function SectionPage() {
             <span className="text-purple-200">{page.description?.length ?? 0} caracteres en la descripción</span>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button
-            asChild
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-          >
-            <Link to="/admin" className="flex items-center justify-center gap-2">
-              <LayoutDashboard className="h-4 w-4" /> Administrar Torneos
-            </Link>
-          </Button>
+        <CardFooter className="flex flex-col items-stretch gap-3">
+          {review === "pending" && (
+            <p className="text-sm text-purple-200">
+              Tu solicitud está en revisión. Cuando un superadmin la apruebe podrás administrar torneos.
+            </p>
+          )}
+          {review === "rejected" && (
+            <>
+              <p className="text-sm text-purple-200">
+                La solicitud fue rechazada. Corrige los datos y vuelve a enviarla.
+              </p>
+              <CreatePageModal />
+            </>
+          )}
+          {canManage && (
+            <Button
+              asChild
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+            >
+              <Link to="/admin" className="flex items-center justify-center gap-2">
+                <LayoutDashboard className="h-4 w-4" /> Administrar Torneos
+              </Link>
+            </Button>
+          )}
         </CardFooter>
       </Card>
 

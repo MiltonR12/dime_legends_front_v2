@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, ChevronsUpDown, LogOut, User, Home, Settings } from "lucide-react"
+import { Bell, ChevronsUpDown, LogOut, User, Home, Settings, Trophy } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import { useAuth, useLogout } from "@/hooks/auth"
 import Image from "../ui/Image"
 import { Link } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
+import { roleLabel } from "@/lib/roles"
 
 export function CardUser() {
   const { isMobile } = useSidebar()
@@ -44,7 +45,7 @@ export function CardUser() {
                 <div className="flex items-center gap-2">
                   <span className="truncate font-medium text-admin-text">{user.firstName}</span>
                   <Badge variant="outline" className="border-admin-border px-1.5 py-0 text-xs text-admin-muted">
-                    Admin
+                    {roleLabel(user.role?.name)}
                   </Badge>
                 </div>
                 <span className="truncate text-xs text-admin-muted">{user.email}</span>
@@ -82,16 +83,6 @@ export function CardUser() {
                 asChild
                 className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text"
               >
-                <Link to="/usuario" className="flex items-center gap-3 px-2 py-2">
-                  <User className="h-4 w-4 text-admin-muted" />
-                  <span className="font-medium">Mi Cuenta</span>
-                </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                asChild
-                className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text"
-              >
                 <Link to="/" className="flex items-center gap-3 px-2 py-2">
                   <Home className="h-4 w-4 text-admin-muted" />
                   <span className="font-medium">Volver al sitio</span>
@@ -119,6 +110,24 @@ export function CardUser() {
             <DropdownMenuSeparator className="bg-admin-border" />
 
             <div className="p-1">
+              <DropdownMenuItem
+                asChild
+                className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text"
+              >
+                <Link to="/perfil" className="flex items-center gap-3 px-2 py-2">
+                  <User className="h-4 w-4 text-admin-muted" />
+                  <span className="font-medium">Editar perfil</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                asChild
+                className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text"
+              >
+                <Link to="/perfil?tab=page" className="flex items-center gap-3 px-2 py-2">
+                  <Trophy className="h-4 w-4 text-admin-muted" />
+                  <span className="font-medium">Editar perfil organizador</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer rounded-md text-red-400 hover:bg-red-500/10 hover:text-red-300 focus:bg-red-500/10 focus:text-red-300"
                 onClick={() => logout()}

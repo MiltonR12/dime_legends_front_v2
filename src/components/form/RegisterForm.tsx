@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { useLoginGoogle, useRegister } from "@/hooks/auth"
 import { registerValidation } from "@/lib/validations"
 import { GoogleLogin } from "@react-oauth/google"
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
 import { User, Phone, Loader2, UserPlus } from "lucide-react"
+import { returnPath } from "@/lib/returnPath"
 import CustomInput from "./CustomInput"
 import InputPhone from "../input/InputPhone"
 
@@ -14,6 +15,8 @@ function RegisterForm() {
   const { mutateAsync: registerUser } = useRegister()
   const { mutateAsync: loginGoogle } = useLoginGoogle()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const next = returnPath(searchParams.toString())
 
   return (
     <Formik
@@ -27,7 +30,7 @@ function RegisterForm() {
       onSubmit={(values, { setSubmitting }) => {
         registerUser(values)
           .then(() => {
-            navigate("/login")
+            navigate(searchParams.get("next") ? `/login?next=${encodeURIComponent(searchParams.get("next") || "")}` : "/login")
           })
           .catch(() => {
             setSubmitting(false)
@@ -122,7 +125,7 @@ function RegisterForm() {
                   if (!token) return
                   loginGoogle(token)
                     .then(() => {
-                      navigate("/perfil")
+                      navigate(next)
                     })
                     .catch(() => undefined)
                 }}
@@ -141,7 +144,7 @@ function RegisterForm() {
             <p className="text-purple-300">
               ¿Ya tienes cuenta?{" "}
               <Link
-                to="/login"
+                to={searchParams.get("next") ? `/login?next=${encodeURIComponent(searchParams.get("next") || "")}` : "/login"}
                 className="font-semibold text-white hover:text-purple-300 transition-colors underline decoration-purple-500 underline-offset-2"
               >
                 Iniciar sesión

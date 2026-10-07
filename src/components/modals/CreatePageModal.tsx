@@ -14,6 +14,7 @@ import { useCreateUserPage } from "@/hooks/auth"
 import UploadPhoto from "@/components/input/UploadPhoto"
 import InputTextArea from "@/components/input/InputTextArea"
 import { Crown, Users, ImageIcon, FileText } from "lucide-react"
+import { CustomToast } from "@/lib/handleToast"
 import { Badge } from "@/components/ui/badge"
 
 function CreatePageModal() {
@@ -61,6 +62,7 @@ function CreatePageModal() {
                 image,
                 name,
               })
+                .then(() => CustomToast.success("Solicitud enviada. Queda pendiente de aprobación"))
                 .catch(() => undefined)
                 .finally(() => {
                   setSubmitting(false)

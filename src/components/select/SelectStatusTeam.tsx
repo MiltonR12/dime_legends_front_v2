@@ -5,16 +5,17 @@ import { UserCheck, UserX, Clock, Loader2 } from "lucide-react"
 
 interface SelectStatusTeamProps {
   _id: string
+  tournament: string
   defaultValue: string
 }
 
-function SelectStatusTeam({ _id, defaultValue }: SelectStatusTeamProps) {
+function SelectStatusTeam({ _id, tournament, defaultValue }: SelectStatusTeamProps) {
   const { mutateAsync: updateStatus, isPending: isLoading } = useUpdateTeamStatus()
   const [currentStatus, setCurrentStatus] = useState(defaultValue)
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      await updateStatus({ id: _id, status: newStatus })
+      await updateStatus({ id: _id, status: newStatus, tournament })
       setCurrentStatus(newStatus)
     } catch (error) {
       console.error("Error updating team status:", error)

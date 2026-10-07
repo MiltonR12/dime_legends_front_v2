@@ -62,8 +62,8 @@ function TableTeam({ data = [], id }: Props) {
     setColumnFilters([{ id: "name", value: search }])
   }
 
-  const handleDelete = (id: string) => {
-    deleteTeam(id)
+  const handleDelete = (teamId: string) => {
+    deleteTeam({ id: teamId, tournament: id })
       .then(() => {
         setIsOpenDelete(false)
       })
@@ -171,6 +171,7 @@ function TableTeam({ data = [], id }: Props) {
         <div className="text-sm flex gap-5 font-bold text-navy-700 dark:text-white">
           <SelectStatusTeam
             _id={info.row.original._id}
+            tournament={id}
             defaultValue={info.row.original.status}
           />
           <MenuTable

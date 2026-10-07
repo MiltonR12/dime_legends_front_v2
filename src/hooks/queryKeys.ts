@@ -2,6 +2,9 @@ export const queryKeys = {
   auth: {
     me: ["auth", "me"] as const,
   },
+  users: {
+    all: ["users"] as const,
+  },
   battles: {
     all: ["battles"] as const,
     list: (tournamentId: string) => ["battles", tournamentId] as const,
@@ -10,6 +13,7 @@ export const queryKeys = {
   teams: {
     all: ["teams"] as const,
     list: (tournamentId: string) => ["teams", tournamentId] as const,
+    mine: ["teams", "mine"] as const,
   },
   tournaments: {
     all: ["tournaments"] as const,

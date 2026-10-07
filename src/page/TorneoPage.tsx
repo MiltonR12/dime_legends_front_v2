@@ -4,6 +4,7 @@ import type { ListTournament } from "@/app/api/tournament/tournament.types"
 import { useBattles } from "@/hooks/battle"
 import { useTeamsByTournament } from "@/hooks/team"
 import { useTournament, useTournaments } from "@/hooks/tournament"
+import { useAuth } from "@/hooks/auth"
 import { Link, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -28,10 +29,14 @@ const NO_BATTLES: TBattle[] = []
 
 function TorneoPage() {
   const { id } = useParams()
+  const { isAuthenticated } = useAuth()
   const { data: tournament, isLoading } = useTournament(id)
   const { data: listTournaments = NO_TOURNAMENTS } = useTournaments()
   const { data: teams = NO_TEAMS } = useTeamsByTournament(id)
   const { data: battles = NO_BATTLES } = useBattles(id)
+  const joinTo = isAuthenticated
+    ? `/torneo/team/create/${id}`
+    : `/login?next=${encodeURIComponent(`/torneo/team/create/${id}`)}`
 
   if (isLoading) return <LoadingTournament />
 
@@ -141,7 +146,7 @@ function TorneoPage() {
               asChild
               className="text-lg py-6 px-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-[0_0_15px_rgba(168,85,247,0.5)] border-none transition-all duration-300 hover:scale-105 animate-pulse"
             >
-              <Link to={`/torneo/team/create/${tournament._id}`}>
+              <Link to={joinTo}>
                 {tournament.payment ? (
                   <span className="flex items-center gap-2">
                     <Flame className="h-5 w-5" /> Inscribirme por {tournament.payment.amount} Bs
@@ -300,7 +305,7 @@ function TorneoPage() {
                     asChild
                     className="mt-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   >
-                    <Link to={`/torneo/team/create/${tournament._id}`}>Sé el primero en inscribirte</Link>
+                    <Link to={joinTo}>Sé el primero en inscribirte</Link>
                   </Button>
                 </div>
               )}

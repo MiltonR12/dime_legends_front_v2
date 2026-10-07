@@ -1,181 +1,314 @@
-import { useEffect, useState } from "react"
-import { useParams, useNavigate, Link } from "react-router-dom"
-import { useTournament } from "@/hooks/tournament"
-import { Separator } from "@/components/ui/separator"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, Users, Shield, Info, AlertCircle } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Steps } from "@/components/ui/steps"
-import CreateTeamForm from "@/components/form/CreateTeamForm"
-import LoadingTournament from "@/components/loader/LoadingTournament"
+import { useState } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Formik } from "formik";
+import { useAuth } from "@/hooks/auth";
+import { useTournament } from "@/hooks/tournament";
+import {
+  useInscribeTeam,
+  useMyTeams,
+  useTeamsByTournament,
+} from "@/hooks/team";
+import type { OwnedTeam, Team } from "@/app/api/team/team.types";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import UploadField from "@/components/form/UploadField";
+import LoadingTournament from "@/components/loader/LoadingTournament";
+import {
+  AlertCircle,
+  ArrowLeft,
+  Calendar,
+  CheckCircle,
+  Info,
+  Loader2,
+  Shield,
+  Users,
+} from "lucide-react";
 
-function RegisterTeamPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { data: tournament, isLoading } = useTournament(id)
-  const [currentStep, setCurrentStep] = useState(1)
-  const [totalSteps, setTotalSteps] = useState(2)
+const NO_MINE: OwnedTeam[] = [];
+const NO_TEAMS: Team[] = [];
 
-  useEffect(() => {
-    if (tournament?.payment) {
-      setTotalSteps(3)
-    } else {
-      setTotalSteps(2)
-    }
-  }, [tournament])
+function CreateTeamPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { data: tournament, isLoading } = useTournament(id);
+  const { data: mine = NO_MINE, isLoading: loadingMine } =
+    useMyTeams(isAuthenticated);
+  const { data: inscribed = NO_TEAMS } = useTeamsByTournament(id);
+  const { mutateAsync: inscribe } = useInscribeTeam();
+  const [done, setDone] = useState(false);
 
-  if (isLoading) return <LoadingTournament />
-
-  if (!tournament) {
+  if (authLoading || isLoading) return <LoadingTournament />;
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-950 to-black pt-20 pb-10 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-4">Torneo no encontrado</h1>
-          <p className="text-purple-300 mb-6">
-            No pudimos encontrar el torneo que estás buscando. Por favor, verifica el enlace o regresa a la lista de torneos.
-          </p>
+      <Navigate
+        to={`/login?next=${encodeURIComponent(`/torneo/team/create/${id}`)}`}
+        replace
+      />
+    );
+  }
+  if (!tournament || !id) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-950 to-black pt-20">
+        <div className="text-center">
+          <h1 className="mb-4 text-3xl font-bold text-white">
+            Torneo no encontrado
+          </h1>
           <Button
             asChild
-            variant="default"
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white"
           >
             <Link to="/torneos">Volver a Torneos</Link>
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
-  const handleStepChange = (step: number) => {
-    setCurrentStep(step)
-  }
-
-  const registrationEndDate = tournament.config?.registrationEnd ?
-    new Date(tournament.config.registrationEnd) : null
-
-  const isRegistrationClosed = registrationEndDate ? new Date() > registrationEndDate : false
-  const isTournamentFull = tournament.teams?.length || 0 >= tournament.config?.maxTeams || false
+  const registrationEnd = tournament.config?.registrationEnd
+    ? new Date(tournament.config.registrationEnd)
+    : null;
+  const closed = registrationEnd ? new Date() > registrationEnd : false;
+  const taken = inscribed.filter((team) => team.status !== "inactive").length;
+  const maxTeams = tournament.config?.maxTeams;
+  const full =
+    typeof maxTeams === "number" && maxTeams > 0 && taken >= maxTeams;
+  const inscribedIds = new Set(inscribed.map((team) => team._id));
+  const available = mine.filter((team) => !inscribedIds.has(team._id));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 to-black pb-10">
-      <div className="relative mb-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/40 to-black z-10"></div>
-        <div className="h-[25vh] overflow-hidden">
-          <img
-            src={tournament.image || "/placeholder.svg"}
-            alt={tournament.name}
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-      </div>
+      <div className="container mx-auto px-4 pt-24">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate(`/torneo/${id}`)}
+          className="mb-6 border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:text-white"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Volver al torneo
+        </Button>
 
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-6 items-start">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(`/torneo/${id}`)}
-            className="mb-4 border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:text-white"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" /> Volver al torneo
-          </Button>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="md:col-span-1">
-            <div className="bg-purple-900/20 p-6 rounded-xl border border-purple-800/50 backdrop-blur-sm sticky top-24">
-              <h2 className="text-2xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-                {tournament.name}
-              </h2>
-              <Separator className="my-4 bg-purple-700/30" />
-
-              <div className="space-y-4 text-purple-200">
-                <div className="flex items-center gap-3">
-                  <Users className="h-5 w-5 text-purple-400" />
-                  <span>
-                    Equipos: {tournament.teams?.length || 1} / {tournament.config?.maxTeams || 1}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Shield className="h-5 w-5 text-purple-400" />
-                  <span>
-                    Jugadores: {tournament.config?.minPlayers || 1} - {tournament.config?.maxPlayers || 10}
-                  </span>
-                </div>
-                {registrationEndDate && (
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-purple-400" />
-                    <span>Inscripciones hasta: {registrationEndDate.toLocaleDateString()}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  <Info className="h-5 w-5 text-purple-400" />
-                  <span>Costo: {tournament.payment ? `${tournament.payment.amount} Bs` : "Gratis"}</span>
-                </div>
+        <div className="grid items-start gap-8 md:grid-cols-3">
+          <aside className="rounded-xl border border-purple-800/50 bg-purple-900/20 p-6 backdrop-blur-sm md:sticky md:top-24">
+            <h2 className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-2xl font-bold text-transparent">
+              {tournament.name}
+            </h2>
+            <Separator className="my-4 bg-purple-700/30" />
+            <div className="space-y-4 text-purple-200">
+              <div className="flex items-center gap-3">
+                <Users className="h-5 w-5 text-purple-400" />
+                <span>
+                  Equipos: {taken}
+                  {maxTeams ? ` / ${maxTeams}` : ""}
+                </span>
               </div>
-
-              {(isRegistrationClosed || isTournamentFull) && (
-                <Alert className="mt-6 bg-red-900/30 border-red-800 text-red-200">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>¡Atención!</AlertTitle>
-                  <AlertDescription>
-                    {isRegistrationClosed
-                      ? "El período de inscripción ha finalizado."
-                      : "El torneo ha alcanzado el máximo de equipos permitidos."}
-                  </AlertDescription>
-                </Alert>
+              <div className="flex items-center gap-3">
+                <Shield className="h-5 w-5 text-purple-400" />
+                <span>
+                  Jugadores: {tournament.config?.minPlayers || 1} -{" "}
+                  {tournament.config?.maxPlayers || 10}
+                </span>
+              </div>
+              {registrationEnd && (
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-purple-400" />
+                  <span>
+                    Inscripciones hasta: {registrationEnd.toLocaleDateString()}
+                  </span>
+                </div>
               )}
-            </div>
-          </div>
-
-          {/* Right Column - Registration Form */}
-          <div className="md:col-span-2">
-            <div className="bg-purple-900/20 p-6 rounded-xl border border-purple-800/50 backdrop-blur-sm">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Registro de Equipo</h1>
-                <p className="text-purple-300">
-                  Completa el formulario para inscribir a tu equipo en el torneo de {tournament.game}
-                </p>
-
-                <div className="mt-6 mb-8">
-                  <Steps
-                    currentStep={currentStep}
-                    totalSteps={totalSteps}
-                    labels={
-                      tournament.payment ? ["Información", "Pago", "Confirmación"] : ["Información", "Confirmación"]
-                    }
-                  />
-                </div>
-
-                {!isRegistrationClosed && !isTournamentFull ? (
-                  <CreateTeamForm id={id || ""} torneo={tournament} onStepChange={handleStepChange} />
-                ) : (
-                  <div className="text-center py-10">
-                    <AlertCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      {isRegistrationClosed ? "Inscripciones cerradas" : "Torneo completo"}
-                    </h3>
-                    <p className="text-purple-300 mb-6 max-w-md mx-auto">
-                      {isRegistrationClosed
-                        ? "El período de inscripción para este torneo ha finalizado."
-                        : "Este torneo ha alcanzado el máximo de equipos permitidos."}
-                    </p>
-                    <Button
-                      asChild
-                      variant="default"
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    >
-                      <Link to="/torneos">Explorar otros torneos</Link>
-                    </Button>
-                  </div>
-                )}
+              <div className="flex items-center gap-3">
+                <Info className="h-5 w-5 text-purple-400" />
+                <span>
+                  Costo:{" "}
+                  {tournament.payment
+                    ? `${tournament.payment.amount} Bs`
+                    : "Gratis"}
+                </span>
               </div>
             </div>
-          </div>
+          </aside>
+
+          <section className="rounded-xl border border-purple-800/50 bg-purple-900/20 p-6 backdrop-blur-sm md:col-span-2">
+            {done ? (
+              <div className="py-8 text-center">
+                <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-400" />
+                <h1 className="mb-2 text-3xl font-bold text-white">
+                  Inscripción enviada
+                </h1>
+                <p className="mb-6 text-purple-300">
+                  Tu equipo quedó pendiente de aprobación en {tournament.name}.
+                </p>
+                <Button
+                  asChild
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+                >
+                  <Link to={`/torneo/${id}`}>Volver al torneo</Link>
+                </Button>
+              </div>
+            ) : closed || full ? (
+              <div className="py-8 text-center">
+                <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-400" />
+                <h1 className="mb-2 text-2xl font-bold text-white">
+                  {closed ? "Inscripciones cerradas" : "Torneo completo"}
+                </h1>
+                <p className="text-purple-300">
+                  {closed
+                    ? "El período de inscripción para este torneo ha finalizado."
+                    : "Este torneo ya alcanzó el máximo de equipos."}
+                </p>
+              </div>
+            ) : loadingMine ? (
+              <p className="text-purple-300">Cargando tus equipos...</p>
+            ) : mine.length === 0 ? (
+              <div>
+                <h1 className="mb-2 text-3xl font-bold text-white">
+                  Primero arma tu equipo
+                </h1>
+                <p className="mb-6 text-purple-300">
+                  Se guarda en tu cuenta. Después vuelves aquí para inscribirlo.
+                </p>
+                <Button
+                  asChild
+                  className="bg-admin-accent text-white hover:bg-admin-accent-hover"
+                >
+                  <Link
+                    to={`/admin/equipos?nuevo=1&next=${encodeURIComponent(`/torneo/team/create/${id}`)}`}
+                  >
+                    Crear equipo
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <Formik
+                enableReinitialize
+                initialValues={{
+                  teamId: available[0]?._id ?? "",
+                  voucher: null as File | null,
+                }}
+                onSubmit={(values, { setSubmitting }) => {
+                  inscribe({
+                    teamId: values.teamId,
+                    tournamentId: id,
+                    voucher: values.voucher,
+                  })
+                    .then(() => setDone(true))
+                    .catch(() => undefined)
+                    .finally(() => setSubmitting(false));
+                }}
+              >
+                {({ handleSubmit, values, setFieldValue, isSubmitting }) => (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <h1 className="mb-2 text-3xl font-bold text-white">
+                        Inscribir equipo
+                      </h1>
+                      <p className="text-purple-300">
+                        Elige cuál de tus equipos entra a {tournament.name}.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {mine.map((team) => {
+                        const already = inscribedIds.has(team._id);
+                        return (
+                          <label
+                            key={team._id}
+                            className={`flex items-center gap-3 rounded-xl border p-4 ${
+                              already
+                                ? "border-purple-900 opacity-60"
+                                : values.teamId === team._id
+                                  ? "border-purple-400 bg-purple-900/40"
+                                  : "border-purple-800/50"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="teamId"
+                              value={team._id}
+                              checked={values.teamId === team._id}
+                              disabled={already}
+                              onChange={() => setFieldValue("teamId", team._id)}
+                            />
+                            <span className="text-white">
+                              {team.name}
+                              <span className="ml-2 text-sm text-purple-300">
+                                {already ? "Ya inscrito" : team.captain}
+                              </span>
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+
+                    {available.length === 0 && (
+                      <Alert className="border-purple-700 bg-purple-900/30 text-purple-100">
+                        <AlertTitle>
+                          Todos tus equipos ya están en este torneo
+                        </AlertTitle>
+                        <AlertDescription>
+                          <Link
+                            to={`/admin/equipos?nuevo=1&next=${encodeURIComponent(`/torneo/team/create/${id}`)}`}
+                            className="underline"
+                          >
+                            Crea otro equipo
+                          </Link>{" "}
+                          si quieres inscribir uno distinto.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
+                    {tournament.payment && (
+                      <div className="rounded-xl border border-purple-800/50 bg-purple-900/30 p-6">
+                        <h2 className="mb-2 text-xl font-semibold text-white">
+                          Comprobante de pago
+                        </h2>
+                        <p className="mb-4 text-purple-200">
+                          Paga {tournament.payment.amount} Bs y sube el
+                          comprobante.
+                        </p>
+                        {tournament.payment.qrImage && (
+                          <img
+                            src={tournament.payment.qrImage}
+                            alt="Código QR para pago"
+                            className="mb-4 max-h-64 rounded-lg border border-purple-600 object-contain"
+                          />
+                        )}
+                        <UploadField
+                          name="voucher"
+                          className="max-h-80 w-full"
+                        />
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={
+                        isSubmitting ||
+                        !values.teamId ||
+                        (!!tournament.payment && !values.voucher)
+                      }
+                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-6 text-white hover:from-purple-700 hover:to-pink-700"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="h-5 w-5 animate-spin" />{" "}
+                          Inscribiendo...
+                        </span>
+                      ) : (
+                        "Inscribir equipo"
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </Formik>
+            )}
+          </section>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default RegisterTeamPage
+export default CreateTeamPage;

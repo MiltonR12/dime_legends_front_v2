@@ -94,8 +94,8 @@ function AdminTeamPage() {
     })
   }
 
-  const handleDelete = (id: string) => {
-    deleteTeam(id)
+  const handleDelete = (teamId: string) => {
+    deleteTeam({ id: teamId, tournament: id || "" })
       .then(() => {
         setIsOpenDelete(false)
         CustomToast.success("Equipo eliminado correctamente")
@@ -205,7 +205,7 @@ function AdminTeamPage() {
       header: () => <span className="text-sm font-medium text-admin-muted">Acciones</span>,
       cell: (info) => (
         <div className="flex items-center gap-2">
-          <SelectStatusTeam _id={info.row.original._id} defaultValue={info.row.original.status} />
+          <SelectStatusTeam _id={info.row.original._id} tournament={id || ""} defaultValue={info.row.original.status} />
 
           {info.row.original.voucher && (
             <Dialog>

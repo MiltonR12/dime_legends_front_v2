@@ -10,10 +10,13 @@ export interface User {
   page: {
     name: string;
     description: string;
+    image?: string;
+    status?: boolean;
+    review?: "pending" | "approved" | "rejected";
     urlPage: string;
     urlGroup: string;
     urlImage: string;
-  }
+  } | null;
   role: {
     name: string;
   }

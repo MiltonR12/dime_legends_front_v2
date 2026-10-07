@@ -1,9 +1,10 @@
 import { Form, Formik } from "formik"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { useLogin, useLoginGoogle } from "@/hooks/auth"
 import { loginValidation } from "@/lib/validations"
 import { GoogleLogin } from "@react-oauth/google"
 import { CustomToast } from "@/lib/handleToast"
+import { returnPath } from "@/lib/returnPath"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Mail, Lock, Loader2 } from "lucide-react"
@@ -14,6 +15,8 @@ function LoginForm() {
   const { mutateAsync: login } = useLogin()
   const { mutateAsync: loginGoogle } = useLoginGoogle()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const next = returnPath(searchParams.toString())
 
   return (
     <Formik
@@ -21,7 +24,7 @@ function LoginForm() {
       onSubmit={(values, { setSubmitting }) => {
         login(values)
           .then(() => {
-            navigate("/perfil")
+            navigate(next)
           })
           .catch(() => undefined)
           .finally(() => {
@@ -86,7 +89,7 @@ function LoginForm() {
                   if (!token) return
                   loginGoogle(token)
                     .then(() => {
-                      navigate("/perfil")
+                      navigate(next)
                     })
                     .catch(() => undefined)
                 }}
@@ -106,7 +109,7 @@ function LoginForm() {
             <p className="text-purple-300">
               ¿No tienes cuenta?{" "}
               <Link
-                to="/register"
+                to={searchParams.get("next") ? `/register?next=${encodeURIComponent(searchParams.get("next") || "")}` : "/register"}
                 className="font-semibold text-white hover:text-purple-300 transition-colors underline decoration-purple-500 underline-offset-2"
               >
                 Regístrate

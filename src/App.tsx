@@ -21,6 +21,8 @@ import AdminTeamPage from './page/admin/team/AdminTeamPage'
 import AdminBattlePage from './page/admin/battle/AdminBattlePage'
 import AdminBracketPage from './page/admin/bracket/AdminBracketPage'
 import DashboardPage from './page/admin/dashboard/DashboardPage'
+import AdminUsersPage from './page/admin/users/AdminUsersPage'
+import MyTeamsPage from './page/admin/teams/MyTeamsPage'
 
 function App() {
 
@@ -47,6 +49,8 @@ function App() {
           <Route path="perfil" element={<ProfilePage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="usuarios" element={<AdminUsersPage />} />
+            <Route path="equipos" element={<MyTeamsPage />} />
             <Route path="torneo/create" element={<CreateTorneoPage />} />
             <Route path="torneo/:id" element={<TorneoAdminPage />} />
             <Route path='torneo/equipos/:id' element={<AdminTeamPage />} />

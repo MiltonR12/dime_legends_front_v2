@@ -76,7 +76,7 @@ function ModalCreateTeam({ id }: Props) {
           }}
           validationSchema={teamSchema}
           onSubmit={(values, { setSubmitting }) => {
-            createTeam({ id, voucher: null, ...values })
+            createTeam({ id, ...values })
               .then(() => { setIsOpen(false) })
               .catch(() => undefined)
               .finally(() => { setSubmitting(false) })
