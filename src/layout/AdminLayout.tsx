@@ -38,6 +38,7 @@ import {
   Users,
   Swords,
   GitBranch,
+  Radio,
   Info,
   LayoutDashboard,
   Search,
@@ -98,6 +99,11 @@ const TOURNAMENT_PAGES: { segment: string; label: string; icon: LucideIcon }[] =
     { segment: "versus", label: "Versus", icon: Swords },
     { segment: "bracket", label: "Bracket", icon: GitBranch },
   ];
+
+const pagesFor = (game: string) =>
+  game === "Mobile Legends"
+    ? [...TOURNAMENT_PAGES, { segment: "obs", label: "OBS", icon: Radio }]
+    : TOURNAMENT_PAGES;
 
 const canAccess = (access: Access, organizer: boolean, superAdmin: boolean) => {
   if (access === "organizer") return organizer;
@@ -253,7 +259,7 @@ function AdminLayout() {
 
                           <CollapsibleContent>
                             <SidebarMenuSub className="ml-6 mt-1 space-y-1">
-                              {TOURNAMENT_PAGES.map((page) => (
+                              {pagesFor(item.game).map((page) => (
                                 <SidebarMenuSubItem key={page.label}>
                                   <SidebarMenuSubButton
                                     asChild

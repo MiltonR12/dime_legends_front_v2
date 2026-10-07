@@ -26,6 +26,8 @@ import MyTeamsPage from './page/admin/teams/MyTeamsPage'
 import OrganizerPage from './page/admin/organizer/OrganizerPage'
 import TeamPublicPage from './page/public/team/TeamPublicPage'
 import OrganizerPublicPage from './page/public/organizer/OrganizerPublicPage'
+import AdminObsPage from './page/admin/obs/AdminObsPage'
+import ObsOverlayPage from './page/obs/ObsOverlayPage'
 
 function App() {
 
@@ -45,6 +47,7 @@ function App() {
           <Route path="equipo/:id" element={<TeamPublicPage />} />
           <Route path="organizador/:id" element={<OrganizerPublicPage />} />
         </Route>
+        <Route path="obs/:id/:screen" element={<ObsOverlayPage />} />
         <Route element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
@@ -62,6 +65,7 @@ function App() {
             <Route path='torneo/equipos/:id' element={<AdminTeamPage />} />
             <Route path='torneo/versus/:id' element={<AdminBattlePage />} />
             <Route path="torneo/bracket/:id" element={<AdminBracketPage />} />
+            <Route path="torneo/obs/:id" element={<AdminObsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />

@@ -5,7 +5,7 @@ import type { ApiResponse } from "../response";
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_BYTES = 8 * 1024 * 1024;
 
-export type UploadFolder = "tournament" | "team" | "page" | "voucher";
+export type UploadFolder = "tournament" | "team" | "page" | "voucher" | "broadcast";
 
 /** Sube la imagen por la API y devuelve la URL pública. */
 export const uploadFile = async (file: File, folder: UploadFolder) => {
