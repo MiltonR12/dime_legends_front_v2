@@ -43,6 +43,7 @@ function InputUploadImage({ name, compact = false }: Props) {
             className="h-full w-full overflow-hidden rounded-full object-cover object-center"
           />
           <Button
+            type="button"
             variant="outline"
             onClick={handleRemoveImage}
             className={`absolute z-10 h-7 w-7 rounded-full border-admin-border bg-admin-surface p-0 text-admin-text hover:bg-admin-input ${compact ? "right-1 top-1" : "right-0 top-0 translate-x-1/4 -translate-y-1/4"}`}

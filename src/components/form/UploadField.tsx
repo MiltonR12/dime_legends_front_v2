@@ -44,6 +44,7 @@ function UploadField({ name, className }: Props) {
               className='mx-auto'
             />
             <Button
+              type="button"
               onClick={() => setValue(null)}
               variant="secondary"
               className="absolute right-4 top-4 p-2 h-auto rounded-full"

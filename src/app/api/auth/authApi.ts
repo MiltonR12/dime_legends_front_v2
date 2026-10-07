@@ -1,7 +1,7 @@
 import axios from "@/lib/axios";
 import { uploadFile } from "../upload/uploadApi";
 import type { ApiResponse } from "../response";
-import type { PCreatePage, PLogin, PRegister } from "./auth";
+import type { PCreatePage, PLogin, PRegister, PUpdatePage } from "./auth";
 import type { User } from "./auth.types";
 
 type Session = { token: string; user: User };
@@ -30,12 +30,31 @@ export const validateTokenApi = async () => {
   return saveSession(data.data);
 };
 
+const storedPageImage = async (image: File | string | null | undefined) => {
+  if (image instanceof File) return uploadFile(image, "page");
+  return image ?? null;
+};
+
 export const createPageApi = async (payload: PCreatePage) => {
-  const image = await uploadFile(payload.image, "page");
+  const image = await storedPageImage(payload.image);
+  const banner = await storedPageImage(payload.banner);
   const { data } = await axios.post<ApiResponse<User>>("/page", {
     name: payload.name,
     description: payload.description,
     image,
+    banner,
+  });
+  return data.data;
+};
+
+export const updatePageApi = async (payload: PUpdatePage) => {
+  const image = await storedPageImage(payload.image);
+  const banner = await storedPageImage(payload.banner);
+  const { data } = await axios.put<ApiResponse<User>>("/page", {
+    name: payload.name,
+    description: payload.description,
+    image,
+    banner,
   });
   return data.data;
 };

@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, ChevronsUpDown, LogOut, User, Home, Settings, Trophy } from "lucide-react"
+import { ChevronsUpDown, LogOut, User, Home, Trophy } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -88,23 +88,6 @@ export function CardUser() {
                   <span className="font-medium">Volver al sitio</span>
                 </Link>
               </DropdownMenuItem>
-
-              <DropdownMenuItem className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text">
-                <div className="flex w-full items-center gap-3 px-2 py-2">
-                  <Bell className="h-4 w-4 text-admin-muted" />
-                  <span className="font-medium">Notificaciones</span>
-                  <Badge variant="outline" className="ml-auto text-xs border-red-600/50 text-red-400 px-1.5 py-0">
-                    3
-                  </Badge>
-                </div>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text">
-                <div className="flex w-full items-center gap-3 px-2 py-2">
-                  <Settings className="h-4 w-4 text-admin-muted" />
-                  <span className="font-medium">Configuración</span>
-                </div>
-              </DropdownMenuItem>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator className="bg-admin-border" />
@@ -123,7 +106,7 @@ export function CardUser() {
                 asChild
                 className="cursor-pointer rounded-md text-admin-text hover:bg-admin-input hover:text-admin-text focus:bg-admin-input focus:text-admin-text"
               >
-                <Link to="/perfil?tab=page" className="flex items-center gap-3 px-2 py-2">
+                <Link to="/admin/organizador" className="flex items-center gap-3 px-2 py-2">
                   <Trophy className="h-4 w-4 text-admin-muted" />
                   <span className="font-medium">Editar perfil organizador</span>
                 </Link>

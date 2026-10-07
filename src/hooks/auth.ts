@@ -4,9 +4,10 @@ import {
   authLoginGoogleApi,
   authRegisterApi,
   createPageApi,
+  updatePageApi,
   validateTokenApi,
 } from "@/app/api/auth/authApi"
-import type { PCreatePage, PLogin, PRegister } from "@/app/api/auth/auth"
+import type { PCreatePage, PLogin, PRegister, PUpdatePage } from "@/app/api/auth/auth"
 import type { User } from "@/app/api/auth/auth.types"
 import { queryKeys } from "./queryKeys"
 
@@ -76,6 +77,15 @@ export function useCreateUserPage() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (data: PCreatePage) => createPageApi(data),
+    onSuccess: (user) => qc.setQueryData(queryKeys.auth.me, user),
+  })
+}
+
+// PUT /page: el dueño guarda sin reenviar la solicitud
+export function useUpdateUserPage() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: PUpdatePage) => updatePageApi(data),
     onSuccess: (user) => qc.setQueryData(queryKeys.auth.me, user),
   })
 }

@@ -62,18 +62,42 @@ type NavItem = {
 };
 
 const NAV: NavItem[] = [
-  { to: "/admin/torneo/create", label: "Crear Torneo", icon: Plus, access: "organizer", accent: true },
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, access: "organizer", end: true },
+  {
+    to: "/admin/torneo/create",
+    label: "Crear Torneo",
+    icon: Plus,
+    access: "organizer",
+    accent: true,
+  },
+  {
+    to: "/admin",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    access: "organizer",
+    end: true,
+  },
   { to: "/admin/equipos", label: "Mis equipos", icon: Users, access: "any" },
-  { to: "/admin/usuarios", label: "Usuarios", icon: Users, access: "superadmin" },
+  {
+    to: "/admin/organizador",
+    label: "Perfil organizador",
+    icon: Trophy,
+    access: "any",
+  },
+  {
+    to: "/admin/usuarios",
+    label: "Usuarios",
+    icon: Users,
+    access: "superadmin",
+  },
 ];
 
-const TOURNAMENT_PAGES: { segment: string; label: string; icon: LucideIcon }[] = [
-  { segment: "", label: "Información", icon: Info },
-  { segment: "equipos", label: "Equipos", icon: Users },
-  { segment: "versus", label: "Versus", icon: Swords },
-  { segment: "bracket", label: "Bracket", icon: GitBranch },
-];
+const TOURNAMENT_PAGES: { segment: string; label: string; icon: LucideIcon }[] =
+  [
+    { segment: "", label: "Información", icon: Info },
+    { segment: "equipos", label: "Equipos", icon: Users },
+    { segment: "versus", label: "Versus", icon: Swords },
+    { segment: "bracket", label: "Bracket", icon: GitBranch },
+  ];
 
 const canAccess = (access: Access, organizer: boolean, superAdmin: boolean) => {
   if (access === "organizer") return organizer;
@@ -82,7 +106,9 @@ const canAccess = (access: Access, organizer: boolean, superAdmin: boolean) => {
 };
 
 const isHere = (pathname: string, item: NavItem) =>
-  item.end ? pathname === item.to : pathname === item.to || pathname.startsWith(`${item.to}/`);
+  item.end
+    ? pathname === item.to
+    : pathname === item.to || pathname.startsWith(`${item.to}/`);
 
 const linkClass = (active: boolean) =>
   active
@@ -98,7 +124,9 @@ function AdminLayout() {
   const location = useLocation();
   const organizer = isOrganizer(user);
   const superAdmin = isSuperAdmin(user);
-  const visible = NAV.filter((item) => canAccess(item.access, organizer, superAdmin));
+  const visible = NAV.filter((item) =>
+    canAccess(item.access, organizer, superAdmin),
+  );
   const actions = visible.filter((item) => item.accent);
   const links = visible.filter((item) => !item.accent);
   const tournaments = myTournaments.filter((item) =>
@@ -147,7 +175,9 @@ function AdminLayout() {
               >
                 <NavLink to={item.to}>
                   <item.icon className="h-4 w-4 flex-shrink-0" />
-                  <span className="font-medium group-data-[collapsible=icon]:hidden">{item.label}</span>
+                  <span className="font-medium group-data-[collapsible=icon]:hidden">
+                    {item.label}
+                  </span>
                 </NavLink>
               </Button>
             </div>
@@ -159,8 +189,16 @@ function AdminLayout() {
             <SidebarMenu className="mb-2">
               {links.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild tooltip={item.label} className="rounded-lg">
-                    <NavLink to={item.to} end={item.end} className={({ isActive }) => linkClass(isActive)}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.label}
+                    className="rounded-lg"
+                  >
+                    <NavLink
+                      to={item.to}
+                      end={item.end}
+                      className={({ isActive }) => linkClass(isActive)}
+                    >
                       <item.icon className="h-4 w-4" />
                       <span>{item.label}</span>
                     </NavLink>
@@ -222,9 +260,15 @@ function AdminLayout() {
                                     className="rounded-md text-admin-muted hover:bg-admin-surface hover:text-admin-text"
                                   >
                                     <NavLink
-                                      to={page.segment ? `/admin/torneo/${page.segment}/${item._id}` : `/admin/torneo/${item._id}`}
+                                      to={
+                                        page.segment
+                                          ? `/admin/torneo/${page.segment}/${item._id}`
+                                          : `/admin/torneo/${item._id}`
+                                      }
                                       className={({ isActive }) =>
-                                        isActive ? "bg-admin-accent text-white" : "text-admin-muted hover:text-admin-text"
+                                        isActive
+                                          ? "bg-admin-accent text-white"
+                                          : "text-admin-muted hover:text-admin-text"
                                       }
                                     >
                                       <page.icon className="h-3 w-3" />

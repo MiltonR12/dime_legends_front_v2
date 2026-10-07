@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { useAuth, useLogout } from "@/hooks/auth"
 import { cn } from "@/lib/utils"
 import { Button } from "./button"
-import { Gamepad2, Trophy, Users, Calendar, Menu, ChevronDown, LogOut, User, Settings, Crown } from "lucide-react"
+import { Gamepad2, Trophy, Users, Calendar, Menu, ChevronDown, LogOut, User, Crown } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -125,15 +125,15 @@ function Header() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+                      <Link to="/admin/organizador" className="flex items-center gap-2 cursor-pointer">
                         <Trophy className="h-4 w-4 text-purple-400" />
-                        <span>Mis Torneos</span>
+                        <span>Editar perfil organizador</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/configuracion" className="flex items-center gap-2 cursor-pointer">
-                        <Settings className="h-4 w-4 text-purple-400" />
-                        <span>Configuración</span>
+                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+                        <Crown className="h-4 w-4 text-purple-400" />
+                        <span>Mis Torneos</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-purple-800/50" />
@@ -306,10 +306,10 @@ function MobileNavigation({ isAuthenticated }: { isAuthenticated: boolean }) {
             isActive={isActive("/perfil")}
           />
           <MobileNavLink
-            to="/configuracion"
-            label="Configuración"
-            icon={<Settings className="h-5 w-5" />}
-            isActive={isActive("/configuracion")}
+            to="/admin/organizador"
+            label="Editar perfil organizador"
+            icon={<Trophy className="h-5 w-5" />}
+            isActive={isActive("/admin/organizador")}
           />
         </>
       )}

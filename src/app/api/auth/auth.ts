@@ -14,5 +14,13 @@ export interface PRegister {
 export interface PCreatePage {
   name: string;
   description: string;
-  image: File;
+  image: File | string;
+  banner?: File | string | null;
+}
+
+export interface PUpdatePage {
+  name: string;
+  description: string;
+  image: File | string;
+  banner?: File | string | null;
 }
