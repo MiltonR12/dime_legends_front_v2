@@ -78,6 +78,7 @@ export const updateTournamentApi = async (tournament: PUpdateTournament) => {
     dateStart: tournament.dateStart,
     formUrl: tournament.formUrl,
     status: tournament.status,
+    phase: tournament.phase,
     award: tournament.award,
     rules: tournament.rules,
     banners,

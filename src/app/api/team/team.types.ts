@@ -1,3 +1,8 @@
+export interface TeamInscription {
+  status: "pending" | "active" | "inactive" | string
+  tournament: { _id: string; name: string }
+}
+
 export interface OwnedTeam {
   _id: string
   owner: string
@@ -6,6 +11,23 @@ export interface OwnedTeam {
   phone: string
   players: string[]
   image: string | null
+  inscriptions?: TeamInscription[]
+}
+
+export interface PublicTeam {
+  _id: string
+  name: string
+  captain: string
+  players: string[]
+  image: string | null
+  tournaments: {
+    _id: string
+    name: string
+    dateStart: string
+    game: string
+    phase?: "inscription" | "running" | "finished"
+    image: string | null
+  }[]
 }
 
 export interface Team {

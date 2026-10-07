@@ -9,6 +9,7 @@ import InputNumber from "@/components/input/InputNumber"
 import ArrayInput from "@/components/form/ArrayInput"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -25,6 +26,12 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Loader2, Save, Trash2 } from "lucide-react"
 import BannerGallery, { BANNER_FILE_TOKEN, bannerUrls, savedBannerSlots } from "@/components/input/BannerGallery"
+
+const PHASES = [
+  { value: "inscription", label: "Inscripción" },
+  { value: "running", label: "En curso" },
+  { value: "finished", label: "Finalizado" },
+] as const
 
 const tournamentSchema = Yup.object({
   name: Yup.string().required("El nombre es obligatorio"),
@@ -115,6 +122,23 @@ function TorneoAdminPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <Select
+            value={tournament.phase ?? "inscription"}
+            onValueChange={(phase: "inscription" | "running" | "finished") =>
+              patchTournament({ _id: tournament._id, phase })
+            }
+          >
+            <SelectTrigger className="w-40 border-admin-border bg-admin-input text-admin-text">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
+              {PHASES.map((item) => (
+                <SelectItem key={item.value} value={item.value} className="focus:bg-admin-row focus:text-admin-text">
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="flex items-center gap-2 rounded-lg border border-admin-border px-3 py-2">
             <span className="text-sm text-admin-muted">{tournament.status ? "Activo" : "Oculto"}</span>
             <Switch

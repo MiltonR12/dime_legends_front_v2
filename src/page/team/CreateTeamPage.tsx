@@ -69,7 +69,7 @@ function CreateTeamPage() {
   const registrationEnd = tournament.config?.registrationEnd
     ? new Date(tournament.config.registrationEnd)
     : null;
-  const closed = registrationEnd ? new Date() > registrationEnd : false;
+  const closed = (tournament.phase ?? "inscription") !== "inscription";
   const taken = inscribed.filter((team) => team.status !== "inactive").length;
   const maxTeams = tournament.config?.maxTeams;
   const full =
@@ -155,7 +155,7 @@ function CreateTeamPage() {
                 </h1>
                 <p className="text-purple-300">
                   {closed
-                    ? "El período de inscripción para este torneo ha finalizado."
+                    ? "Este torneo ya no acepta inscripciones."
                     : "Este torneo ya alcanzó el máximo de equipos."}
                 </p>
               </div>

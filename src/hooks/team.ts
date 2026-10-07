@@ -4,6 +4,7 @@ import {
   createTeamApi,
   deleteTeamApi,
   getMyTeamsApi,
+  getPublicTeamApi,
   getTeamByTournamentApi,
   inscribeTeamApi,
   updateStatusTeamApi,
@@ -17,6 +18,14 @@ export function useTeamsByTournament(tournamentId?: string) {
     queryKey: queryKeys.teams.list(tournamentId ?? ""),
     queryFn: () => getTeamByTournamentApi(tournamentId!),
     enabled: !!tournamentId,
+  })
+}
+
+export function usePublicTeam(id?: string) {
+  return useQuery({
+    queryKey: queryKeys.teams.public(id ?? ""),
+    queryFn: () => getPublicTeamApi(id!),
+    enabled: !!id,
   })
 }
 

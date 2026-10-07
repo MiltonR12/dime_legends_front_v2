@@ -17,6 +17,8 @@ function TorneoListPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [gameFilter, setGameFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [fromDate, setFromDate] = useState("")
+  const [phaseFilter, setPhaseFilter] = useState("all")
 
   // Filter tournaments based on search and filters
   const filteredTournaments = listTournaments.filter((tournament) => {
@@ -26,8 +28,10 @@ function TorneoListPage() {
       statusFilter === "all" ||
       (statusFilter === "free" && !tournament.payment) ||
       (statusFilter === "paid" && tournament.payment)
+    const matchesDate = !fromDate || new Date(tournament.dateStart) >= new Date(`${fromDate}T00:00:00`)
+    const matchesPhase = phaseFilter === "all" || (tournament.phase ?? "inscription") === phaseFilter
 
-    return matchesSearch && matchesGame && matchesStatus
+    return matchesSearch && matchesGame && matchesStatus && matchesDate && matchesPhase
   })
 
   const uniqueGames = [...new Set(listTournaments.map((t) => t.game))]
@@ -67,7 +71,7 @@ function TorneoListPage() {
             <h2 className="text-2xl font-bold text-white">Filtros y Búsqueda</h2>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
@@ -92,6 +96,25 @@ function TorneoListPage() {
                     {game}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+
+            <Input
+              type="date"
+              value={fromDate}
+              onChange={(event) => setFromDate(event.target.value)}
+              aria-label="Desde"
+              className="bg-slate-900/50 border-purple-700/50 text-white"
+            />
+
+            <Select value={phaseFilter} onValueChange={setPhaseFilter}>
+              <SelectTrigger className="bg-slate-900/50 border-purple-700/50 text-white">
+                <SelectValue placeholder="Fase" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-900 border-purple-700">
+                <SelectItem value="all" className="text-white">Todas las fases</SelectItem>
+                <SelectItem value="inscription" className="text-white">Inscripción abierta</SelectItem>
+                <SelectItem value="running" className="text-white">En curso</SelectItem>
               </SelectContent>
             </Select>
 
@@ -121,6 +144,8 @@ function TorneoListPage() {
                 setSearchTerm("")
                 setGameFilter("all")
                 setStatusFilter("all")
+                setFromDate("")
+                setPhaseFilter("all")
               }}
               variant="outline"
               className="border-purple-700 text-purple-300 hover:bg-purple-900/30"
@@ -169,6 +194,8 @@ function TorneoListPage() {
                   setSearchTerm("")
                   setGameFilter("all")
                   setStatusFilter("all")
+                  setFromDate("")
+                  setPhaseFilter("all")
                 }}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >

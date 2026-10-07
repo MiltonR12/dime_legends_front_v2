@@ -14,11 +14,13 @@ export const queryKeys = {
     all: ["teams"] as const,
     list: (tournamentId: string) => ["teams", tournamentId] as const,
     mine: ["teams", "mine"] as const,
+    public: (id: string) => ["teams", "public", id] as const,
   },
   tournaments: {
     all: ["tournaments"] as const,
     list: ["tournaments", "list"] as const,
     mine: ["tournaments", "mine"] as const,
     detail: (id: string) => ["tournaments", id] as const,
+    organizer: (id: string) => ["page", "public", id] as const,
   },
 }

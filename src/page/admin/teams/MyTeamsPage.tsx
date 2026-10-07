@@ -15,6 +15,18 @@ import { Plus, Users, X } from "lucide-react";
 
 const NO_TEAMS: OwnedTeam[] = [];
 
+const INSCRIPTION_LABEL: Record<string, string> = {
+  pending: "Pendiente",
+  active: "Aceptado",
+  inactive: "Rechazado",
+};
+
+const INSCRIPTION_COLOR: Record<string, string> = {
+  pending: "text-admin-muted",
+  active: "text-green-400",
+  inactive: "text-red-400",
+};
+
 function MyTeamsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -94,6 +106,20 @@ function MyTeamsPage() {
                     <p className="text-sm text-admin-muted">
                       {team.captain} · {team.players.length} jugadores
                     </p>
+                    {(team.inscriptions ?? []).length > 0 && (
+                      <ul className="mt-1 space-y-0.5">
+                        {team.inscriptions?.map((item) => (
+                          <li key={item.tournament._id} className="text-xs">
+                            <Link to={`/torneo/${item.tournament._id}`} className="text-admin-text hover:underline">
+                              {item.tournament.name}
+                            </Link>
+                            <span className={`ml-2 ${INSCRIPTION_COLOR[item.status] ?? "text-admin-muted"}`}>
+                              {INSCRIPTION_LABEL[item.status] ?? item.status}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">

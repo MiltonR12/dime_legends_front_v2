@@ -41,4 +41,5 @@ export interface PUpdateTournament {
   config?: Partial<Configuration>;
   payment?: IPayment | null;
   status?: boolean;
+  phase?: "inscription" | "running" | "finished";
 }

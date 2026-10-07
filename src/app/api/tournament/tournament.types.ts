@@ -8,6 +8,7 @@ export interface ListTournament {
   modality: string[]
   payment: Payment
   teamsCount: number
+  phase?: "inscription" | "running" | "finished"
 }
 
 interface CreatedBy {
@@ -75,6 +76,7 @@ export interface TournamentOne {
   award: string[];
   note: string;
   status: boolean;
+  phase?: "inscription" | "running" | "finished";
   config: {
     minPlayers: number;
     maxPlayers: number;

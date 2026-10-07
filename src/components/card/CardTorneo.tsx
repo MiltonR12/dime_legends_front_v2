@@ -119,7 +119,7 @@ function CardTorneo({ torneo }: Props) {
           >
             <Link to={`/torneo/${torneo._id}`} className="flex items-center justify-center gap-2">
               <Star className="h-4 w-4" />
-              <span>Inscribirse</span>
+              <span>{torneo.phase === "running" ? "Ver torneo" : "Inscribirse"}</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
             </Link>
           </Button>

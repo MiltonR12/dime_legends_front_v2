@@ -2,7 +2,7 @@ import axios from "@/lib/axios"
 import type { ApiResponse } from "../response"
 import { uploadFile } from "../upload/uploadApi"
 import type { PCreateOwnedTeam, PCreateTeam, PInscribeTeam, PUpdateStatusTeam, PUpdateTeam } from "./team"
-import type { OwnedTeam, Team } from "./team.types"
+import type { OwnedTeam, PublicTeam, Team } from "./team.types"
 
 const uploadedImage = async (image: File | string | null | undefined) => {
   if (image instanceof File) return uploadFile(image, "team" as const)
@@ -12,6 +12,11 @@ const uploadedImage = async (image: File | string | null | undefined) => {
 
 export const getTeamByTournamentApi = async (tournamentId: string) => {
   const { data } = await axios.get<ApiResponse<Team[]>>(`/team/tournament/${tournamentId}`)
+  return data.data
+}
+
+export const getPublicTeamApi = async (id: string) => {
+  const { data } = await axios.get<ApiResponse<PublicTeam>>(`/team/${id}`)
   return data.data
 }
 

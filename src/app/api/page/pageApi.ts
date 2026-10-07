@@ -8,6 +8,28 @@ export const createPageApi = async (payload: unknown) => {
 
 export type PageSocial = { platform: string; url: string };
 
+export type PublicPage = {
+  _id: string
+  name: string
+  description: string | null
+  image: string | null
+  banner: string | null
+  socialLinks: PageSocial[]
+  tournaments: {
+    _id: string
+    name: string
+    dateStart: string
+    game: string
+    phase?: "inscription" | "running" | "finished"
+    image: string | null
+  }[]
+}
+
+export const getPublicPageApi = async (id: string) => {
+  const { data } = await axios.get<ApiResponse<PublicPage>>(`/page/${id}`)
+  return data.data
+}
+
 export const addNetworkPageApi = async (url: string) => {
   const { data } = await axios.post<ApiResponse<{ socialLinks: PageSocial[] }>>("/page/add-network", { url });
   return data.data;

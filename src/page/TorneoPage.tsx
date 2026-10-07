@@ -37,6 +37,7 @@ function TorneoPage() {
   const joinTo = isAuthenticated
     ? `/torneo/team/create/${id}`
     : `/login?next=${encodeURIComponent(`/torneo/team/create/${id}`)}`
+  const open = (tournament?.phase ?? "inscription") === "inscription"
 
   if (isLoading) return <LoadingTournament />
 
@@ -141,6 +142,7 @@ function TorneoPage() {
               </div>
             </div>
 
+            {open ? (
             <Button
               variant="default"
               asChild
@@ -158,6 +160,11 @@ function TorneoPage() {
                 )}
               </Link>
             </Button>
+            ) : (
+              <p className="text-lg text-purple-200">
+                {tournament.phase === "finished" ? "Torneo finalizado" : "Inscripciones cerradas"}
+              </p>
+            )}
           </div>
         </div>
       </div>

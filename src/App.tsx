@@ -24,6 +24,8 @@ import DashboardPage from './page/admin/dashboard/DashboardPage'
 import AdminUsersPage from './page/admin/users/AdminUsersPage'
 import MyTeamsPage from './page/admin/teams/MyTeamsPage'
 import OrganizerPage from './page/admin/organizer/OrganizerPage'
+import TeamPublicPage from './page/public/team/TeamPublicPage'
+import OrganizerPublicPage from './page/public/organizer/OrganizerPublicPage'
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
           <Route path="contacto" element={<ContactPage />} />
           <Route path="torneos" element={<TorneoListPage />} />
           <Route path='torneo/:id' element={<TorneoPage />} />
+          <Route path="equipo/:id" element={<TeamPublicPage />} />
+          <Route path="organizador/:id" element={<OrganizerPublicPage />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
