@@ -161,7 +161,17 @@ function AdminObsPage() {
         </TabsList>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
 
-        <TabsContent value="draft" className="mt-4">
+        <TabsContent value="draft" className="mt-4 space-y-4">
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          className="border-admin-border text-admin-text hover:bg-admin-surface"
+          onClick={() => send({ type: "clear" })}
+        >
+          Vaciar draft
+        </Button>
+      </div>
       <div className="grid gap-8 lg:grid-cols-2">
         {(["blue", "red"] as const).map((side) => (
           <section key={side} className="space-y-3">

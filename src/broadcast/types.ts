@@ -96,6 +96,7 @@ export type DeskEvent =
   | { type: "background"; url: string }
   | { type: "stage"; stage: string }
   | { type: "overlay"; overlay: OverlayId }
+  | { type: "clear" }
   | {
       type: "detected";
       bans: { blue: (string | null)[]; red: (string | null)[] };
