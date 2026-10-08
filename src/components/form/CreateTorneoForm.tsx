@@ -2,7 +2,6 @@ import { Form, Formik, type FormikTouched } from "formik"
 import CustomInput from "./CustomInput"
 import ArrayInput from "./ArrayInput"
 import { useState } from "react"
-import { Switch } from "../ui/switch"
 import { useCreateTournament } from "@/hooks/tournament"
 import { Button } from "../ui/button"
 import { useNavigate } from "react-router-dom"
@@ -11,7 +10,6 @@ import InputDatePicker from "../input/inputDatePicker"
 import InputComboBox from "../input/InputComboBox"
 import { listGames } from "@/payments/games"
 import InputNumber from "../input/InputNumber"
-import { Badge } from "../ui/badge"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 import UploadPhoto from "../input/UploadPhoto"
 import BannerGallery, { type BannerSlot } from "../input/BannerGallery"
@@ -252,33 +250,49 @@ function CreateTorneoForm() {
                   </div>
                   <InputNumber label="Máximo de equipos" name="maxTeams" required />
 
-                  <div className="flex items-center justify-between gap-4 rounded-lg border border-admin-border px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium text-admin-text">Cobrar inscripción</p>
-                      <p className="text-xs text-admin-muted">Si lo activas, pide QR y monto</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge
-                        variant="outline"
-                        className={
-                          values.chargeFee
-                            ? "border-admin-accent bg-admin-row text-admin-text"
-                            : "border-admin-border text-admin-muted"
-                        }
-                      >
-                        {values.chargeFee ? "Con costo" : "Gratuito"}
-                      </Badge>
-                      <Switch
-                        checked={values.chargeFee}
-                        onCheckedChange={(checked) => setFieldValue("chargeFee", checked)}
-                        aria-label="Cobrar inscripción"
-                      />
-                    </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {(
+                      [
+                        { paid: false, title: "Gratis", hint: "Los equipos se inscriben sin pagar." },
+                        {
+                          paid: true,
+                          title: "Con costo",
+                          hint: "Pide un QR, un monto y, si quieres, un número de cuenta.",
+                        },
+                      ] as const
+                    ).map((option) => {
+                      const selected = values.chargeFee === option.paid
+                      return (
+                        <button
+                          key={option.title}
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() => setFieldValue("chargeFee", option.paid)}
+                          className={`rounded-lg border px-4 py-3 text-left ${
+                            selected
+                              ? "border-admin-accent bg-admin-accent text-white"
+                              : "border-admin-border bg-admin-input text-admin-muted"
+                          }`}
+                        >
+                          <span className="block text-sm font-medium">{option.title}</span>
+                          <span className={`mt-1 block text-xs ${selected ? "text-white/80" : "text-admin-muted"}`}>
+                            {option.hint}
+                          </span>
+                        </button>
+                      )
+                    })}
                   </div>
 
                   {values.chargeFee && (
                     <div className="space-y-4 rounded-lg border border-admin-border p-4">
-                      <UploadPhoto name="qrImage" plain />
+                      <div>
+                        <p className="text-sm font-medium text-admin-text">Datos de pago</p>
+                        <p className="mt-1 text-xs text-admin-muted">Los equipos verán esto al inscribirse.</p>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-admin-text">QR de pago</p>
+                        <UploadPhoto name="qrImage" plain />
+                      </div>
                       <InputNumber label="Costo de inscripción" name="amount" required min={1} max={100000} />
                       <CustomInput
                         label="Nro de cuenta (opcional)"
