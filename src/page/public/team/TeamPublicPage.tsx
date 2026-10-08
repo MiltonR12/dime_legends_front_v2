@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom"
 import { usePublicTeam } from "@/hooks/team"
 import { Button } from "@/components/ui/button"
+import { usePageTitle } from "@/lib/pageTitle"
 
 const PHASE_LABEL: Record<string, string> = {
   inscription: "Inscripción",
@@ -11,6 +12,7 @@ const PHASE_LABEL: Record<string, string> = {
 function TeamPublicPage() {
   const { id } = useParams()
   const { data: team, isLoading, isError } = usePublicTeam(id)
+  usePageTitle(team?.name)
 
   if (isLoading) {
     return <main className="min-h-screen bg-black px-4 py-24 text-center text-purple-300">Cargando equipo...</main>

@@ -3,6 +3,22 @@ export interface TeamInscription {
   tournament: { _id: string; name: string }
 }
 
+export interface ImportTeam {
+  name: string
+  captain: string
+  phone: string
+  players: string[]
+}
+
+export interface ImportPreviewTeam extends ImportTeam {
+  issue: string | null
+}
+
+export interface ImportResult {
+  created: string[]
+  skipped: { name: string; reason: string }[]
+}
+
 export interface OwnedTeam {
   _id: string
   owner: string

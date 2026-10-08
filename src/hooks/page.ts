@@ -1,7 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addNetworkPageApi, createPageApi, getPublicPageApi } from "@/app/api/page/pageApi"
+import { addNetworkPageApi, createPageApi, getPublicPageApi, listOrganizersApi } from "@/app/api/page/pageApi"
 import type { User } from "@/app/api/auth/auth.types"
 import { queryKeys } from "./queryKeys"
+
+export function useOrganizers() {
+  return useQuery({
+    queryKey: queryKeys.pages.organizers,
+    queryFn: listOrganizersApi,
+    staleTime: 5 * 60 * 1000,
+  })
+}
 
 export function usePublicPage(id?: string) {
   return useQuery({

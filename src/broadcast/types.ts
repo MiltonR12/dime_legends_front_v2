@@ -75,6 +75,8 @@ export type HeroCard = {
   title: string;
   iconUrl: string;
   portraitUrl: string;
+  /** Clip de entrada del héroe. Puede no existir para todos. */
+  videoUrl?: string;
   lanes: string[];
 };
 

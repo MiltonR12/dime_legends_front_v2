@@ -19,6 +19,7 @@ import BenefitCard from "@/components/card/BenefitCard"
 import FormatCard from "@/components/card/FormatCard"
 import TournamentCard from "@/components/card/TournamentCard"
 import OrganizerFeature from "@/components/card/OrganizerFeature"
+import OrganizersSection from "@/components/home/OrganizersSection"
 
 function HomePage() {
 
@@ -313,6 +314,8 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <OrganizersSection />
 
       <section className="py-20 px-4 bg-purple-950/30 relative overflow-hidden">
         <div className="container mx-auto relative z-10">

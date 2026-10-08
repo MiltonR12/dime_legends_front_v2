@@ -25,6 +25,20 @@ export type PublicPage = {
   }[]
 }
 
+export type OrganizerSummary = {
+  _id: string
+  name: string
+  description: string | null
+  image: string | null
+  banner: string | null
+  tournaments: number
+}
+
+export const listOrganizersApi = async () => {
+  const { data } = await axios.get<ApiResponse<OrganizerSummary[]>>("/page")
+  return data.data
+}
+
 export const getPublicPageApi = async (id: string) => {
   const { data } = await axios.get<ApiResponse<PublicPage>>(`/page/${id}`)
   return data.data

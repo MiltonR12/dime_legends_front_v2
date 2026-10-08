@@ -37,7 +37,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import CardTag from "@/page/admin/dashboard/components/CardTag";
-import { Calendar, Search, Swords, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar, Loader2, Search, Swords, Users } from "lucide-react";
 
 const columnHelper = createColumnHelper<TBattle>();
 const NO_BATTLES: TBattle[] = [];
@@ -45,7 +46,12 @@ const NO_TEAMS: Team[] = [];
 
 function AdminBattlePage() {
   const { id } = useParams();
-  const { data: battles = NO_BATTLES } = useBattles(id);
+  const {
+    data: battles = NO_BATTLES,
+    isLoading,
+    isError,
+    refetch,
+  } = useBattles(id);
   const { data: teams = NO_TEAMS } = useTeamsByTournament(id);
   const { mutate: removeBattle } = useDeleteBattle();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -333,7 +339,40 @@ function AdminBattlePage() {
                 ))}
               </thead>
               <tbody>
-                {table.getRowModel().rows.length ? (
+                {isLoading ? (
+                  <tr>
+                    <td
+                      colSpan={columns.length}
+                      className="px-4 py-12 text-center"
+                    >
+                      <div className="flex flex-col items-center gap-3 text-admin-muted">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <p className="text-sm">Cargando enfrentamientos…</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : isError ? (
+                  <tr>
+                    <td
+                      colSpan={columns.length}
+                      className="px-4 py-12 text-center"
+                    >
+                      <div className="flex flex-col items-center gap-3">
+                        <p className="text-sm text-red-300">
+                          No se pudieron cargar los enfrentamientos
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => refetch()}
+                          className="border-admin-border bg-transparent text-admin-text hover:bg-admin-input"
+                        >
+                          Reintentar
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ) : table.getRowModel().rows.length ? (
                   table.getRowModel().rows.map((row) => (
                     <tr
                       key={row.id}

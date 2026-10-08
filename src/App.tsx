@@ -4,7 +4,7 @@ import AuthLayout from './layout/AuthLayout'
 import LoginPage from './page/auth/LoginPage'
 import RegisterPage from './page/auth/RegisterPage'
 import ProtectLayout from './layout/ProtectLayout'
-import { useCurrentUser } from './hooks/auth'
+import { useCurrentUser, useSessionExpired } from './hooks/auth'
 import AdminLayout from './layout/AdminLayout'
 import CreateTorneoPage from './page/admin/CreateTorneoPage'
 import TorneoAdminPage from './page/admin/TorneoAdminPage'
@@ -28,11 +28,14 @@ import TeamPublicPage from './page/public/team/TeamPublicPage'
 import OrganizerPublicPage from './page/public/organizer/OrganizerPublicPage'
 import AdminObsPage from './page/admin/obs/AdminObsPage'
 import ObsOverlayPage from './page/obs/ObsOverlayPage'
+import { useRouteTitle } from './lib/pageTitle'
 
 function App() {
 
   // Valida el token al iniciar y deja al usuario en la cache de TanStack Query.
   useCurrentUser()
+  useSessionExpired()
+  useRouteTitle()
 
   return (
     <>

@@ -69,7 +69,9 @@ function CreateTeamPage() {
   const registrationEnd = tournament.config?.registrationEnd
     ? new Date(tournament.config.registrationEnd)
     : null;
-  const closed = (tournament.phase ?? "inscription") !== "inscription";
+  const closed =
+    (tournament.phase ?? "inscription") !== "inscription" ||
+    (!!registrationEnd && registrationEnd.getTime() < Date.now());
   const taken = inscribed.filter((team) => team.status !== "inactive").length;
   const maxTeams = tournament.config?.maxTeams;
   const full =
@@ -135,10 +137,12 @@ function CreateTeamPage() {
               <div className="py-8 text-center">
                 <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-400" />
                 <h1 className="mb-2 text-3xl font-bold text-white">
-                  Inscripción enviada
+                  {tournament.payment ? "Inscripción enviada" : "¡Equipo inscrito!"}
                 </h1>
                 <p className="mb-6 text-purple-300">
-                  Tu equipo quedó pendiente de aprobación en {tournament.name}.
+                  {tournament.payment
+                    ? `Tu equipo quedó pendiente hasta que el organizador valide el pago en ${tournament.name}.`
+                    : `Tu equipo ya participa en ${tournament.name}.`}
                 </p>
                 <Button
                   asChild

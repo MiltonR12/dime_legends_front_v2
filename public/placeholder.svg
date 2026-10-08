@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sin imagen">
+  <rect width="160" height="90" fill="#1a0b33"/>
+  <rect width="160" height="90" fill="#7c3aed" opacity="0.18"/>
+  <g fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.75">
+    <path d="M65 28h30v14a15 15 0 0 1-30 0z"/>
+    <path d="M65 32H55a5 5 0 0 0 0 10h10"/>
+    <path d="M95 32h10a5 5 0 0 1 0 10H95"/>
+    <path d="M80 57v10"/>
+    <path d="M70 67h20"/>
+  </g>
+</svg>

@@ -48,7 +48,7 @@ function TorneoListPage() {
               <Trophy className="h-8 w-8 text-white" />
             </div>
             <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 text-lg">
-              Gaming Platform
+              Plataforma de torneos
             </Badge>
           </div>
 
@@ -126,9 +126,6 @@ function TorneoListPage() {
               <SelectContent className="bg-slate-900 border-purple-700">
                 <SelectItem value="all" className="text-white">
                   Todos
-                </SelectItem>
-                <SelectItem value="active" className="text-white">
-                  Activos
                 </SelectItem>
                 <SelectItem value="free" className="text-white">
                   Gratuitos

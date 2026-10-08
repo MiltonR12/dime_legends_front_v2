@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   approveOrganizerApi,
   listUsersApi,
@@ -8,10 +8,11 @@ import {
 } from "@/app/api/user/userApi"
 import { queryKeys } from "./queryKeys"
 
-export function useUsers(enabled = true) {
+export function useUsers(page: number, search: string, enabled = true) {
   return useQuery({
-    queryKey: queryKeys.users.all,
-    queryFn: listUsersApi,
+    queryKey: [...queryKeys.users.all, page, search] as const,
+    queryFn: () => listUsersApi(page, search),
+    placeholderData: keepPreviousData,
     enabled,
   })
 }

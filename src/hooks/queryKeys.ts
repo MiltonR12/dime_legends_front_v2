@@ -16,6 +16,9 @@ export const queryKeys = {
     mine: ["teams", "mine"] as const,
     public: (id: string) => ["teams", "public", id] as const,
   },
+  pages: {
+    organizers: ["page", "organizers"] as const,
+  },
   tournaments: {
     all: ["tournaments"] as const,
     list: ["tournaments", "list"] as const,

@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { ImportTeam } from "@/app/api/team/team.types"
 import {
+  commitImportApi,
   createOwnedTeamApi,
   createTeamApi,
   deleteTeamApi,
@@ -7,6 +9,7 @@ import {
   getPublicTeamApi,
   getTeamByTournamentApi,
   inscribeTeamApi,
+  previewImportApi,
   updateStatusTeamApi,
   updateTeamApi,
 } from "@/app/api/team/teamApi"
@@ -77,6 +80,23 @@ export function useUpdateTeamStatus() {
   return useMutation({
     mutationFn: (data: PUpdateStatusTeam) => updateStatusTeamApi(data),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.teams.all }),
+  })
+}
+
+export function usePreviewImport() {
+  return useMutation({
+    mutationFn: (data: { tournament: string; sheet: string }) => previewImportApi(data),
+  })
+}
+
+export function useCommitImport() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: { tournament: string; teams: ImportTeam[] }) => commitImportApi(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.teams.all })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.all })
+    },
   })
 }
 
