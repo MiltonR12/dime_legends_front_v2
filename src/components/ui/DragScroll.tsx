@@ -11,7 +11,8 @@ const DragScroll = ({ children }: { children: React.ReactNode }) => {
     if (!containerRef.current) return;
     
     // Verificar si el target es un elemento interactivo
-    const target = e.target as HTMLElement;
+    if (!(e.target instanceof HTMLElement)) return;
+    const target = e.target;
     if (target.tagName === 'BUTTON' || target.closest('button')) {
       return;
     }

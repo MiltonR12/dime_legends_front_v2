@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import Image from '../ui/Image';
+import { formatDate } from '@/lib/date';
 
 interface Team {
   _id: string;
@@ -79,13 +80,7 @@ function ModalShowVersus({ battle }: BattlePreviewProps) {
 
           <div className="flex justify-center items-center gap-4 text-gray-300">
             <div className="flex items-center capitalize">
-              <span>{new Date(battle.date).toLocaleDateString('es', {
-                month: 'long',
-                day: 'numeric',
-                weekday: 'long',
-                hour: 'numeric',
-                minute: 'numeric',
-              })}</span>
+              <span>{formatDate(battle.date, "large")}</span>
             </div>
           </div>
         </div>

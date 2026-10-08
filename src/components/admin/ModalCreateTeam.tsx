@@ -66,12 +66,18 @@ function ModalCreateTeam({ id }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <Formik
+        <Formik<{
+          name: string
+          captain: string
+          phone: string
+          image: File | null
+          players: string[]
+        }>
           initialValues={{
             name: "",
             captain: "",
             phone: "",
-            image: null as null | File,
+            image: null,
             players: [""],
           }}
           validationSchema={teamSchema}

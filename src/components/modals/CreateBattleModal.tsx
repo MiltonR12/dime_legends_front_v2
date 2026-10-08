@@ -1,9 +1,9 @@
-import { useState } from "react"
-import { Form, Formik } from "formik"
-import { useParams } from "react-router-dom"
-import { useCreateBattle } from "@/hooks/battle"
-import { useTeamsByTournament } from "@/hooks/team"
-import { validatCreateeBattle } from "@/lib/validateBattle"
+import { useState } from "react";
+import { Form, Formik } from "formik";
+import { useParams } from "react-router-dom";
+import { useCreateBattle } from "@/hooks/battle";
+import { useTeamsByTournament } from "@/hooks/team";
+import { validatCreateeBattle } from "@/lib/validateBattle";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,32 +11,37 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import InputSelect from "../input/InputSelect"
-import InputNumber from "../input/InputNumber"
-import InputGroupRadioButton from "../input/InputGroupRadioButton"
-import { Swords, Loader2, Save } from "lucide-react"
-import InputDatePicker from "../input/inputDatePicker"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import InputSelect from "../input/InputSelect";
+import InputNumber from "../input/InputNumber";
+import InputGroupRadioButton from "../input/InputGroupRadioButton";
+import { Swords, Loader2, Save } from "lucide-react";
+import InputDatePicker from "../input/inputDatePicker";
 
 type Props = {
-  round?: number
-  group?: string
+  round?: number;
+  group?: string;
   /** Oculta ronda y grupo (en el lienzo libre no hacen falta). */
-  compact?: boolean
+  compact?: boolean;
   /** Posición del nuevo versus en el lienzo. */
-  getPosition?: () => { x: number; y: number }
-}
+  getPosition?: () => { x: number; y: number };
+};
 
-function CreateBattleModal({ round = 0, group = "A", compact = false, getPosition }: Props) {
-  const { id } = useParams()
-  const [isOpen, setIsOpen] = useState(false)
-  const { mutateAsync: createBattle } = useCreateBattle()
-  const { data: teams = [] } = useTeamsByTournament(id)
+function CreateBattleModal({
+  round = 0,
+  group = "A",
+  compact = false,
+  getPosition,
+}: Props) {
+  const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutateAsync: createBattle } = useCreateBattle();
+  const { data: teams = [] } = useTeamsByTournament(id);
 
   const nameTeams = teams
     .filter((team) => team.status !== "inactive")
-    .map((team) => ({ value: team._id, label: team.name, image: team.image }))
+    .map((team) => ({ value: team._id, label: team.name, image: team.image }));
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -70,10 +75,10 @@ function CreateBattleModal({ round = 0, group = "A", compact = false, getPositio
           validationSchema={validatCreateeBattle}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             if (!id) {
-              setSubmitting(false)
-              return
+              setSubmitting(false);
+              return;
             }
-            const { round: valueRound, group: valueGroup, ...rest } = values
+            const { round: valueRound, group: valueGroup, ...rest } = values;
             createBattle({
               tournament: id,
               ...rest,
@@ -82,20 +87,22 @@ function CreateBattleModal({ round = 0, group = "A", compact = false, getPositio
               date: values.date.toISOString(),
             })
               .then(() => {
-                setIsOpen(false)
-                resetForm()
+                setIsOpen(false);
+                resetForm();
               })
               .catch(() => undefined)
               .finally(() => {
-                setSubmitting(false)
-              })
+                setSubmitting(false);
+              });
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit} className="p-6">
               <div className="space-y-6">
                 <div className="rounded-lg border border-admin-border bg-admin-input p-5">
-                  <h3 className="mb-4 text-sm font-medium text-admin-text">Equipos</h3>
+                  <h3 className="mb-4 text-sm font-medium text-admin-text">
+                    Equipos
+                  </h3>
 
                   <div className="space-y-4">
                     <InputSelect
@@ -116,36 +123,40 @@ function CreateBattleModal({ round = 0, group = "A", compact = false, getPositio
 
                 {/* Date and Round */}
                 <div className="rounded-lg border border-admin-border bg-admin-input p-5">
-                  <h3 className="mb-4 text-sm font-medium text-admin-text">Cuándo se juega</h3>
+                  <h3 className="mb-4 text-sm font-medium text-admin-text">
+                    Cuándo se juega
+                  </h3>
 
                   <div className="space-y-4">
                     <InputDatePicker
                       name="date"
                       label="Fecha y hora del encuentro"
-                    // icon={<Calendar className="h-4 w-4 text-purple-400" />}
+                      // icon={<Calendar className="h-4 w-4 text-purple-400" />}
                     />
 
-                    {!compact && <div className="grid items-end gap-4 sm:grid-cols-2">
-                      <InputNumber
-                        label="Ronda"
-                        name="round"
-                        min={0}
-                        max={10}
-                        disabled={isSubmitting}
-                        icon={null}
-                      />
+                    {!compact && (
+                      <div className="grid items-end gap-4 sm:grid-cols-2">
+                        <InputNumber
+                          label="Ronda"
+                          name="round"
+                          min={0}
+                          max={10}
+                          disabled={isSubmitting}
+                          icon={null}
+                        />
 
-                      <InputGroupRadioButton
-                        label="Grupo"
-                        name="group"
-                        options={[
-                          { value: "A", label: "Winner Bracket" },
-                          { value: "B", label: "Loser Bracket" },
-                        ]}
-                        disabled={isSubmitting}
-                      // icon={<Users className="h-4 w-4 text-purple-400" />}
-                      />
-                    </div>}
+                        <InputGroupRadioButton
+                          label="Grupo"
+                          name="group"
+                          options={[
+                            { value: "A", label: "Winner Bracket" },
+                            { value: "B", label: "Loser Bracket" },
+                          ]}
+                          disabled={isSubmitting}
+                          // icon={<Users className="h-4 w-4 text-purple-400" />}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -180,7 +191,7 @@ function CreateBattleModal({ round = 0, group = "A", compact = false, getPositio
         </Formik>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
 
-export default CreateBattleModal
+export default CreateBattleModal;

@@ -22,8 +22,9 @@ const cupos = {
       "min-max",
       "Debe ser mayor o igual al mínimo",
       function (value) {
-        const min = this.parent.minPlayers as number;
-        return value == null || min == null || value >= min;
+        const min = this.parent.minPlayers;
+        const minimum = typeof min === "number" ? min : undefined;
+        return value == null || minimum == null || value >= minimum;
       }
     ),
   maxTeams: Yup.number()

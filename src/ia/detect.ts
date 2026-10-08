@@ -21,6 +21,12 @@ type Cv = {
   onRuntimeInitialized?: () => void;
 };
 
+declare global {
+  interface Window {
+    cv?: Cv;
+  }
+}
+
 export type Guess = { slug: string; name: string; score: number };
 
 let cvPromise: Promise<Cv> | null = null;
@@ -33,7 +39,7 @@ function loadOpenCv(): Promise<Cv> {
   if (!cvPromise) {
     cvPromise = new Promise((resolve, reject) => {
       const ready = () => {
-        const cv = window.cv as Cv | undefined;
+        const cv = window.cv;
         if (cv && typeof cv.imread === "function") {
           resolve(cv);
           return true;
@@ -41,7 +47,7 @@ function loadOpenCv(): Promise<Cv> {
         return false;
       };
       if (ready()) return;
-      const existing = window.cv as Cv | undefined;
+      const existing = window.cv;
       if (existing && !existing.imread) {
         existing.onRuntimeInitialized = () => {
           if (!ready()) reject(new Error("OpenCV no terminó de iniciar."));
@@ -52,7 +58,7 @@ function loadOpenCv(): Promise<Cv> {
       script.src = SCRIPT;
       script.async = true;
       script.onload = () => {
-        const cv = window.cv as Cv | undefined;
+        const cv = window.cv;
         if (!cv) {
           reject(new Error("OpenCV no se registró."));
           return;

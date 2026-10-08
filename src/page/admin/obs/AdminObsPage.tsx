@@ -32,6 +32,13 @@ import ObsConnect from "./ObsConnect";
 
 const NO_TEAMS: Team[] = [];
 
+function bestOfFrom(value: string): 1 | 3 | 5 | 7 {
+  if (value === "1") return 1;
+  if (value === "5") return 5;
+  if (value === "7") return 7;
+  return 3;
+}
+
 type Slot = {
   side: Side;
   kind: "ban" | "pick";
@@ -238,7 +245,7 @@ function AdminObsPage() {
               onChange={(event) =>
                 send({
                   type: "series",
-                  bestOf: Number(event.target.value) as 1 | 3 | 5 | 7,
+                  bestOf: bestOfFrom(event.target.value),
                   blue: desk.series.score.blue,
                   red: desk.series.score.red,
                 })

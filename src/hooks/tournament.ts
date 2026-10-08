@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
 import {
   createTournamentApi,
   deleteTournamentApi,
@@ -15,6 +16,10 @@ export function useTournament(id?: string) {
     queryKey: queryKeys.tournaments.detail(id ?? ""),
     queryFn: () => getTournamentByIdApi(id!),
     enabled: !!id,
+    retry: (failureCount, error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 404) return false
+      return failureCount < 2
+    },
   })
 }
 
@@ -57,6 +62,10 @@ export function useDeleteTournament() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => deleteTournamentApi(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.tournaments.all }),
+    onSuccess: async (_data, id) => {
+      await qc.cancelQueries({ queryKey: queryKeys.tournaments.detail(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.list })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.mine })
+    },
   })
 }

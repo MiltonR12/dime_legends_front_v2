@@ -1,18 +1,30 @@
-import { useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { Formik, Form } from "formik"
-import * as Yup from "yup"
-import { useDeleteTournament, useTournament, useUpdateTournament } from "@/hooks/tournament"
-import { listGames, ListaGamesImage } from "@/payments/games"
-import InputComboBox from "@/components/input/InputComboBox"
-import InputNumber from "@/components/input/InputNumber"
-import ArrayInput from "@/components/form/ArrayInput"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams, useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import {
+  useDeleteTournament,
+  useTournament,
+  useUpdateTournament,
+} from "@/hooks/tournament";
+import { queryKeys } from "@/hooks/queryKeys";
+import { listGames, ListaGamesImage } from "@/payments/games";
+import InputComboBox from "@/components/input/InputComboBox";
+import InputNumber from "@/components/input/InputNumber";
+import ArrayInput from "@/components/form/ArrayInput";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,15 +35,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Loader2, Save, Trash2 } from "lucide-react"
-import BannerGallery, { BANNER_FILE_TOKEN, bannerUrls, savedBannerSlots } from "@/components/input/BannerGallery"
+} from "@/components/ui/alert-dialog";
+import { Loader2, Save, Trash2 } from "lucide-react";
+import BannerGallery, {
+  BANNER_FILE_TOKEN,
+  bannerUrls,
+  savedBannerSlots,
+} from "@/components/input/BannerGallery";
 
 const PHASES = [
   { value: "inscription", label: "Inscripción" },
   { value: "running", label: "En curso" },
   { value: "finished", label: "Finalizado" },
-] as const
+] as const;
 
 const tournamentSchema = Yup.object({
   name: Yup.string().required("El nombre es obligatorio"),
@@ -42,25 +58,27 @@ const tournamentSchema = Yup.object({
   minPlayers: Yup.number().min(1).required(),
   maxPlayers: Yup.number().min(1).required(),
   maxTeams: Yup.number().min(1).required(),
-})
+});
 
 const toLocalInput = (value: string) => {
-  const date = new Date(value)
-  const pad = (part: number) => String(part).padStart(2, "0")
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
-}
+  const date = new Date(value);
+  const pad = (part: number) => String(part).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
 
 const fieldClass =
-  "mt-2 h-10 rounded-md border-admin-border bg-admin-input text-sm text-admin-text shadow-none placeholder:text-admin-muted focus-visible:ring-admin-accent disabled:opacity-70"
+  "mt-2 h-10 rounded-md border-admin-border bg-admin-input text-sm text-admin-text shadow-none placeholder:text-admin-muted focus-visible:ring-admin-accent disabled:opacity-70";
 
 function TorneoAdminPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { data: tournament, isLoading } = useTournament(id)
-  const { mutateAsync: updateTournament, mutate: patchTournament } = useUpdateTournament()
-  const { mutateAsync: deleteTournament } = useDeleteTournament()
-  const [isEditing, setIsEditing] = useState(false)
-  const [formVersion, setFormVersion] = useState(0)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data: tournament, isLoading } = useTournament(id);
+  const { mutateAsync: updateTournament, mutate: patchTournament } =
+    useUpdateTournament();
+  const { mutateAsync: deleteTournament } = useDeleteTournament();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formVersion, setFormVersion] = useState(0);
 
   if (isLoading) {
     return (
@@ -70,13 +88,15 @@ function TorneoAdminPage() {
           <p className="text-sm text-admin-muted">Cargando el torneo...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!tournament) {
     return (
       <div className="mx-auto max-w-lg py-16 text-center">
-        <h1 className="text-xl font-semibold text-admin-text">Torneo no encontrado</h1>
+        <h1 className="text-xl font-semibold text-admin-text">
+          Torneo no encontrado
+        </h1>
         <Button
           onClick={() => navigate("/admin")}
           variant="outline"
@@ -85,24 +105,32 @@ function TorneoAdminPage() {
           Volver al panel
         </Button>
       </div>
-    )
+    );
   }
 
-  const game = ListaGamesImage.find((item) => item.name === tournament.game)
+  const game = ListaGamesImage.find((item) => item.name === tournament.game);
   const dateLabel = new Date(tournament.dateStart).toLocaleDateString("es", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-  })
-  const teams = tournament.teams?.length || 0
-  const maxTeams = tournament.config?.maxTeams || 0
+  });
+  const teams = tournament.teams?.length || 0;
+  const maxTeams = tournament.config?.maxTeams || 0;
 
   const handleDelete = () => {
-    deleteTournament(tournament._id)
-      .then(() => navigate("/admin"))
-      .catch(() => undefined)
-  }
+    const deletedId = tournament._id;
+    deleteTournament(deletedId)
+      .then(() => {
+        navigate("/admin", { replace: true });
+        window.setTimeout(() => {
+          queryClient.removeQueries({
+            queryKey: queryKeys.tournaments.detail(deletedId),
+          });
+        }, 0);
+      })
+      .catch(() => undefined);
+  };
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 pb-10">
@@ -114,8 +142,12 @@ function TorneoAdminPage() {
             className="h-16 w-16 shrink-0 rounded-lg border border-admin-border object-cover"
           />
           <div className="min-w-0">
-            <p className="text-xs font-medium text-admin-muted">Editar torneo</p>
-            <h1 className="truncate text-2xl font-semibold text-admin-text">{tournament.name}</h1>
+            <p className="text-xs font-medium text-admin-muted">
+              Editar torneo
+            </p>
+            <h1 className="truncate text-2xl font-semibold text-admin-text">
+              {tournament.name}
+            </h1>
             <p className="mt-1 text-sm text-admin-muted">
               {tournament.game} · {dateLabel}
             </p>
@@ -133,14 +165,20 @@ function TorneoAdminPage() {
             </SelectTrigger>
             <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
               {PHASES.map((item) => (
-                <SelectItem key={item.value} value={item.value} className="focus:bg-admin-row focus:text-admin-text">
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  className="focus:bg-admin-row focus:text-admin-text"
+                >
                   {item.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2 rounded-lg border border-admin-border px-3 py-2">
-            <span className="text-sm text-admin-muted">{tournament.status ? "Activo" : "Oculto"}</span>
+            <span className="text-sm text-admin-muted">
+              {tournament.status ? "Activo" : "Oculto"}
+            </span>
             <Switch
               checked={tournament.status}
               onCheckedChange={(checked) =>
@@ -155,8 +193,8 @@ function TorneoAdminPage() {
             variant="outline"
             onClick={() =>
               setIsEditing((editing) => {
-                if (editing) setFormVersion((version) => version + 1)
-                return !editing
+                if (editing) setFormVersion((version) => version + 1);
+                return !editing;
               })
             }
             className="border-admin-border bg-transparent text-admin-text hover:bg-admin-surface"
@@ -174,7 +212,7 @@ function TorneoAdminPage() {
           description: tournament.description,
           game: tournament.game,
           dateStart: toLocalInput(tournament.dateStart),
-          tipo: (tournament.config as { tipo?: string } | null)?.tipo || "simple",
+          tipo: tournament.config?.tipo || "simple",
           minPlayers: tournament.config?.minPlayers || 1,
           maxPlayers: tournament.config?.maxPlayers || 5,
           maxTeams: tournament.config?.maxTeams || 16,
@@ -192,34 +230,55 @@ function TorneoAdminPage() {
             dateStart: new Date(values.dateStart).toISOString(),
             rules: values.rules,
             award: values.award,
-            bannerOrder: values.bannerSlots.map((slot) => slot.kind === "saved" ? slot.url : BANNER_FILE_TOKEN),
-            bannerFiles: values.bannerSlots.flatMap((slot) => slot.kind === "new" ? [slot.file] : []),
+            bannerOrder: values.bannerSlots.map((slot) =>
+              slot.kind === "saved" ? slot.url : BANNER_FILE_TOKEN,
+            ),
+            bannerFiles: values.bannerSlots.flatMap((slot) =>
+              slot.kind === "new" ? [slot.file] : [],
+            ),
             config: {
               minPlayers: Number(values.minPlayers),
               maxPlayers: Number(values.maxPlayers),
               maxTeams: Number(values.maxTeams),
-              tipo: values.tipo as "simple" | "doble" | "normal",
+              tipo: values.tipo,
               ...(tournament.config?.registrationEnd
-                ? { registrationEnd: new Date(tournament.config.registrationEnd) }
+                ? {
+                    registrationEnd: new Date(
+                      tournament.config.registrationEnd,
+                    ),
+                  }
                 : {}),
             },
           })
             .then(() => setIsEditing(false))
             .catch(() => undefined)
-            .finally(() => setSubmitting(false))
+            .finally(() => setSubmitting(false));
         }}
       >
-        {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
+        {({
+          values,
+          handleChange,
+          handleBlur,
+          errors,
+          touched,
+          isSubmitting,
+        }) => (
           <Form className="space-y-6">
             <section className="space-y-4 rounded-xl border border-admin-border bg-admin-surface p-5">
               <div>
-                <h2 className="text-base font-semibold text-admin-text">Información</h2>
-                <p className="text-sm text-admin-muted">Nombre, fecha, descripción y banner que ven los equipos.</p>
+                <h2 className="text-base font-semibold text-admin-text">
+                  Información
+                </h2>
+                <p className="text-sm text-admin-muted">
+                  Nombre, fecha, descripción y banner que ven los equipos.
+                </p>
               </div>
               <BannerGallery disabled={!isEditing} />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="name" className="text-sm text-admin-text">Nombre del torneo</Label>
+                  <Label htmlFor="name" className="text-sm text-admin-text">
+                    Nombre del torneo
+                  </Label>
                   <Input
                     id="name"
                     name="name"
@@ -229,10 +288,17 @@ function TorneoAdminPage() {
                     disabled={!isEditing}
                     className={fieldClass}
                   />
-                  {errors.name && touched.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+                  {errors.name && touched.name && (
+                    <p className="mt-1 text-sm text-red-400">{errors.name}</p>
+                  )}
                 </div>
                 <div>
-                  <Label htmlFor="dateStart" className="text-sm text-admin-text">Fecha de inicio</Label>
+                  <Label
+                    htmlFor="dateStart"
+                    className="text-sm text-admin-text"
+                  >
+                    Fecha de inicio
+                  </Label>
                   <Input
                     id="dateStart"
                     name="dateStart"
@@ -244,12 +310,19 @@ function TorneoAdminPage() {
                     className={fieldClass}
                   />
                   {errors.dateStart && touched.dateStart && (
-                    <p className="mt-1 text-sm text-red-400">{String(errors.dateStart)}</p>
+                    <p className="mt-1 text-sm text-red-400">
+                      {String(errors.dateStart)}
+                    </p>
                   )}
                 </div>
               </div>
               <div>
-                <Label htmlFor="description" className="text-sm text-admin-text">Descripción</Label>
+                <Label
+                  htmlFor="description"
+                  className="text-sm text-admin-text"
+                >
+                  Descripción
+                </Label>
                 <Textarea
                   id="description"
                   name="description"
@@ -261,20 +334,30 @@ function TorneoAdminPage() {
                   className="mt-2 rounded-md border-admin-border bg-admin-input text-sm text-admin-text shadow-none placeholder:text-admin-muted focus-visible:ring-admin-accent disabled:opacity-70"
                 />
                 {errors.description && touched.description && (
-                  <p className="mt-1 text-sm text-red-400">{errors.description}</p>
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.description}
+                  </p>
                 )}
               </div>
             </section>
 
             <section className="space-y-4 rounded-xl border border-admin-border bg-admin-surface p-5">
               <div>
-                <h2 className="text-base font-semibold text-admin-text">Juego</h2>
-                <p className="text-sm text-admin-muted">El juego publicado y el formato del torneo.</p>
+                <h2 className="text-base font-semibold text-admin-text">
+                  Juego
+                </h2>
+                <p className="text-sm text-admin-muted">
+                  El juego publicado y el formato del torneo.
+                </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex items-start gap-3">
                   {game && (
-                    <img src={game.image || "/placeholder.svg"} alt="" className="mt-8 h-10 w-10 rounded-md object-cover" />
+                    <img
+                      src={game.image || "/placeholder.svg"}
+                      alt=""
+                      className="mt-8 h-10 w-10 rounded-md object-cover"
+                    />
                   )}
                   <div className="min-w-0 flex-1">
                     <InputComboBox
@@ -283,7 +366,10 @@ function TorneoAdminPage() {
                       required
                       disabled={!isEditing}
                       placeholder="Selecciona un juego"
-                      list={listGames.map((item) => ({ label: item, value: item }))}
+                      list={listGames.map((item) => ({
+                        label: item,
+                        value: item,
+                      }))}
                     />
                   </div>
                 </div>
@@ -303,15 +389,40 @@ function TorneoAdminPage() {
 
             <section className="space-y-4 rounded-xl border border-admin-border bg-admin-surface p-5">
               <div>
-                <h2 className="text-base font-semibold text-admin-text">Cupos</h2>
+                <h2 className="text-base font-semibold text-admin-text">
+                  Cupos
+                </h2>
                 <p className="text-sm text-admin-muted">
-                  {teams} equipos inscritos{maxTeams ? ` de ${maxTeams}` : ""}. La inscripción es {tournament.payment ? "de pago" : "gratuita"}.
+                  {teams} equipos inscritos{maxTeams ? ` de ${maxTeams}` : ""}.
+                  La inscripción es{" "}
+                  {tournament.payment ? "de pago" : "gratuita"}.
                 </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
-                <InputNumber label="Mínimo de jugadores" name="minPlayers" required disabled={!isEditing} min={1} max={20} />
-                <InputNumber label="Máximo de jugadores" name="maxPlayers" required disabled={!isEditing} min={1} max={20} />
-                <InputNumber label="Máximo de equipos" name="maxTeams" required disabled={!isEditing} min={1} max={128} />
+                <InputNumber
+                  label="Mínimo de jugadores"
+                  name="minPlayers"
+                  required
+                  disabled={!isEditing}
+                  min={1}
+                  max={20}
+                />
+                <InputNumber
+                  label="Máximo de jugadores"
+                  name="maxPlayers"
+                  required
+                  disabled={!isEditing}
+                  min={1}
+                  max={20}
+                />
+                <InputNumber
+                  label="Máximo de equipos"
+                  name="maxTeams"
+                  required
+                  disabled={!isEditing}
+                  min={1}
+                  max={128}
+                />
               </div>
             </section>
 
@@ -351,7 +462,11 @@ function TorneoAdminPage() {
                   disabled={isSubmitting}
                   className="bg-admin-accent text-white hover:bg-admin-accent-hover"
                 >
-                  {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  {isSubmitting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
                   Guardar cambios
                 </Button>
               </div>
@@ -362,28 +477,42 @@ function TorneoAdminPage() {
 
       <section className="flex flex-col gap-3 rounded-xl border border-red-900/60 bg-admin-surface p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-red-300">Eliminar torneo</h2>
-          <p className="text-sm text-admin-muted">Borra el torneo y los equipos inscritos. No se puede deshacer.</p>
+          <h2 className="text-sm font-semibold text-red-300">
+            Eliminar torneo
+          </h2>
+          <p className="text-sm text-admin-muted">
+            Borra el torneo y los equipos inscritos. No se puede deshacer.
+          </p>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button type="button" variant="outline" className="border-red-900/70 text-red-300 hover:bg-red-950/40">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-red-900/70 text-red-300 hover:bg-red-950/40"
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Eliminar
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="border-admin-border bg-admin-surface">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-admin-text">¿Eliminar {tournament.name}?</AlertDialogTitle>
+              <AlertDialogTitle className="text-admin-text">
+                ¿Eliminar {tournament.name}?
+              </AlertDialogTitle>
               <AlertDialogDescription className="text-admin-muted">
-                Se pierden los equipos, las batallas y la configuración. Esta acción no se puede deshacer.
+                Se pierden los equipos, las batallas y la configuración. Esta
+                acción no se puede deshacer.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel className="border-admin-border bg-transparent text-admin-text hover:bg-admin-input">
                 Cancelar
               </AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-red-700 text-white hover:bg-red-600">
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-700 text-white hover:bg-red-600"
+              >
                 Eliminar torneo
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -391,7 +520,7 @@ function TorneoAdminPage() {
         </AlertDialog>
       </section>
     </div>
-  )
+  );
 }
 
-export default TorneoAdminPage
+export default TorneoAdminPage;

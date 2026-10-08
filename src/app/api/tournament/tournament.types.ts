@@ -82,6 +82,7 @@ export interface TournamentOne {
     maxPlayers: number;
     maxTeams: number;
     isFree: boolean;
+    tipo?: "simple" | "doble" | "normal";
     registrationEnd: string | null;
   };
   payment: Payment | null;

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { ErrorMessage, Field } from "formik"
+import { ErrorMessage, Field, type FieldProps } from "formik"
 import { Label } from "../ui/label"
 
 type Props = {
@@ -27,7 +27,7 @@ function InputTextArea({ label, name, placeholder, required, className, labelCla
       </Label>
 
       <Field name={name} >
-        {({ field }: any) => (
+        {({ field }: FieldProps<string>) => (
           <textarea
             id={name}
             placeholder={placeholder}

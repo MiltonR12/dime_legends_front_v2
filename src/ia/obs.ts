@@ -2,6 +2,11 @@ import OBSWebSocket from "obs-websocket-js"
 
 let client: OBSWebSocket | null = null
 
+function sceneName(scene: unknown): string | null {
+  if (typeof scene !== "object" || scene === null || !("sceneName" in scene)) return null
+  return typeof scene.sceneName === "string" ? scene.sceneName : null
+}
+
 export async function connectObs(url: string, password: string): Promise<void> {
   if (client) {
     try {
@@ -27,8 +32,8 @@ export async function listSources(): Promise<string[]> {
     if (typeof input.inputName === "string") names.add(input.inputName)
   }
   for (const scene of scenes.scenes) {
-    const record = scene as { sceneName?: string }
-    if (record.sceneName) names.add(record.sceneName)
+    const name = sceneName(scene)
+    if (name) names.add(name)
   }
   return [...names]
 }
@@ -36,9 +41,10 @@ export async function listSources(): Promise<string[]> {
 export async function listScenes(): Promise<string[]> {
   if (!client) return []
   const result = await client.call("GetSceneList")
-  return result.scenes
-    .map((scene) => (scene as { sceneName?: string }).sceneName)
-    .filter((name): name is string => Boolean(name))
+  return result.scenes.flatMap((scene) => {
+    const name = sceneName(scene)
+    return name ? [name] : []
+  })
 }
 
 export async function captureSource(sourceName: string): Promise<string> {

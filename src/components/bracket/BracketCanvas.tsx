@@ -30,7 +30,7 @@ import {
   Wand2,
   Workflow,
 } from "lucide-react"
-import type { BattleSlot, LinkKind, TBattle } from "@/app/api/battle/battle.types"
+import { isBattleSlot, isLinkKind, type BattleSlot, type LinkKind, type TBattle } from "@/app/api/battle/battle.types"
 import {
   useBattles,
   useCreateBattle,
@@ -151,7 +151,7 @@ function Canvas({ tournamentId, readOnly = false, className = "" }: Props) {
   useEffect(() => {
     if (readOnly) return
     const onKeyDown = (event: KeyboardEvent) => {
-      if ((event.target as HTMLElement | null)?.closest("input, textarea, [role='dialog'], [contenteditable]")) return
+      if (event.target instanceof HTMLElement && event.target.closest("input, textarea, [role='dialog'], [contenteditable]")) return
       if (!(event.ctrlKey || event.metaKey)) return
       const key = event.key.toLowerCase()
       if (key === "z") {
@@ -226,9 +226,9 @@ function Canvas({ tournamentId, readOnly = false, className = "" }: Props) {
 
   const onConnect = (connection: Connection) => {
     const { source, target, sourceHandle, targetHandle } = connection
-    if (!source || !target || !sourceHandle || !targetHandle) return
-    const kind = sourceHandle as LinkKind
-    const slot = targetHandle as BattleSlot
+    if (!source || !target || !isLinkKind(sourceHandle) || !isBattleSlot(targetHandle)) return
+    const kind = sourceHandle
+    const slot = targetHandle
     const previous = previousLink(source, kind)
 
     setLink(source, kind, target, slot)
@@ -245,13 +245,15 @@ function Canvas({ tournamentId, readOnly = false, className = "" }: Props) {
   const isValidConnection = (connection: Connection | Edge) => {
     const { source, target, targetHandle } = connection
     if (!source || !target || source === target) return false
-    if (incomingOf(battles).get(target)?.[targetHandle as BattleSlot]) return false
+    if (!isBattleSlot(targetHandle)) return false
+    if (incomingOf(battles).get(target)?.[targetHandle]) return false
     return !createsCycle(battles, source, target)
   }
 
   const onEdgesDelete = (deleted: Edge[]) => {
     for (const edge of deleted) {
-      const kind = edge.id.split(":")[1] as LinkKind
+      const kind = edge.id.split(":")[1]
+      if (!isLinkKind(kind)) continue
       const previous = previousLink(edge.source, kind)
       if (!previous) continue
       setLink(edge.source, kind, null)

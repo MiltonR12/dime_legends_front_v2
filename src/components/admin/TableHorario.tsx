@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import ModalDelete from "../modals/ModalDelete";
 import UpdateBattleDialog from "../modals/UpdateBattleDialog";
 import ModalShowVersus from "../modals/ModalShowVersus";
+import { formatDate } from "@/lib/date";
 
 const columnHelper = createColumnHelper<TBattle>();
 
@@ -59,13 +60,7 @@ function TableHorario({ data }: Props) {
       ),
       cell: (info) => (
         <p className="text-sm text-center capitalize font-bold text-navy-700 dark:text-white">
-          {new Date(info.getValue()).toLocaleDateString("es", {
-            month: "short",
-            day: "numeric",
-            weekday: "short",
-            hour: "numeric",
-            minute: "numeric",
-          })}
+          {formatDate(info.getValue())}
         </p>
       ),
     }),

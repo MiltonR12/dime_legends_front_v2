@@ -1,7 +1,7 @@
 import { Field, ErrorMessage, useField } from 'formik'
 import { cn } from '@/lib/utils'
 import NetworkIcon from '../icons/NetworkIcon';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import { INetwork } from '@/interfaces/globals';
 
 interface Props extends React.HtmlHTMLAttributes<HTMLInputElement> {
@@ -64,7 +64,7 @@ function InputNetwork({
           id={name}
           name={name}
           value={value}
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value)}
           type="text"
           placeholder={placeholder}
           required={required}

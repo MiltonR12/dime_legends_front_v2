@@ -49,11 +49,11 @@ function CreatePageModal() {
             </div>
           </DialogHeader>
 
-          <Formik
+          <Formik<{ name: string; description: string; image: File | null }>
             initialValues={{
               name: "",
               description: "",
-              image: null as File | null,
+              image: null,
             }}
             onSubmit={({ description, image, name }, { setSubmitting }) => {
               if (!image) return

@@ -3,6 +3,12 @@ import type { Team } from "../team/team.types";
 export type BattleSlot = "teamOne" | "teamTwo";
 export type LinkKind = "winner" | "loser";
 
+export const isBattleSlot = (value: string | null | undefined): value is BattleSlot =>
+  value === "teamOne" || value === "teamTwo";
+
+export const isLinkKind = (value: string | null | undefined): value is LinkKind =>
+  value === "winner" || value === "loser";
+
 /** Conexión hacia otro versus: a cuál y en qué hueco entra el equipo. */
 export interface BattleLink {
   battle: string;

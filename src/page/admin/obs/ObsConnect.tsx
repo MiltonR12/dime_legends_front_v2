@@ -15,14 +15,23 @@ const LABELS: { id: OverlayId; label: string }[] = [
 
 const SCENE_KEY = "dime-obs-scenes"
 
+function sceneText(record: object, key: OverlayId): string {
+  if (!(key in record)) return ""
+  const value: unknown = Reflect.get(record, key)
+  return typeof value === "string" ? value : ""
+}
+
 function readScenes(): Record<OverlayId, string> {
   try {
-    const parsed = JSON.parse(localStorage.getItem(SCENE_KEY) ?? "") as Partial<Record<OverlayId, string>>
+    const parsed: unknown = JSON.parse(localStorage.getItem(SCENE_KEY) ?? "")
+    if (typeof parsed !== "object" || parsed === null) {
+      return { presentacion: "", draft: "", marcador: "", resultado: "" }
+    }
     return {
-      presentacion: parsed.presentacion ?? "",
-      draft: parsed.draft ?? "",
-      marcador: parsed.marcador ?? "",
-      resultado: parsed.resultado ?? "",
+      presentacion: sceneText(parsed, "presentacion"),
+      draft: sceneText(parsed, "draft"),
+      marcador: sceneText(parsed, "marcador"),
+      resultado: sceneText(parsed, "resultado"),
     }
   } catch {
     return { presentacion: "", draft: "", marcador: "", resultado: "" }

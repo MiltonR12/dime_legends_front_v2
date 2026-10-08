@@ -1,13 +1,13 @@
 import { TBattle } from "@/app/api/battle/battle.types";
 
 export const groupBattlesByRound = (battles: TBattle[]) => {
-  const grouped = battles.reduce((acc, battle) => {
+  const grouped = battles.reduce<Record<number, TBattle[]>>((acc, battle) => {
     if (!acc[battle.round]) {
       acc[battle.round] = [];
     }
     acc[battle.round].push(battle);
     return acc;
-  }, {} as { [key: number]: TBattle[] });
+  }, {});
 
   const result = Object.keys(grouped).map(round => ({
     name: `Ronda ${round}`,

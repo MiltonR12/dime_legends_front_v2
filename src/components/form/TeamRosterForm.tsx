@@ -26,12 +26,17 @@ function TeamRosterForm({ team, onDone }: Props) {
   const { mutateAsync: updateTeam } = useUpdateTeam()
 
   return (
-    <Formik
+    <Formik<{
+      name: string
+      phone: string
+      image: File | string | null
+      players: string[]
+    }>
       enableReinitialize
       initialValues={{
         name: team?.name ?? "",
         phone: team?.phone ?? "",
-        image: (team?.image ?? null) as File | string | null,
+        image: team?.image ?? null,
         players: team?.players?.length ? team.players : [""],
       }}
       validationSchema={schema}

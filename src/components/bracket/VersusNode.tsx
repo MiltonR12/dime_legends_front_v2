@@ -1,48 +1,64 @@
-import { memo } from "react"
-import { Handle, Position, type NodeProps } from "@xyflow/react"
-import { AlertTriangle, Calendar } from "lucide-react"
-import { useSetBattleWinner } from "@/hooks/battle"
-import { CustomToast } from "@/lib/handleToast"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { BattleSlot } from "@/app/api/battle/battle.types"
-import { useBracketContext } from "./BracketContext"
-import { battleState, EDGE_COLOR, SLOTS, type VersusNode as VersusNodeType } from "./bracketGraph"
-import TeamRow from "./TeamRow"
+import { memo } from "react";
+import { Handle, Position, type NodeProps } from "@xyflow/react";
+import { AlertTriangle, Calendar } from "lucide-react";
+import { useSetBattleWinner } from "@/hooks/battle";
+import { formatDate } from "@/lib/date";
+import { CustomToast } from "@/lib/handleToast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import type { BattleSlot } from "@/app/api/battle/battle.types";
+import { useBracketContext } from "./BracketContext";
+import {
+  battleState,
+  EDGE_COLOR,
+  SLOTS,
+  type VersusNode as VersusNodeType,
+} from "./bracketGraph";
+import TeamRow from "./TeamRow";
 
 const STATE_STYLE = {
   pending: { label: "Por definir", className: "bg-white/5 text-admin-muted" },
   ready: { label: "Listo", className: "bg-amber-500/15 text-amber-300" },
   done: { label: "Terminado", className: "bg-green-500/15 text-green-400" },
-} as const
+} as const;
 
-const ROW = 52
-const HEADER = 29
-const rowCenter = (index: number) => HEADER + index * (ROW + 1) + ROW / 2
+const ROW = 52;
+const HEADER = 29;
+const rowCenter = (index: number) => HEADER + index * (ROW + 1) + ROW / 2;
 
-const handleBase = "!h-3.5 !w-3.5 !border-2 !border-admin-bg"
+const handleBase = "!h-3.5 !w-3.5 !border-2 !border-admin-bg";
 
 function VersusNode({ data, selected }: NodeProps<VersusNodeType>) {
-  const { battle, incoming, warnings } = data
-  const { readOnly, selectedTeam, assignTeam, editBattle } = useBracketContext()
-  const { mutate: setWinner, isPending } = useSetBattleWinner()
+  const { battle, incoming, warnings } = data;
+  const { readOnly, selectedTeam, assignTeam, editBattle } =
+    useBracketContext();
+  const { mutate: setWinner, isPending } = useSetBattleWinner();
 
-  const state = STATE_STYLE[battleState(battle)]
-  const when = battle.date ? new Date(battle.date) : null
-  const day = when?.toLocaleString("es", { weekday: "short", day: "numeric", month: "short" })
-  const time = when?.toLocaleString("es", { hour: "2-digit", minute: "2-digit" })
+  const state = STATE_STYLE[battleState(battle)];
+  const when = battle.date ? new Date(battle.date) : null;
+  const day = formatDate(when, "short", "day");
+  const time = formatDate(when, "short", "time");
 
   const toggle = (slot: BattleSlot) => {
-    const team = battle[slot]
-    if (!team) return
-    const isWinner = battle.winner === team._id
+    const team = battle[slot];
+    if (!team) return;
+    const isWinner = battle.winner === team._id;
     setWinner(
       { id: battle._id, winner: isWinner ? null : team._id },
       {
         onSuccess: () =>
-          CustomToast.success(isWinner ? "Se quitó el ganador" : `Ganador: ${team.name}. Pulsa de nuevo para deshacerlo.`),
+          CustomToast.success(
+            isWinner
+              ? "Se quitó el ganador"
+              : `Ganador: ${team.name}. Pulsa de nuevo para deshacerlo.`,
+          ),
       },
-    )
-  }
+    );
+  };
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -65,7 +81,9 @@ function VersusNode({ data, selected }: NodeProps<VersusNodeType>) {
             isConnectable={!readOnly && !incoming[slot]}
             style={{ top: rowCenter(index) }}
             className={`${handleBase} !bg-admin-muted ${readOnly ? "!opacity-0" : ""}`}
-            title={slot === "teamOne" ? "Entrada: equipo 1" : "Entrada: equipo 2"}
+            title={
+              slot === "teamOne" ? "Entrada: equipo 1" : "Entrada: equipo 2"
+            }
           />
         ))}
         {(["winner", "loser"] as const).map((kind, index) => (
@@ -77,17 +95,28 @@ function VersusNode({ data, selected }: NodeProps<VersusNodeType>) {
             isConnectable={!readOnly}
             style={{ top: rowCenter(index), background: EDGE_COLOR[kind] }}
             className={`${handleBase} ${readOnly ? "!opacity-0" : ""}`}
-            title={kind === "winner" ? "Salida: el ganador avanza" : "Salida: el perdedor pasa"}
+            title={
+              kind === "winner"
+                ? "Salida: el ganador avanza"
+                : "Salida: el perdedor pasa"
+            }
           />
         ))}
 
         <div className="flex h-[29px] items-center justify-between gap-2 border-b border-admin-border bg-black/20 px-3 text-xs text-admin-muted">
           <span className="flex items-center gap-1.5">
-            <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${state.className}`}>{state.label}</span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${state.className}`}
+            >
+              {state.label}
+            </span>
             {!readOnly && warnings.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-400" aria-label="Hay advertencias" />
+                  <AlertTriangle
+                    className="h-3.5 w-3.5 text-amber-400"
+                    aria-label="Hay advertencias"
+                  />
                 </TooltipTrigger>
                 <TooltipContent>
                   <ul className="space-y-1">
@@ -110,14 +139,7 @@ function VersusNode({ data, selected }: NodeProps<VersusNodeType>) {
                 </span>
               </TooltipTrigger>
               <TooltipContent className="capitalize">
-                {when.toLocaleString("es", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {formatDate(when, "large")}
               </TooltipContent>
             </Tooltip>
           ) : (
@@ -126,29 +148,35 @@ function VersusNode({ data, selected }: NodeProps<VersusNodeType>) {
         </div>
 
         {SLOTS.map((slot, index) => {
-          const other = battle[slot === "teamOne" ? "teamTwo" : "teamOne"]
-          const team = battle[slot]
+          const other = battle[slot === "teamOne" ? "teamTwo" : "teamOne"];
+          const team = battle[slot];
           return (
             <div key={slot}>
               {index === 1 && <div className="h-px bg-admin-border" />}
               <TeamRow
                 team={team}
                 isWinner={!!team && battle.winner === team._id}
-                isLoser={!!battle.winner && !!other && battle.winner === other._id}
+                isLoser={
+                  !!battle.winner && !!other && battle.winner === other._id
+                }
                 locked={incoming[slot]}
                 readOnly={readOnly}
                 busy={isPending}
-                canAssign={!readOnly && !!selectedTeam && !team && !incoming[slot]}
+                canAssign={
+                  !readOnly && !!selectedTeam && !team && !incoming[slot]
+                }
                 onToggleWinner={() => toggle(slot)}
-                onAssign={() => selectedTeam && assignTeam(battle._id, slot, selectedTeam)}
+                onAssign={() =>
+                  selectedTeam && assignTeam(battle._id, slot, selectedTeam)
+                }
                 onDropTeam={(teamId) => assignTeam(battle._id, slot, teamId)}
               />
             </div>
-          )
+          );
         })}
       </div>
     </TooltipProvider>
-  )
+  );
 }
 
-export default memo(VersusNode)
+export default memo(VersusNode);

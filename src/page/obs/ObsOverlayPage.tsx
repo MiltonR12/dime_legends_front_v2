@@ -10,12 +10,15 @@ import {
   ResultadoScreen,
 } from "./screens";
 
-const SCREENS = new Set<OverlayId>([
+const SCREENS: readonly OverlayId[] = [
   "draft",
   "presentacion",
   "marcador",
   "resultado",
-]);
+];
+
+const isOverlay = (value: string | undefined): value is OverlayId =>
+  SCREENS.some((screen) => screen === value);
 
 function Stage({ children }: { children: ReactNode }) {
   const [scale, setScale] = useState(1);
@@ -37,7 +40,7 @@ function Stage({ children }: { children: ReactNode }) {
 
 function ObsOverlayPage() {
   const { id, screen } = useParams();
-  const kind = SCREENS.has(screen as OverlayId) ? (screen as OverlayId) : null;
+  const kind = isOverlay(screen) ? screen : null;
   const [state, setState] = useState<DeskState | null>(null);
   const [missing, setMissing] = useState(false);
   const [heroes, setHeroes] = useState<HeroCard[]>([]);

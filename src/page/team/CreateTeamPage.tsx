@@ -181,11 +181,11 @@ function CreateTeamPage() {
                 </Button>
               </div>
             ) : (
-              <Formik
+              <Formik<{ teamId: string; voucher: File | null }>
                 enableReinitialize
                 initialValues={{
                   teamId: available[0]?._id ?? "",
-                  voucher: null as File | null,
+                  voucher: null,
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                   inscribe({
