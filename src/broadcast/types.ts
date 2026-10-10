@@ -3,6 +3,8 @@ export type Lane = (typeof LANES)[number];
 export type Side = "blue" | "red";
 export type OverlayId = "draft" | "presentacion" | "marcador" | "resultado";
 
+export const isVideoUrl = (url: string) => /\.(mp4|webm)(\?|$)/i.test(url);
+
 export const LANE_LABEL: Record<Lane, string> = {
   exp: "EXP",
   jungle: "Jungla",

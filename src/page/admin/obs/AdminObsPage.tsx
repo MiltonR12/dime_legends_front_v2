@@ -150,7 +150,6 @@ function AdminObsPage() {
               ["serie", "Serie"],
               ["cierre", "Cierre"],
               ["datos", "Datos"],
-              ["fondo", "Fondo"],
               ["obs", "OBS"],
             ] as const
           ).map(([value, label]) => (
@@ -162,6 +161,11 @@ function AdminObsPage() {
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
 
         <TabsContent value="draft" className="mt-4 space-y-4">
+      <BackgroundField
+        url={desk.theme.backgroundImageUrl}
+        onChange={(url) => send({ type: "background", url })}
+        onError={setError}
+      />
       <div className="flex justify-end">
         <Button
           type="button"
@@ -354,14 +358,6 @@ function AdminObsPage() {
             />
           </label>
           <DeskCredits desk={desk} send={send} onError={setError} />
-        </TabsContent>
-
-        <TabsContent value="fondo" className="mt-4">
-      <BackgroundField
-        url={desk.theme.backgroundImageUrl}
-        onChange={(url) => send({ type: "background", url })}
-        onError={setError}
-      />
         </TabsContent>
 
         <TabsContent value="obs" className="mt-4 space-y-6">

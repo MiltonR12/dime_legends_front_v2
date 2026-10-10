@@ -3,12 +3,10 @@ import { useParams } from "react-router-dom";
 import { deskSocket } from "@/broadcast/socket";
 import { fillDesk, type DeskState, type HeroCard, type OverlayId } from "@/broadcast/types";
 import { getDeskApi, getHeroesApi } from "@/app/api/broadcast/broadcastApi";
-import {
-  DraftScreen,
-  MarcadorScreen,
-  PresentacionScreen,
-  ResultadoScreen,
-} from "./screens";
+import { DraftScreen } from "./DraftScreen";
+import { MarcadorScreen } from "./MarcadorScreen";
+import { PresentacionScreen } from "./PresentacionScreen";
+import { ResultadoScreen } from "./ResultadoScreen";
 
 const SCREENS: readonly OverlayId[] = [
   "draft",

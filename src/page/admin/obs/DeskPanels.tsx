@@ -5,6 +5,7 @@ import { uploadFile } from "@/app/api/upload/uploadApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  isVideoUrl,
   LANE_LABEL,
   type DeskCaster,
   type DeskEvent,
@@ -105,16 +106,27 @@ export function BackgroundField({
   return (
     <div className="flex flex-wrap items-center gap-4 rounded-md border border-admin-border bg-admin-surface p-3">
       <div className="grid h-20 w-36 place-items-center overflow-hidden rounded-sm bg-admin-input">
-        {url ? (
+        {url && isVideoUrl(url) ? (
+          <video
+            src={url}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="h-full w-full object-cover"
+          />
+        ) : url ? (
           <img src={url} alt="" className="h-full w-full object-cover" />
         ) : (
           <ImagePlus className="h-5 w-5 text-admin-muted" />
         )}
       </div>
       <div className="space-y-2">
-        <p className="text-sm text-admin-text">Fondo de las cuatro pantallas</p>
+        <p className="text-sm text-admin-text">Fondo de Draft y Cierre</p>
         <p className="text-xs text-admin-muted">
-          {url ? "Visible en presentación, draft, marcador y resultado." : "Sin imagen, las pantallas quedan transparentes."}
+          {url
+            ? "Imagen o video. Presentación y marcador siguen transparentes."
+            : "Sin archivo, Draft y Cierre quedan transparentes."}
         </p>
         <div className="flex gap-2">
           <Button
@@ -123,7 +135,7 @@ export function BackgroundField({
             className="bg-admin-accent text-white hover:bg-admin-accent-hover"
             onClick={() => inputRef.current?.click()}
           >
-            {busy ? "Subiendo..." : url ? "Cambiar imagen" : "Elegir imagen"}
+            {busy ? "Subiendo..." : url ? "Cambiar" : "Elegir imagen o video"}
           </Button>
           {url && (
             <Button
@@ -140,14 +152,14 @@ export function BackgroundField({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
         className="hidden"
         onChange={(event) => {
           const file = event.target.files?.[0];
           event.target.value = "";
           if (!file) return;
           setBusy(true);
-          uploadFile(file, "broadcast")
+          uploadFile(file, "broadcast", { video: true })
             .then(onChange)
             .catch(() => onError("No se subió el fondo."))
             .finally(() => setBusy(false));
