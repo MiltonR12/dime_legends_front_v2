@@ -253,6 +253,13 @@ function AdminLayout() {
                               <span className="font-medium capitalize truncate">
                                 {item.name?.toLowerCase().slice(0, 30)}
                               </span>
+                              {user?._id &&
+                                item.createdBy &&
+                                item.createdBy !== user._id && (
+                                  <span className="text-[10px] uppercase text-admin-muted group-data-[collapsible=icon]:hidden">
+                                    Compartido
+                                  </span>
+                                )}
                               <ChevronRight className="ml-auto h-4 w-4 text-admin-muted transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                             </SidebarMenuButton>
                           </CollapsibleTrigger>

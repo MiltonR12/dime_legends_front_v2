@@ -370,7 +370,7 @@ function TorneoPage() {
                       <Users className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">
-                      Organizador
+                      Organizadores
                     </h3>
                   </div>
                   <Separator className="my-4 bg-purple-700/30" />
@@ -391,6 +391,28 @@ function TorneoPage() {
                       </h4>
                     </div>
                   </div>
+                  {(tournament.organizers ?? []).length > 0 && (
+                    <ul className="mt-4 space-y-3">
+                      {tournament.organizers?.map((person) => (
+                        <li key={person.pageId}>
+                          <Link
+                            to={`/organizador/${person.pageId}`}
+                            className="flex items-center gap-3 rounded-lg hover:bg-purple-800/30"
+                          >
+                            <Image
+                              src={person.avatar}
+                              alt={person.firstName}
+                              className="h-10 w-10"
+                              noImage={person.firstName.charAt(0).toUpperCase()}
+                            />
+                            <span className="text-white">
+                              {person.firstName} {person.lastName}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>

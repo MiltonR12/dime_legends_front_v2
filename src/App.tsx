@@ -29,6 +29,7 @@ import OrganizerPublicPage from './page/public/organizer/OrganizerPublicPage'
 import AdminObsPage from './page/admin/obs/AdminObsPage'
 import ObsOverlayPage from './page/obs/ObsOverlayPage'
 import { useRouteTitle } from './lib/pageTitle'
+import InvitePage from './page/invite/InvitePage'
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="contacto" element={<ContactPage />} />
           <Route path="torneos" element={<TorneoListPage />} />
           <Route path='torneo/:id' element={<TorneoPage />} />
+          <Route path="invitacion/:token" element={<InvitePage />} />
           <Route path="equipo/:id" element={<TeamPublicPage />} />
           <Route path="organizador/:id" element={<OrganizerPublicPage />} />
         </Route>

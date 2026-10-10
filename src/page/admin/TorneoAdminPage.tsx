@@ -42,6 +42,8 @@ import BannerGallery, {
   bannerUrls,
   savedBannerSlots,
 } from "@/components/input/BannerGallery";
+import TournamentStaff from "@/page/admin/TournamentStaff";
+import { useTournamentStaff } from "@/hooks/staff";
 
 const PHASES = [
   { value: "inscription", label: "Inscripción" },
@@ -74,6 +76,7 @@ function TorneoAdminPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: tournament, isLoading } = useTournament(id);
+  const { data: staff } = useTournamentStaff(id);
   const { mutateAsync: updateTournament, mutate: patchTournament } =
     useUpdateTournament();
   const { mutateAsync: deleteTournament } = useDeleteTournament();
@@ -475,6 +478,9 @@ function TorneoAdminPage() {
         )}
       </Formik>
 
+      <TournamentStaff tournamentId={tournament._id} />
+
+      {staff?.isOwner && (
       <section className="flex flex-col gap-3 rounded-xl border border-red-900/60 bg-admin-surface p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-sm font-semibold text-red-300">
@@ -519,6 +525,7 @@ function TorneoAdminPage() {
           </AlertDialogContent>
         </AlertDialog>
       </section>
+      )}
     </div>
   );
 }

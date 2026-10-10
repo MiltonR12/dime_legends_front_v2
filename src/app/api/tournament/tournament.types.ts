@@ -54,6 +54,13 @@ interface Payment {
   qrImage: string;
 }
 
+export interface PublicOrganizer {
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  pageId: string;
+}
+
 export interface TournamentOne {
   _id: string;
   createdBy: {
@@ -62,6 +69,7 @@ export interface TournamentOne {
     avatar: string;
     id: string;
   };
+  organizers?: PublicOrganizer[];
   name: string;
   formUrl: string | null;
   dateStart: string;
@@ -94,6 +102,7 @@ export interface TournamentOne {
 
 export interface MyTournament {
   _id: string;
+  createdBy?: string;
   name: string;
   dateStart: string;
   game: string;

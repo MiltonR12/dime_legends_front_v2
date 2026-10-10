@@ -15,6 +15,7 @@ const ROUTE_TITLES: [pattern: string, title: string][] = [
   ["/register", "Crear cuenta"],
   ["/perfil", "Mi perfil"],
   ["/torneo/team/create/:id", "Inscribir equipo"],
+  ["/invitacion/:token", "Invitación"],
   ["/admin", "Panel"],
   ["/admin/usuarios", "Usuarios"],
   ["/admin/equipos", "Mis equipos"],
