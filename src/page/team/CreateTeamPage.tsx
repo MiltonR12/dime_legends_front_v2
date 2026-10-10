@@ -69,9 +69,7 @@ function CreateTeamPage() {
   const registrationEnd = tournament.config?.registrationEnd
     ? new Date(tournament.config.registrationEnd)
     : null;
-  const closed =
-    (tournament.phase ?? "inscription") !== "inscription" ||
-    (!!registrationEnd && registrationEnd.getTime() < Date.now());
+  const closed = (tournament.phase ?? "inscription") !== "inscription";
   const taken = inscribed.filter((team) => team.status !== "inactive").length;
   const maxTeams = tournament.config?.maxTeams;
   const full =

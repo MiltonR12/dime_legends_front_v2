@@ -96,10 +96,7 @@ function TorneoPage() {
   const joinTo = isAuthenticated
     ? `/torneo/team/create/${id}`
     : `/login?next=${encodeURIComponent(`/torneo/team/create/${id}`)}`;
-  const registrationEnd = tournament?.config?.registrationEnd;
-  const open =
-    (tournament?.phase ?? "inscription") === "inscription" &&
-    (!registrationEnd || new Date(registrationEnd).getTime() >= Date.now());
+  const open = (tournament?.phase ?? "inscription") === "inscription";
 
   if (isLoading) return <LoadingTournament />;
 
@@ -259,7 +256,7 @@ function TorneoPage() {
               <Button
                 variant="default"
                 asChild
-                className="text-lg py-6 px-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-[0_0_15px_rgba(168,85,247,0.5)] border-none transition-all duration-300 hover:scale-105 animate-pulse"
+                className="text-lg py-6 px-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-[0_0_15px_rgba(168,85,247,0.5)] border-none transition-all duration-300 hover:scale-105"
               >
                 <Link to={joinTo}>
                   {tournament.payment ? (
