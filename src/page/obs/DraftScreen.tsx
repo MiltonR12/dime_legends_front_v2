@@ -180,7 +180,7 @@ export function DraftScreen({
             <SideBoard state={state} side="blue" heroes={heroes} />
             <SideBoard state={state} side="red" heroes={heroes} />
           </div>
-          <div className="absolute left-1/2 top-0 flex -translate-x-1/2 -translate-y-20 items-start justify-center gap-10">
+          <div className="absolute left-1/2 top-0 flex -translate-x-1/2 -translate-y-16 items-start justify-center gap-32">
             <TeamLogo team={state.teams.blue} side="blue" />
             <TeamLogo team={state.teams.red} side="red" />
           </div>
