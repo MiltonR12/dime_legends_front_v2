@@ -52,6 +52,18 @@ const field =
 const tabTrigger =
   "rounded-md border border-transparent px-3 py-1.5 text-sm text-admin-muted data-[state=active]:border-admin-border data-[state=active]:bg-admin-surface data-[state=active]:text-admin-text data-[state=active]:shadow-none";
 
+const takenHeroes = (desk: DeskState, current: string | null) => {
+  const taken = new Set<string>();
+  for (const side of ["blue", "red"] as const) {
+    for (const slug of desk.bans[side] ?? []) if (slug) taken.add(slug);
+    for (const player of desk.teams[side].players) {
+      if (player.heroSlug) taken.add(player.heroSlug);
+    }
+  }
+  if (current) taken.delete(current);
+  return taken;
+};
+
 function AdminObsPage() {
   const { id = "" } = useParams();
   const { data: tournament, isLoading } = useTournament(id);
@@ -393,6 +405,7 @@ function AdminObsPage() {
         title={slot?.kind === "ban" ? "Ban" : "Personaje"}
         heroes={heroes}
         current={slot?.current ?? null}
+        taken={takenHeroes(desk, slot?.current ?? null)}
         onOpenChange={(open) => {
           if (!open) setSlot(null);
         }}

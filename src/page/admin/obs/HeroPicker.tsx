@@ -13,6 +13,7 @@ function HeroPicker({
   title,
   heroes,
   current,
+  taken,
   onOpenChange,
   onPick,
 }: {
@@ -20,6 +21,7 @@ function HeroPicker({
   title: string;
   heroes: HeroCard[];
   current: string | null;
+  taken: ReadonlySet<string>;
   onOpenChange: (open: boolean) => void;
   onPick: (slug: string | null) => void;
 }) {
@@ -47,13 +49,18 @@ function HeroPicker({
         />
         <div className="min-h-0 max-h-[60vh] overflow-y-auto pr-1">
           <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
-            {visible.map((hero) => (
+            {visible.map((hero) => {
+              const blocked = taken.has(hero.slug) && hero.slug !== current;
+              return (
               <button
                 key={hero.slug}
                 type="button"
-                title={hero.name}
+                title={blocked ? `${hero.name} ya está en el draft` : hero.name}
+                disabled={blocked}
                 onClick={() => onPick(hero.slug)}
                 className={`overflow-hidden rounded-md border text-left ${
+                  blocked ? "cursor-not-allowed" : ""
+                } ${
                   hero.slug === current
                     ? "border-admin-accent"
                     : "border-admin-border"
@@ -63,14 +70,20 @@ function HeroPicker({
                   <img
                     src={hero.iconUrl}
                     alt=""
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className={`absolute inset-0 h-full w-full object-cover ${
+                      blocked ? "grayscale" : ""
+                    }`}
                   />
+                  {blocked ? (
+                    <span className="absolute inset-0 bg-black/55" />
+                  ) : null}
                 </span>
                 <span className="block truncate px-1 py-1 text-[11px] text-admin-muted">
                   {hero.name}
                 </span>
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
         {visible.length === 0 && (

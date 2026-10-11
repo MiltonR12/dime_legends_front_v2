@@ -80,6 +80,8 @@ export type HeroCard = {
   /** Clip de entrada del héroe. Puede no existir para todos. */
   videoUrl?: string;
   lanes: string[];
+  /** Clase del héroe: asesino, mago, tanque… */
+  roles?: string[];
 };
 
 export type DeskEvent =

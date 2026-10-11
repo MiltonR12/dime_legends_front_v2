@@ -108,6 +108,18 @@ function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
 const laneLogo = (lane: (typeof LANES)[number]) =>
   `https://mlbbdex.com/visuels/lanes/${lane}.webp`;
 
+const ROLE_LABEL: Record<string, string> = {
+  assassin: "Asesino",
+  mage: "Mago",
+  marksman: "Tirador",
+  tank: "Tanque",
+  fighter: "Luchador",
+  support: "Apoyo",
+};
+
+const roleLabel = (role: string) =>
+  ROLE_LABEL[role.toLowerCase()] ?? role;
+
 function PickCard({
   side,
   lane,
@@ -149,6 +161,11 @@ function PickCard({
         style={{ transform: `skewX(${unskewOf(side)})` }}
       >
         <img src={laneLogo(lane)} alt="" className="h-14 w-14 object-contain" />
+        {hero?.roles?.[0] ? (
+          <div className="text-[28px] font-black uppercase leading-none text-white">
+            {roleLabel(hero.roles[0])}
+          </div>
+        ) : null}
         <div className="line-clamp-2 text-[26px] font-black leading-[1.05] text-white">
           {nick || "—"}
         </div>
@@ -205,14 +222,16 @@ export function DraftScreen({
 }) {
   return (
     <Shell state={state} backdrop>
-      <div className="relative h-full px-6 pt-8">
-        <div className="grid h-full grid-cols-2 gap-x-28">
-          <SideBoard state={state} side="blue" heroes={heroes} />
-          <SideBoard state={state} side="red" heroes={heroes} />
-        </div>
-        <div className="absolute left-1/2 top-8 flex -translate-x-1/2 items-start justify-center gap-4">
-          <TeamLogo team={state.teams.blue} side="blue" />
-          <TeamLogo team={state.teams.red} side="red" />
+      <div className="flex h-full items-end px-6 pb-8">
+        <div className="relative w-full">
+          <div className="grid grid-cols-2 gap-x-28">
+            <SideBoard state={state} side="blue" heroes={heroes} />
+            <SideBoard state={state} side="red" heroes={heroes} />
+          </div>
+          <div className="absolute left-1/2 top-0 flex -translate-x-1/2 items-start justify-center gap-4">
+            <TeamLogo team={state.teams.blue} side="blue" />
+            <TeamLogo team={state.teams.red} side="red" />
+          </div>
         </div>
       </div>
     </Shell>
