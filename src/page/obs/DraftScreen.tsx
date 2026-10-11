@@ -166,7 +166,7 @@ function PickCard({
             {roleLabel(hero.roles[0])}
           </div>
         ) : null}
-        <div className="line-clamp-2 text-[26px] font-black leading-[1.05] text-white">
+        <div className="line-clamp-1 text-base font-black leading-[1.05] text-white">
           {nick || "—"}
         </div>
       </div>
