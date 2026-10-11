@@ -95,7 +95,7 @@ function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
       }}
     >
       {team.logoUrl ? (
-        <img src={team.logoUrl} alt="" className="h-16 w-16 object-contain" />
+        <img src={team.logoUrl} alt="" className="h-full w-full object-contain" />
       ) : (
         <span className="text-3xl font-black tracking-wide text-white">
           {team.tag}
