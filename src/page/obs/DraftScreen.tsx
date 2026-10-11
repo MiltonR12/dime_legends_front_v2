@@ -63,7 +63,7 @@ function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
   if (!team.logoUrl) return null;
   return (
     <div
-      className="h-36 w-80 overflow-hidden "
+      className="h-36 w-72 overflow-hidden "
       style={{
         clipPath:
           side === "blue"
@@ -180,7 +180,7 @@ export function DraftScreen({
             <SideBoard state={state} side="blue" heroes={heroes} />
             <SideBoard state={state} side="red" heroes={heroes} />
           </div>
-          <div className="absolute left-1/2 top-0 flex -translate-x-1/2 -translate-y-16 items-start justify-center gap-32">
+          <div className="absolute left-1/2 top-0 flex -translate-x-1/2 -translate-y-10 items-start justify-center gap-48">
             <TeamLogo team={state.teams.blue} side="blue" />
             <TeamLogo team={state.teams.red} side="red" />
           </div>
