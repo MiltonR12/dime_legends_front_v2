@@ -15,11 +15,6 @@ const plateClip = (side: Side) =>
     ? "polygon(0 24%, 16% 0, 100% 0, 84% 100%, 0 100%)"
     : "polygon(0 0, 84% 0, 100% 24%, 100% 100%, 16% 100%)";
 
-const nameClip = (side: Side) =>
-  side === "blue"
-    ? "polygon(0 0, 92% 0, 100% 100%, 8% 100%)"
-    : "polygon(8% 0, 100% 0, 92% 100%, 0 100%)";
-
 function TeamPlate({
   side,
   team,
@@ -33,9 +28,9 @@ function TeamPlate({
 }) {
   const blue = side === "blue";
   return (
-    <div className={`relative h-[148px] w-[460px] ${blue ? "" : "ml-auto"}`}>
+    <div className={`w-[460px] ${blue ? "" : "ml-auto"}`}>
       <div
-        className="absolute inset-x-0 top-0 flex h-[72px] items-center px-8"
+        className="flex h-[72px] items-center px-8"
         style={{ clipPath: plateClip(side), background: "#f4f4f4" }}
       >
         <span
@@ -46,79 +41,39 @@ function TeamPlate({
           {team.name}
         </span>
       </div>
-      <div
-        className={`absolute bottom-0 flex h-[70px] overflow-hidden bg-[#12142b] ${
-          blue ? "left-0 right-6" : "left-6 right-0"
-        }`}
-        style={{ clipPath: nameClip(side) }}
-      >
+      <div className="mt-2 flex h-16">
         {bans.slice(0, 5).map((slug, index) => {
-          const hero = heroOf(heroes, slug);
+          const banned = heroOf(heroes, slug);
           return (
-            <div
-              key={index}
-              className={`relative min-w-0 flex-1 ${index > 0 ? "border-l border-white/70" : ""}`}
-            >
-              {hero ? (
+            <div key={index} className="flex flex-1 items-center justify-center">
+              {banned ? (
                 <img
-                  src={hero.iconUrl}
+                  src={banned.iconUrl}
                   alt=""
-                  className="h-full w-full object-cover grayscale"
+                  className="h-14 w-14 rounded-full object-cover shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
                 />
               ) : null}
             </div>
           );
         })}
-        <span
-          className={`pointer-events-none absolute top-0 h-full w-4 bg-[#ff3d9a] ${blue ? "right-0" : "left-0"}`}
-          style={{
-            clipPath: blue
-              ? "polygon(45% 0, 100% 0, 100% 100%, 0 100%)"
-              : "polygon(0 0, 55% 0, 100% 100%, 0 100%)",
-          }}
-        />
       </div>
     </div>
   );
 }
 
-function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
+function TeamLogo({ team }: { team: DeskTeam }) {
+  if (!team.logoUrl) return null;
   return (
-    <div
-      className="flex h-[110px] w-[190px] items-center justify-center bg-[#2f6b22]"
-      style={{
-        clipPath:
-          side === "blue"
-            ? "polygon(8% 0, 100% 0, 92% 100%, 0 100%)"
-            : "polygon(0 0, 92% 0, 100% 100%, 8% 100%)",
-        filter: "drop-shadow(0 10px 8px rgba(0,0,0,0.4))",
-      }}
-    >
-      {team.logoUrl ? (
-        <img src={team.logoUrl} alt="" className="h-full w-full object-contain" />
-      ) : (
-        <span className="text-3xl font-black tracking-wide text-white">
-          {team.tag}
-        </span>
-      )}
-    </div>
+    <img
+      src={team.logoUrl}
+      alt=""
+      className="h-44 w-44 object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.65)]"
+    />
   );
 }
 
 const laneLogo = (lane: (typeof LANES)[number]) =>
   `https://mlbbdex.com/visuels/lanes/${lane}.webp`;
-
-const ROLE_LABEL: Record<string, string> = {
-  assassin: "Asesino",
-  mage: "Mago",
-  marksman: "Tirador",
-  tank: "Tanque",
-  fighter: "Luchador",
-  support: "Apoyo",
-};
-
-const roleLabel = (role: string) =>
-  ROLE_LABEL[role.toLowerCase()] ?? role;
 
 function PickCard({
   side,
@@ -131,10 +86,9 @@ function PickCard({
   nick: string;
   hero: HeroCard | null;
 }) {
-  const blue = side === "blue";
   return (
     <div
-      className="relative h-[540px] min-w-0 flex-1 overflow-hidden"
+      className="relative h-[660px] min-w-0 flex-1 overflow-hidden"
       style={{
         transform: `skewX(${skewOf(side)})`,
         background: "linear-gradient(#555 0 72%, #3a3a3a 72% 100%)",
@@ -153,20 +107,13 @@ function PickCard({
           />
         </div>
       ) : null}
-      <div className="absolute inset-x-0 bottom-0 h-[30%] bg-[#2c2c2c]" />
+      <div className="absolute inset-x-0 bottom-0 h-[26%] bg-[#2c2c2c]" />
       <div
-        className={`absolute inset-x-[8%] bottom-3 z-10 flex flex-col justify-end gap-1 ${
-          blue ? "items-start text-left" : "items-end text-right"
-        }`}
+        className="absolute inset-x-2 bottom-3 z-10 flex flex-col items-center justify-end gap-1 text-center"
         style={{ transform: `skewX(${unskewOf(side)})` }}
       >
-        <img src={laneLogo(lane)} alt="" className="h-14 w-14 object-contain" />
-        {hero?.roles?.[0] ? (
-          <div className="font-black uppercase leading-none text-white">
-            {roleLabel(hero.roles[0])}
-          </div>
-        ) : null}
-        <div className="line-clamp-1 text-base font-black leading-[1.05] text-white">
+        <img src={laneLogo(lane)} alt="" className="h-16 w-16 object-contain" />
+        <div className="line-clamp-2 w-full text-2xl font-black leading-[1.05] text-white">
           {nick || "—"}
         </div>
       </div>
@@ -229,8 +176,8 @@ export function DraftScreen({
             <SideBoard state={state} side="red" heroes={heroes} />
           </div>
           <div className="absolute left-1/2 top-0 flex -translate-x-1/2 items-start justify-center gap-4">
-            <TeamLogo team={state.teams.blue} side="blue" />
-            <TeamLogo team={state.teams.red} side="red" />
+            <TeamLogo team={state.teams.blue} />
+            <TeamLogo team={state.teams.red} />
           </div>
         </div>
       </div>
