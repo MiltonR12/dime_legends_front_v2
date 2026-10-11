@@ -93,7 +93,7 @@ function PickCard({
 }) {
   return (
     <div
-      className="relative h-[660px] min-w-0 flex-1 overflow-hidden"
+      className="relative h-[600px] min-w-0 flex-1 overflow-hidden"
       style={{
         transform: `skewX(${skewOf(side)})`,
         background: "linear-gradient(#555 0 72%, #3a3a3a 72% 100%)",
