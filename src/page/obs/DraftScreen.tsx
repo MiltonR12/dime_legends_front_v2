@@ -162,7 +162,7 @@ function PickCard({
       >
         <img src={laneLogo(lane)} alt="" className="h-14 w-14 object-contain" />
         {hero?.roles?.[0] ? (
-          <div className="text-[28px] font-black uppercase leading-none text-white">
+          <div className="font-black uppercase leading-none text-white">
             {roleLabel(hero.roles[0])}
           </div>
         ) : null}
