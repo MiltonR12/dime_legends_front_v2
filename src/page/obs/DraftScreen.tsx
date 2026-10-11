@@ -63,7 +63,7 @@ function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
   if (!team.logoUrl) return null;
   return (
     <div
-      className="h-52 w-80 overflow-hidden bg-[#2f6b22]"
+      className="h-36 w-96 overflow-hidden "
       style={{
         clipPath:
           side === "blue"
