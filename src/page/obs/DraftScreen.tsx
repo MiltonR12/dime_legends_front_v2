@@ -41,34 +41,39 @@ function TeamPlate({
           {team.name}
         </span>
       </div>
-      <div className="mt-2 flex h-16">
-        {bans.slice(0, 5).map((slug, index) => {
+      <div className={`mt-2 flex h-16 gap-1 ${blue ? "justify-start pl-2" : "justify-end pr-2"}`}>
+        {bans.slice(0, 5).flatMap((slug, index) => {
           const banned = heroOf(heroes, slug);
-          return (
-            <div key={index} className="flex flex-1 items-center justify-center">
-              {banned ? (
-                <img
-                  src={banned.iconUrl}
-                  alt=""
-                  className="h-14 w-14 rounded-full object-cover shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
-                />
-              ) : null}
-            </div>
-          );
+          if (!banned) return [];
+          return [
+            <img
+              key={index}
+              src={banned.iconUrl}
+              alt=""
+              className="h-14 w-14 rounded-full object-cover shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
+            />,
+          ];
         })}
       </div>
     </div>
   );
 }
 
-function TeamLogo({ team }: { team: DeskTeam }) {
+function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
   if (!team.logoUrl) return null;
   return (
-    <img
-      src={team.logoUrl}
-      alt=""
-      className="h-44 w-44 object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.65)]"
-    />
+    <div
+      className="h-52 w-80 overflow-hidden bg-[#2f6b22]"
+      style={{
+        clipPath:
+          side === "blue"
+            ? "polygon(8% 0, 100% 0, 92% 100%, 0 100%)"
+            : "polygon(0 0, 92% 0, 100% 100%, 8% 100%)",
+        filter: "drop-shadow(0 10px 8px rgba(0,0,0,0.45))",
+      }}
+    >
+      <img src={team.logoUrl} alt="" className="h-full w-full object-cover" />
+    </div>
   );
 }
 
@@ -113,7 +118,7 @@ function PickCard({
         style={{ transform: `skewX(${unskewOf(side)})` }}
       >
         <img src={laneLogo(lane)} alt="" className="h-16 w-16 object-contain" />
-        <div className="line-clamp-2 w-full text-2xl font-black leading-[1.05] text-white">
+        <div className="line-clamp-1 w-full text-2xl font-black leading-[1.05] text-white">
           {nick || "—"}
         </div>
       </div>
@@ -176,8 +181,8 @@ export function DraftScreen({
             <SideBoard state={state} side="red" heroes={heroes} />
           </div>
           <div className="absolute left-1/2 top-0 flex -translate-x-1/2 items-start justify-center gap-4">
-            <TeamLogo team={state.teams.blue} />
-            <TeamLogo team={state.teams.red} />
+            <TeamLogo team={state.teams.blue} side="blue" />
+            <TeamLogo team={state.teams.red} side="red" />
           </div>
         </div>
       </div>
