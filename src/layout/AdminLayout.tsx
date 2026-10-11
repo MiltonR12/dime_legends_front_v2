@@ -74,7 +74,7 @@ const NAV: NavItem[] = [
     to: "/admin",
     label: "Dashboard",
     icon: LayoutDashboard,
-    access: "organizer",
+    access: "any",
     end: true,
   },
   { to: "/admin/equipos", label: "Mis equipos", icon: Users, access: "any" },

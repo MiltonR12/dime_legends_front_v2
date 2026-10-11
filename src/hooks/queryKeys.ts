@@ -23,6 +23,7 @@ export const queryKeys = {
     all: ["tournaments"] as const,
     list: ["tournaments", "list"] as const,
     mine: ["tournaments", "mine"] as const,
+    summary: ["tournaments", "summary"] as const,
     detail: (id: string) => ["tournaments", id] as const,
     staff: (id: string) => ["tournaments", id, "staff"] as const,
     creators: (query: string) => ["tournaments", "creators", query] as const,

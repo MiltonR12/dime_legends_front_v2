@@ -79,7 +79,10 @@ export function useUpdateTeamStatus() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (data: PUpdateStatusTeam) => updateStatusTeamApi(data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.teams.all }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.teams.all })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.summary })
+    },
   })
 }
 
@@ -107,6 +110,7 @@ export function useDeleteTeam() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.teams.all })
       qc.invalidateQueries({ queryKey: queryKeys.battles.all })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.summary })
     },
   })
 }

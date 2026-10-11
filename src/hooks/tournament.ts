@@ -6,6 +6,7 @@ import {
   getListTournamentApi,
   getMyTournamentApi,
   getTournamentByIdApi,
+  getTournamentSummaryApi,
   updateTournamentApi,
 } from "@/app/api/tournament/tournamentApi"
 import type { PTournament, PUpdateTournament } from "@/app/api/tournament/tournament"
@@ -38,6 +39,14 @@ export function useMyTournaments(enabled = true) {
   })
 }
 
+export function useTournamentSummary(enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.tournaments.summary,
+    queryFn: getTournamentSummaryApi,
+    enabled,
+  })
+}
+
 export function useCreateTournament() {
   const qc = useQueryClient()
   return useMutation({
@@ -54,6 +63,7 @@ export function useUpdateTournament() {
       if (tournament) qc.setQueryData(queryKeys.tournaments.detail(variables._id), tournament)
       qc.invalidateQueries({ queryKey: queryKeys.tournaments.list })
       qc.invalidateQueries({ queryKey: queryKeys.tournaments.mine })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.summary })
     },
   })
 }
@@ -66,6 +76,7 @@ export function useDeleteTournament() {
       await qc.cancelQueries({ queryKey: queryKeys.tournaments.detail(id) })
       qc.invalidateQueries({ queryKey: queryKeys.tournaments.list })
       qc.invalidateQueries({ queryKey: queryKeys.tournaments.mine })
+      qc.invalidateQueries({ queryKey: queryKeys.tournaments.summary })
     },
   })
 }

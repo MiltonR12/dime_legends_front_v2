@@ -55,9 +55,8 @@ interface Payment {
 }
 
 export interface PublicOrganizer {
-  firstName: string;
-  lastName: string;
-  avatar: string;
+  name: string;
+  image: string | null;
   pageId: string;
 }
 
@@ -69,7 +68,8 @@ export interface TournamentOne {
     avatar: string;
     id: string;
   };
-  organizers?: PublicOrganizer[];
+  organizer?: PublicOrganizer | null;
+  coorganizers?: PublicOrganizer[];
   name: string;
   formUrl: string | null;
   dateStart: string;
@@ -98,6 +98,34 @@ export interface TournamentOne {
   battles: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+export type TournamentPhase = "inscription" | "running" | "finished"
+
+export interface SummaryTournament {
+  _id: string
+  name: string
+  game: string
+  phase: TournamentPhase
+  dateStart: string
+  accepted: number
+}
+
+export interface PendingTeam {
+  teamId: string
+  team: string
+  tournamentId: string
+  tournament: string
+}
+
+export interface TournamentSummary {
+  tournaments: number
+  inscription: number
+  running: number
+  acceptedTeams: number
+  list: SummaryTournament[]
+  pending: PendingTeam[]
+  upcoming: SummaryTournament[]
 }
 
 export interface MyTournament {

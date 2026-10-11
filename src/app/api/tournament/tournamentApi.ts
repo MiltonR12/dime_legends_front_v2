@@ -3,7 +3,7 @@ import { BANNER_FILE_TOKEN } from "@/components/input/BannerGallery"
 import type { ApiResponse } from "../response"
 import { uploadFile } from "../upload/uploadApi"
 import type { PTournament, PUpdateTournament } from "./tournament"
-import type { ListTournament, MyTournament, TournamentOne } from "./tournament.types"
+import type { ListTournament, MyTournament, TournamentOne, TournamentSummary } from "./tournament.types"
 
 const uploadAll = (files: File[]) => Promise.all(files.map((file) => uploadFile(file, "tournament")))
 
@@ -19,6 +19,11 @@ export const getListTournamentApi = async () => {
 
 export const getMyTournamentApi = async () => {
   const { data } = await axios.get<ApiResponse<MyTournament[]>>("/tournament/mis-torneos")
+  return data.data
+}
+
+export const getTournamentSummaryApi = async () => {
+  const { data } = await axios.get<ApiResponse<TournamentSummary>>("/tournament/resumen")
   return data.data
 }
 

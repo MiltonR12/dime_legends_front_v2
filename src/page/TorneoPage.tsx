@@ -1,6 +1,9 @@
 import type { TBattle } from "@/app/api/battle/battle.types";
 import type { Team } from "@/app/api/team/team.types";
-import type { ListTournament } from "@/app/api/tournament/tournament.types";
+import type {
+  ListTournament,
+  PublicOrganizer,
+} from "@/app/api/tournament/tournament.types";
 import { useBattles } from "@/hooks/battle";
 import { useTeamsByTournament } from "@/hooks/team";
 import { useTournament, useTournaments } from "@/hooks/tournament";
@@ -79,6 +82,23 @@ function HeroBanner({ src, alt }: { src?: string; alt: string }) {
   );
 }
 
+function OrganizerLink({ person }: { person: PublicOrganizer }) {
+  return (
+    <Link
+      to={`/organizador/${person.pageId}`}
+      className="flex items-center gap-3 rounded-lg p-2 transition hover:bg-purple-800/40"
+    >
+      <Image
+        src={person.image}
+        alt={person.name}
+        className="h-12 w-12"
+        noImage={person.name.slice(0, 2).toUpperCase()}
+      />
+      <span className="text-lg font-semibold text-white">{person.name}</span>
+    </Link>
+  );
+}
+
 function TorneoPage() {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
@@ -143,6 +163,14 @@ function TorneoPage() {
     );
   }
 
+  const seen = new Set<string>();
+  const hosts = [tournament.organizer, ...(tournament.coorganizers ?? [])].flatMap(
+    (person) => {
+      if (!person?.pageId || seen.has(person.pageId)) return [];
+      seen.add(person.pageId);
+      return [person];
+    },
+  );
   const date = new Date(tournament.dateStart);
   const game = ListaGamesImage.find((game) => game.name === tournament.game);
   const banners = bannerUrls(tournament);
@@ -374,41 +402,15 @@ function TorneoPage() {
                     </h3>
                   </div>
                   <Separator className="my-4 bg-purple-700/30" />
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={tournament.createdBy.avatar}
-                      alt={tournament.createdBy.firstName}
-                      className="h-12 w-12"
-                      noImage={tournament.createdBy.firstName
-                        .charAt(0)
-                        .toUpperCase()}
-                    />
-                    <div>
-                      <h4 className="text-lg font-semibold text-white">
-                        {tournament.createdBy.firstName +
-                          " " +
-                          tournament.createdBy.lastName}
-                      </h4>
-                    </div>
-                  </div>
-                  {(tournament.organizers ?? []).length > 0 && (
-                    <ul className="mt-4 space-y-3">
-                      {tournament.organizers?.map((person) => (
+                  {hosts.length === 0 ? (
+                    <p className="text-sm text-purple-300">
+                      Este torneo todavía no tiene un perfil de organizador.
+                    </p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {hosts.map((person) => (
                         <li key={person.pageId}>
-                          <Link
-                            to={`/organizador/${person.pageId}`}
-                            className="flex items-center gap-3 rounded-lg hover:bg-purple-800/30"
-                          >
-                            <Image
-                              src={person.avatar}
-                              alt={person.firstName}
-                              className="h-10 w-10"
-                              noImage={person.firstName.charAt(0).toUpperCase()}
-                            />
-                            <span className="text-white">
-                              {person.firstName} {person.lastName}
-                            </span>
-                          </Link>
+                          <OrganizerLink person={person} />
                         </li>
                       ))}
                     </ul>
