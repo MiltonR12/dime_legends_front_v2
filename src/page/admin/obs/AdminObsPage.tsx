@@ -8,6 +8,14 @@ import type { TBattle } from "@/app/api/battle/battle.types";
 import { useTournament } from "@/hooks/tournament";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   getHeroesApi,
@@ -249,31 +257,48 @@ function AdminObsPage() {
         </Button>
       </div>
       <div className="flex flex-wrap items-end gap-3">
-        <label className="space-y-1 text-sm text-admin-muted">
-          Día
-          <select
-            className={`${field} w-44`}
+        <div className="flex w-44 flex-col gap-1">
+          <span className="text-sm text-admin-muted">Día</span>
+          <Select
             value={day || "all"}
-            onChange={(event) => {
-              setDay(event.target.value);
+            onValueChange={(next) => {
+              setDay(next);
               setBattleId("");
             }}
           >
-            <option value="all">Todas</option>
-            {days.map((item) => (
-              <option key={item} value={item}>
-                {dayLabel(item)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="min-w-72 flex-1 space-y-1 text-sm text-admin-muted">
-          Batalla
-          <select
-            className={field}
-            value={battleId}
-            onChange={(event) => {
-              const next = event.target.value;
+            <SelectTrigger className="border-admin-border bg-admin-input text-admin-text shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
+              <SelectGroup>
+                <SelectItem
+                  value="all"
+                  className="focus:bg-admin-row focus:text-admin-text"
+                >
+                  Todas
+                </SelectItem>
+                {days.map((item) => (
+                  <SelectItem
+                    key={item}
+                    value={item}
+                    className="focus:bg-admin-row focus:text-admin-text"
+                  >
+                    {dayLabel(item)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex min-w-72 flex-1 flex-col gap-1">
+          <span className="text-sm text-admin-muted">Batalla</span>
+          <Select
+            value={battleId || "none"}
+            onValueChange={(next) => {
+              if (next === "none") {
+                setBattleId("");
+                return;
+              }
               setBattleId(next);
               const battle = shown.find((item) => item._id === next);
               const teams = battle ? paired(battle) : null;
@@ -281,14 +306,30 @@ function AdminObsPage() {
               send({ type: "match", blue: teams.one._id, red: teams.two._id });
             }}
           >
-            <option value="">Elegir partido</option>
-            {shown.map((battle) => (
-              <option key={battle._id} value={battle._id}>
-                {battleLabel(battle)}
-              </option>
-            ))}
-          </select>
-        </label>
+            <SelectTrigger className="border-admin-border bg-admin-input text-admin-text shadow-none">
+              <SelectValue placeholder="Elegir partido" />
+            </SelectTrigger>
+            <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
+              <SelectGroup>
+                <SelectItem
+                  value="none"
+                  className="focus:bg-admin-row focus:text-admin-text"
+                >
+                  Elegir partido
+                </SelectItem>
+                {shown.map((battle) => (
+                  <SelectItem
+                    key={battle._id}
+                    value={battle._id}
+                    className="focus:bg-admin-row focus:text-admin-text"
+                  >
+                    {battleLabel(battle)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
         <Button
           type="button"
           variant="outline"
