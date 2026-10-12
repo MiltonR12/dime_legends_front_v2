@@ -41,7 +41,7 @@ function TeamPlate({
           {team.name}
         </span>
       </div>
-      <div className={`mt-2 flex h-16 gap-1 ${blue ? "justify-start pl-2" : "justify-end pr-2"}`}>
+      <div className={`flex h-16 gap-1 ${blue ? "justify-start pl-12" : "justify-end pr-12"}`}>
         {bans.slice(0, 5).flatMap((slug, index) => {
           const banned = heroOf(heroes, slug);
           if (!banned) return [];
@@ -50,7 +50,7 @@ function TeamPlate({
               key={index}
               src={banned.iconUrl}
               alt=""
-              className="h-14 w-14 rounded-full object-cover shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
+              className="h-12 w-12 rounded-full object-cover shadow-[0_2px_8px_rgba(0,0,0,0.55)]"
             />,
           ];
         })}
@@ -60,19 +60,24 @@ function TeamPlate({
 }
 
 function TeamLogo({ team, side }: { team: DeskTeam; side: Side }) {
-  if (!team.logoUrl) return null;
   return (
     <div
-      className="h-36 w-72 overflow-hidden "
-      style={{
-        clipPath:
-          side === "blue"
-            ? "polygon(8% 0, 100% 0, 92% 100%, 0 100%)"
-            : "polygon(0 0, 92% 0, 100% 100%, 8% 100%)",
-        filter: "drop-shadow(0 10px 8px rgba(0,0,0,0.45))",
-      }}
+      className="h-36 w-72 overflow-hidden"
+      style={
+        team.logoUrl
+          ? {
+              clipPath:
+                side === "blue"
+                  ? "polygon(8% 0, 100% 0, 92% 100%, 0 100%)"
+                  : "polygon(0 0, 92% 0, 100% 100%, 8% 100%)",
+              filter: "drop-shadow(0 10px 8px rgba(0,0,0,0.45))",
+            }
+          : undefined
+      }
     >
-      <img src={team.logoUrl} alt="" className="h-full w-full object-cover" />
+      {team.logoUrl ? (
+        <img src={team.logoUrl} alt="" className="h-full w-full object-cover" />
+      ) : null}
     </div>
   );
 }
@@ -102,13 +107,13 @@ function PickCard({
     >
       {hero ? (
         <div
-          className="absolute -inset-[14%]"
+          className="absolute -inset-[32%]"
           style={{ transform: `skewX(${unskewOf(side)})` }}
         >
           <img
             src={hero.portraitUrl || hero.iconUrl}
             alt=""
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover"
           />
         </div>
       ) : null}

@@ -161,7 +161,6 @@ function AdminObsPage() {
               ["draft", "Draft"],
               ["serie", "Serie"],
               ["cierre", "Cierre"],
-              ["datos", "Datos"],
               ["obs", "OBS"],
             ] as const
           ).map(([value, label]) => (
@@ -259,6 +258,23 @@ function AdminObsPage() {
           </section>
         ))}
       </div>
+      <label className="block max-w-xs text-xs text-admin-muted">
+        Fase en pantalla
+        <Input
+          value={desk.tournament.stage}
+          onChange={(event) =>
+            setDesk({
+              ...desk,
+              tournament: { ...desk.tournament, stage: event.target.value },
+            })
+          }
+          onBlur={() =>
+            send({ type: "stage", stage: desk.tournament.stage })
+          }
+          className={`mt-1 ${field}`}
+        />
+      </label>
+      <DeskCredits desk={desk} send={send} onError={setError} />
         </TabsContent>
 
         <TabsContent value="serie" className="mt-4">
@@ -350,26 +366,6 @@ function AdminObsPage() {
 
         <TabsContent value="cierre" className="mt-4">
       <MatchClose desk={desk} heroes={heroMap} send={send} />
-        </TabsContent>
-
-        <TabsContent value="datos" className="mt-4 space-y-6">
-          <label className="block max-w-xs text-xs text-admin-muted">
-            Fase en pantalla
-            <Input
-              value={desk.tournament.stage}
-              onChange={(event) =>
-                setDesk({
-                  ...desk,
-                  tournament: { ...desk.tournament, stage: event.target.value },
-                })
-              }
-              onBlur={() =>
-                send({ type: "stage", stage: desk.tournament.stage })
-              }
-              className={`mt-1 ${field}`}
-            />
-          </label>
-          <DeskCredits desk={desk} send={send} onError={setError} />
         </TabsContent>
 
         <TabsContent value="obs" className="mt-4 space-y-6">
