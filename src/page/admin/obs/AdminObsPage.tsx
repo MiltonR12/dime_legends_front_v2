@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader2, Plus } from "lucide-react";
 import { useTeamsByTournament } from "@/hooks/team";
+import { useBattles } from "@/hooks/battle";
 import type { Team } from "@/app/api/team/team.types";
+import type { TBattle } from "@/app/api/battle/battle.types";
 import { useTournament } from "@/hooks/tournament";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,19 +66,78 @@ const takenHeroes = (desk: DeskState, current: string | null) => {
   return taken;
 };
 
+const dayKey = (value: string | Date) => {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+};
+
+const dayLabel = (key: string) =>
+  new Date(`${key}T12:00:00`).toLocaleDateString("es", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+
+const clockOf = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" });
+};
+
+const paired = (battle: TBattle) => {
+  if (battle.status === "cancelled" || battle.status === "canceled") return null;
+  if (!battle.teamOne?._id || !battle.teamOne.name) return null;
+  if (!battle.teamTwo?._id || !battle.teamTwo.name) return null;
+  return { one: battle.teamOne, two: battle.teamTwo };
+};
+
+const battleLabel = (battle: TBattle) => {
+  const teams = paired(battle);
+  if (!teams) return "";
+  const group = battle.group ? ` · Grupo ${battle.group}` : "";
+  const hour = clockOf(battle.date);
+  return `${teams.one.name} vs ${teams.two.name} · Ronda ${battle.round}${group}${hour ? ` · ${hour}` : ""}`;
+};
+
 function AdminObsPage() {
   const { id = "" } = useParams();
   const { data: tournament, isLoading } = useTournament(id);
   const { data: teams = NO_TEAMS } = useTeamsByTournament(id);
+  const { data: battles = [] } = useBattles(id);
   const [desk, setDesk] = useState<DeskState | null>(null);
   const [heroes, setHeroes] = useState<HeroCard[]>([]);
   const [slot, setSlot] = useState<Slot | null>(null);
   const [error, setError] = useState("");
+  const [custom, setCustom] = useState(false);
+  const [day, setDay] = useState("");
+  const [battleId, setBattleId] = useState("");
   const accepted = teams.filter((team) => team.status === "active");
   const heroMap = useMemo(
     () => new Map(heroes.map((hero) => [hero.slug, hero])),
     [heroes],
   );
+  const playable = useMemo(() => {
+    const rows = battles.filter((battle) => paired(battle) !== null);
+    return [...rows].sort((a, b) => +new Date(a.date) - +new Date(b.date));
+  }, [battles]);
+  const days = useMemo(
+    () =>
+      [...new Set(playable.map((battle) => dayKey(battle.date)).filter(Boolean))].sort(),
+    [playable],
+  );
+  const shown =
+    day && day !== "all"
+      ? playable.filter((battle) => dayKey(battle.date) === day)
+      : playable;
+
+  useEffect(() => {
+    if (day || days.length === 0) return;
+    const today = dayKey(new Date());
+    setDay(days.find((item) => item >= today) ?? "all");
+  }, [day, days]);
 
   useEffect(() => {
     if (!id || tournament?.game !== "Mobile Legends") return;
@@ -187,6 +248,70 @@ function AdminObsPage() {
           Vaciar draft
         </Button>
       </div>
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="space-y-1 text-sm text-admin-muted">
+          Día
+          <select
+            className={`${field} w-44`}
+            value={day || "all"}
+            onChange={(event) => {
+              setDay(event.target.value);
+              setBattleId("");
+            }}
+          >
+            <option value="all">Todas</option>
+            {days.map((item) => (
+              <option key={item} value={item}>
+                {dayLabel(item)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="min-w-72 flex-1 space-y-1 text-sm text-admin-muted">
+          Batalla
+          <select
+            className={field}
+            value={battleId}
+            onChange={(event) => {
+              const next = event.target.value;
+              setBattleId(next);
+              const battle = shown.find((item) => item._id === next);
+              const teams = battle ? paired(battle) : null;
+              if (!teams) return;
+              send({ type: "match", blue: teams.one._id, red: teams.two._id });
+            }}
+          >
+            <option value="">Elegir partido</option>
+            {shown.map((battle) => (
+              <option key={battle._id} value={battle._id}>
+                {battleLabel(battle)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Button
+          type="button"
+          variant="outline"
+          className="border-admin-border text-admin-text hover:bg-admin-surface"
+          disabled={!desk.teams.blue.teamId || !desk.teams.red.teamId}
+          onClick={() => {
+            const blue = desk.teams.red.teamId;
+            const red = desk.teams.blue.teamId;
+            if (!blue || !red) return;
+            send({ type: "match", blue, red });
+          }}
+        >
+          Invertir
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="border-admin-border text-admin-text hover:bg-admin-surface"
+          onClick={() => setCustom((open) => !open)}
+        >
+          Partido custom
+        </Button>
+      </div>
       <div className="grid gap-8 lg:grid-cols-2">
         {(["blue", "red"] as const).map((side) => (
           <section key={side} className="space-y-3">
@@ -196,12 +321,18 @@ function AdminObsPage() {
                 style={{ color: desk.teams[side].color }}
               >
                 {side === "blue" ? "Azul" : "Rojo"}
+                {desk.teams[side].name ? ` · ${desk.teams[side].name}` : ""}
               </h2>
-              <TeamPicker
-                teams={accepted}
-                teamId={desk.teams[side].teamId}
-                onPick={(teamId) => send({ type: "side", side, teamId })}
-              />
+              {custom ? (
+                <TeamPicker
+                  teams={accepted}
+                  teamId={desk.teams[side].teamId}
+                  onPick={(teamId) => {
+                    setBattleId("");
+                    send({ type: "side", side, teamId });
+                  }}
+                />
+              ) : null}
             </div>
             <div className="grid grid-cols-5 gap-2">
               {desk.bans[side].map((slug, index) => (

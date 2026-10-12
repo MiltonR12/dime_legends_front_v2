@@ -86,6 +86,7 @@ export type HeroCard = {
 
 export type DeskEvent =
   | { type: "side"; side: Side; teamId: string }
+  | { type: "match"; blue: string; red: string }
   | {
       type: "slot";
       side: Side;
