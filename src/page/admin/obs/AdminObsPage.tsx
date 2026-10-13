@@ -8,14 +8,6 @@ import type { TBattle } from "@/app/api/battle/battle.types";
 import { useTournament } from "@/hooks/tournament";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   getHeroesApi,
@@ -24,8 +16,11 @@ import {
 } from "@/app/api/broadcast/broadcastApi";
 import { deskSocket } from "@/broadcast/socket";
 import {
+  clockMs,
   fillDesk,
+  formatClock,
   LANE_LABEL,
+  type DeskClock,
   type DeskEvent,
   type DeskState,
   type HeroCard,
@@ -37,10 +32,60 @@ import {
   MatchClose,
   TeamPicker,
 } from "./DeskPanels";
+import { DeskSelect } from "./DeskSelect";
 import HeroPicker from "./HeroPicker";
 import ObsConnect from "./ObsConnect";
 
 const NO_TEAMS: Team[] = [];
+
+function SeriesClock({
+  clock,
+  onAction,
+}: {
+  clock: DeskClock;
+  onAction: (action: "start" | "pause" | "reset") => void;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!clock.running) return;
+    const id = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(id);
+  }, [clock.running, clock.startedAt]);
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="min-w-16 text-lg tabular-nums text-admin-text">
+        {formatClock(clockMs(clock, now))}
+      </span>
+      <Button
+        type="button"
+        variant="outline"
+        className="border-admin-border text-admin-text hover:bg-admin-surface"
+        disabled={clock.running}
+        onClick={() => onAction("start")}
+      >
+        Iniciar
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        className="border-admin-border text-admin-text hover:bg-admin-surface"
+        disabled={!clock.running}
+        onClick={() => onAction("pause")}
+      >
+        Pausar
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        className="border-admin-border text-admin-text hover:bg-admin-surface"
+        onClick={() => onAction("reset")}
+      >
+        Reiniciar
+      </Button>
+    </div>
+  );
+}
 
 function bestOfFrom(value: string): 1 | 3 | 5 | 7 {
   if (value === "1") return 1;
@@ -257,79 +302,43 @@ function AdminObsPage() {
         </Button>
       </div>
       <div className="flex flex-wrap items-end gap-3">
-        <div className="flex w-44 flex-col gap-1">
-          <span className="text-sm text-admin-muted">Día</span>
-          <Select
-            value={day || "all"}
-            onValueChange={(next) => {
-              setDay(next);
+        <DeskSelect
+          label="Día"
+          className="w-44"
+          value={day || "all"}
+          onChange={(next) => {
+            setDay(next);
+            setBattleId("");
+          }}
+          options={[
+            { value: "all", label: "Todas" },
+            ...days.map((item) => ({ value: item, label: dayLabel(item) })),
+          ]}
+        />
+        <DeskSelect
+          label="Batalla"
+          className="min-w-72 flex-1"
+          value={battleId || "none"}
+          placeholder="Elegir partido"
+          onChange={(next) => {
+            if (next === "none") {
               setBattleId("");
-            }}
-          >
-            <SelectTrigger className="border-admin-border bg-admin-input text-admin-text shadow-none">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
-              <SelectGroup>
-                <SelectItem
-                  value="all"
-                  className="focus:bg-admin-row focus:text-admin-text"
-                >
-                  Todas
-                </SelectItem>
-                {days.map((item) => (
-                  <SelectItem
-                    key={item}
-                    value={item}
-                    className="focus:bg-admin-row focus:text-admin-text"
-                  >
-                    {dayLabel(item)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex min-w-72 flex-1 flex-col gap-1">
-          <span className="text-sm text-admin-muted">Batalla</span>
-          <Select
-            value={battleId || "none"}
-            onValueChange={(next) => {
-              if (next === "none") {
-                setBattleId("");
-                return;
-              }
-              setBattleId(next);
-              const battle = shown.find((item) => item._id === next);
-              const teams = battle ? paired(battle) : null;
-              if (!teams) return;
-              send({ type: "match", blue: teams.one._id, red: teams.two._id });
-            }}
-          >
-            <SelectTrigger className="border-admin-border bg-admin-input text-admin-text shadow-none">
-              <SelectValue placeholder="Elegir partido" />
-            </SelectTrigger>
-            <SelectContent className="border-admin-border bg-admin-surface text-admin-text">
-              <SelectGroup>
-                <SelectItem
-                  value="none"
-                  className="focus:bg-admin-row focus:text-admin-text"
-                >
-                  Elegir partido
-                </SelectItem>
-                {shown.map((battle) => (
-                  <SelectItem
-                    key={battle._id}
-                    value={battle._id}
-                    className="focus:bg-admin-row focus:text-admin-text"
-                  >
-                    {battleLabel(battle)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+              return;
+            }
+            setBattleId(next);
+            const battle = shown.find((item) => item._id === next);
+            const teams = battle ? paired(battle) : null;
+            if (!teams) return;
+            send({ type: "match", blue: teams.one._id, red: teams.two._id });
+          }}
+          options={[
+            { value: "none", label: "Elegir partido" },
+            ...shown.map((battle) => ({
+              value: battle._id,
+              label: battleLabel(battle),
+            })),
+          ]}
+        />
         <Button
           type="button"
           variant="outline"
@@ -453,25 +462,23 @@ function AdminObsPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-xs text-admin-muted">
           Serie
-          <div className="mt-1 flex gap-2">
-            <select
-              value={desk.series.bestOf}
-              onChange={(event) =>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <DeskSelect
+              className="w-28"
+              value={String(desk.series.bestOf)}
+              onChange={(next) =>
                 send({
                   type: "series",
-                  bestOf: bestOfFrom(event.target.value),
+                  bestOf: bestOfFrom(next),
                   blue: desk.series.score.blue,
                   red: desk.series.score.red,
                 })
               }
-              className={field}
-            >
-              {[1, 3, 5, 7].map((value) => (
-                <option key={value} value={value}>
-                  Bo{value}
-                </option>
-              ))}
-            </select>
+              options={[1, 3, 5, 7].map((value) => ({
+                value: String(value),
+                label: `Bo${value}`,
+              }))}
+            />
             <Input
               type="number"
               value={desk.series.score.blue}
@@ -499,6 +506,10 @@ function AdminObsPage() {
               }
               className={field}
               aria-label="Mapas rojo"
+            />
+            <SeriesClock
+              clock={desk.clock}
+              onAction={(action) => send({ type: "clock", action })}
             />
           </div>
         </label>

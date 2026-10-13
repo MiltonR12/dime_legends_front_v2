@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { DeskSelect } from "./DeskSelect"
 import type { HeroCard, OverlayId } from "@/broadcast/types"
 import { TOURNAMENT_STEPS, defaultRects, guessesToSlots } from "@/broadcast/steps"
 import { captureSource, connectObs, listScenes, listSources, switchScene } from "@/ia/obs"
@@ -14,6 +15,7 @@ const LABELS: { id: OverlayId; label: string }[] = [
 ]
 
 const SCENE_KEY = "dime-obs-scenes"
+const EMPTY = "__empty__"
 
 function sceneText(record: object, key: OverlayId): string {
   if (!(key in record)) return ""
@@ -135,44 +137,42 @@ function ObsConnect({
       {connected && (
         <div className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            {LABELS.map((item) => (
-              <label key={item.id} className="text-xs text-admin-muted">
-                {item.label}
-                <div className="mt-1 flex gap-2">
-                  <select
-                    value={sceneMap[item.id]}
-                    onChange={(event) => remember(item.id, event.target.value)}
-                    className={`h-10 flex-1 rounded-md border px-2 ${field}`}
-                  >
-                    <option value="">Escena</option>
-                    {scenes.map((scene) => (
-                      <option key={scene} value={scene}>
-                        {scene}
-                      </option>
-                    ))}
-                  </select>
+            {LABELS.map((item) => {
+              const current = sceneMap[item.id]
+              const names = current && !scenes.includes(current) ? [current, ...scenes] : scenes
+              return (
+                <div key={item.id} className="flex items-end gap-2">
+                  <DeskSelect
+                    label={item.label}
+                    className="min-w-0 flex-1"
+                    value={current || EMPTY}
+                    onChange={(next) => remember(item.id, next === EMPTY ? "" : next)}
+                    options={[
+                      { value: EMPTY, label: "Escena" },
+                      ...names.filter(Boolean).map((scene) => ({ value: scene, label: scene })),
+                    ]}
+                  />
                   <Button type="button" variant="outline" onClick={() => show(item.id)} className="border-admin-border">
                     Mostrar
                   </Button>
                 </div>
-              </label>
-            ))}
+              )
+            })}
           </div>
           <div className="flex flex-wrap items-end gap-3">
-            <label className="min-w-56 text-xs text-admin-muted">
-              Fuente del emulador
-              <select
-                value={source}
-                onChange={(event) => setSource(event.target.value)}
-                className={`mt-1 h-10 w-full rounded-md border px-2 ${field}`}
-              >
-                {sources.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <DeskSelect
+              label="Fuente del emulador"
+              className="min-w-56"
+              value={source || EMPTY}
+              onChange={(next) => {
+                if (next !== EMPTY) setSource(next)
+              }}
+              options={
+                sources.length
+                  ? sources.map((item) => ({ value: item, label: item }))
+                  : [{ value: EMPTY, label: "Sin fuentes" }]
+              }
+            />
             <Button type="button" variant="outline" onClick={detect} className="border-admin-border">
               Detectar héroes
             </Button>

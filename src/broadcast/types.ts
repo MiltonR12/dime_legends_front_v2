@@ -39,6 +39,26 @@ export type DeskKda = {
   assists: number;
 };
 
+export type DeskClock = {
+  running: boolean;
+  startedAt: string | null;
+  elapsedMs: number;
+};
+
+export const clockMs = (clock: DeskClock, now = Date.now()) => {
+  if (!clock.running || !clock.startedAt) return clock.elapsedMs;
+  const start = Date.parse(clock.startedAt);
+  if (Number.isNaN(start)) return clock.elapsedMs;
+  return clock.elapsedMs + Math.max(0, now - start);
+};
+
+export const formatClock = (ms: number) => {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+
 export type DeskState = {
   tournament: { name: string; logoUrl: string; stage: string };
   theme: {
@@ -52,6 +72,7 @@ export type DeskState = {
   teams: { blue: DeskTeam; red: DeskTeam };
   bans: { blue: (string | null)[]; red: (string | null)[] };
   series: { bestOf: 1 | 3 | 5 | 7; score: { blue: number; red: number } };
+  clock: DeskClock;
   game: { kills: { blue: number; red: number } };
   result: { winner: Side | null; durationSec: number; kda: DeskKda[] };
   activeOverlay: OverlayId;
@@ -59,10 +80,21 @@ export type DeskState = {
 };
 
 export function fillDesk(state: DeskState): DeskState {
+  const clock = state.clock;
+  const startedAt =
+    typeof clock?.startedAt === "string" ? clock.startedAt : null;
   return {
     ...state,
     sponsors: state.sponsors ?? [],
     casters: state.casters ?? [],
+    clock: {
+      running: clock?.running === true && !!startedAt,
+      startedAt: clock?.running === true ? startedAt : null,
+      elapsedMs:
+        typeof clock?.elapsedMs === "number" && Number.isFinite(clock.elapsedMs)
+          ? Math.max(0, clock.elapsedMs)
+          : 0,
+    },
     result: {
       winner: state.result?.winner ?? null,
       durationSec: state.result?.durationSec ?? 0,
@@ -95,6 +127,7 @@ export type DeskEvent =
       heroSlug: string | null;
     }
   | { type: "series"; bestOf: 1 | 3 | 5 | 7; blue: number; red: number }
+  | { type: "clock"; action: "start" | "pause" | "reset" }
   | { type: "kills"; blue: number; red: number }
   | { type: "result"; winner: Side | null; durationSec: number }
   | { type: "sponsors"; sponsors: DeskSponsor[] }
