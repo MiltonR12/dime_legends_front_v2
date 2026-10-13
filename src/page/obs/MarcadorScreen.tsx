@@ -31,14 +31,13 @@ function Plate({
   children,
 }: {
   clip: string;
-  border: string;
+  border?: string;
   className: string;
   children: ReactNode;
 }) {
   return (
     <div
       className={`relative ${className}`}
-      style={{ filter: "drop-shadow(0 10px 12px rgba(0,0,0,0.28))" }}
     >
       <div className="absolute inset-0" style={{ clipPath: clip, background: border }} />
       <div className="absolute inset-[5px]" style={{ clipPath: clip }}>
@@ -59,7 +58,7 @@ function LogoPlate({
 }) {
   return (
     <Plate clip={clip} border={border} className="h-[130px] w-[230px]">
-      <div className="h-full w-full bg-white">
+      <div className="h-full w-full">
         {team.logoUrl ? (
           <img
             src={team.logoUrl}
@@ -74,9 +73,9 @@ function LogoPlate({
 
 function NamePlate({ name, align }: { name: string; align: "start" | "end" }) {
   return (
-    <Plate clip={NAME} border="#ffffff" className="-mx-6 h-[108px] w-[300px]">
+    <Plate clip={NAME} className="-mx-6 h-[108px] w-[300px]">
       <div
-        className={`flex h-full w-full items-center bg-white px-8 text-3xl font-medium text-black ${
+        className={`flex h-full w-full items-center px-8 text-3xl font-medium text-black ${
           align === "end" ? "justify-end text-right" : "justify-start text-left"
         }`}
       >
@@ -89,8 +88,8 @@ function NamePlate({ name, align }: { name: string; align: "start" | "end" }) {
 function ScorePlate({ clock, blue, red }: { clock: DeskClock; blue: number; red: number }) {
   const now = useNow(clock.running, clock.startedAt);
   return (
-    <Plate clip={CENTER} border="#0b1f6e" className="-mx-4 h-[108px] w-[200px]">
-      <div className="flex h-full w-full flex-col items-center justify-center bg-[#0b1f6e] text-white">
+    <Plate clip={CENTER} className="-mx-4 h-[108px] w-[200px]">
+      <div className="flex h-full w-full flex-col items-center justify-center text-black">
         <span className="text-3xl font-medium tabular-nums">
           {formatClock(clockMs(clock, now))}
         </span>
@@ -154,7 +153,7 @@ export function MarcadorScreen({ state }: { state: DeskState }) {
             red={state.series.score.red}
           />
           <NamePlate name={red.name} align="start" />
-          <LogoPlate team={red} clip={BLUE} border="#3d7dff" />
+          <LogoPlate team={red} clip={BLUE} border="#ffffff" />
         </div>
         <div className="absolute right-8 top-6">
           <SponsorCorner sponsors={state.sponsors ?? []} />
